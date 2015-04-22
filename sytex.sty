@@ -1,0 +1,275 @@
+% Declare that this style file requires at least LaTeX version 2e.
+\NeedsTeXFormat{LaTeX2e}
+
+% Provide the name of your page, the date it was last updated, and a comment about what it's used for
+\ProvidesPackage{sytex}[2015-04-21]
+
+% \arraycolsep=1.5pt\def\arraystretch{1.5}	stretch matrix
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% MATH CUSTOMIZATION %—————————————————————————————————————————————————————————————————%	
+\newcommand{\tx}{\text}				%% TEXT IN MATH MODE
+
+\newcommand{\<}{\langle}			%% left angle bracket
+\newcommand{\ra}{\rangle}			%% right angle package
+\newcommand{\p}{\dot}				%% DOT
+\newcommand{\pp}{\ddot}				%% DOUBLE DOT
+\newcommand{\cd}{\cdot}				%% MULTIPLICATION DOT
+\newcommand{\f}{\dfrac}				%% LARGE FRACTION
+\newcommand{\fr}{\frac}				%% FRACTION
+\newcommand{\vv}{\vec}				%% VECTOR
+\newcommand{\bm}[1]{\text{\boldmath $#1$\unboldmath}} %% OTHER VECTOR
+
+\newcommand{\rr}{\sqrt}					%% SQUARE ROOT
+\newcommand{\hh}{\f{1}{2}}				%% HALF
+\newcommand{\hhf}{\fr{1}{2}}			%% HALF (small)
+\newcommand{\un}{\uu{$\;\;\;\;$}$\;$} 	%% UNDERLINED TEXT
+
+%% DERIVATIVES
+\newcommand{\dd}[2]{\f{d #1}{d #2}}					%% DERIVATIVE
+\newcommand{\pd}[2]{\f{\partial #1}{\partial #2}}	%% PARTIAL DERIVATIVE
+\newcommand{\ddt}{\dd{}{t}}							%% TIME DERIVATIVE
+
+
+%% MATH SYMBOLS
+\newcommand{\x}{\times}			%% multiplication ×
+
+\newcommand{\h}{\theta}			%% THETA
+\newcommand{\w}{\omega}			%% OMEGA
+\newcommand{\dt}{\delta}		%% DELTA
+\newcommand{\dg}{^{\circ}}		%% DEGREE DOT
+\newcommand{\sbt}{\,\begin{picture}(-1,1)(-1,-3)\circle*{3}\end{picture}\ } % SMALLER DOT
+
+\newcommand{\vn}{\varnothing}	%% empty set (wide)
+\newcommand{\es}{\emptyset}		%% empty set (narrow)
+\newcommand{\fa}{\forall}		%% for all symbol
+\newcommand{\xe}{\exists}		%% EXISTS SYMBOL
+\newcommand{\la}{\land}			%% LOGICAL AND
+\newcommand{\no}{\lnot}			%% LOGICAL NOT
+\newcommand{\ap}{\approx}		%% APPROXIMATELY
+
+\newcommand{\mmp}{\EuScript{P}}	%% prime number
+\newcommand{\mml}{\mathcal{L}}	%% L
+\newcommand{\mmr}{\mathbb{R}}	%% real number
+\newcommand{\mmn}{\mathbb{N}}	%% natural number
+\newcommand{\mmq}{\mathbb{Q}}	%% rational number
+\newcommand{\mmz}{\mathbb{Z}}	%% integer
+
+\newcommand{\xl}{{x}_1}				%% x_1
+\newcommand{\xll}{{x}_2}			%% x_2
+\newcommand{\xlll}{{x}_3}			%% x_3
+\newcommand{\xlv}{{x}_4}			%% x_4
+
+\newcommand{\pxl}{\p{x}_1}			%% x'_1
+\newcommand{\pxll}{\p{x}_2}			%% x'_2
+\newcommand{\pxlll}{\p{x}_3}		%% x'_3
+\newcommand{\pxlv}{\p{x}_4}			%% x'_4
+
+\newcommand{\ppxl}{\pp{x}_1}		%% x"_1
+\newcommand{\ppxll}{\pp{x}_2}		%% x"_2
+\newcommand{\ppxlll}{\pp{x}_3}		%% x"_3
+\newcommand{\ppxlv}{\pp{x}_4}		%% x"_4
+
+\newcommand{\px}{\p{x}}				%% x'
+
+%% VECTORS
+\newcommand{\vi}{\bm{i}}			%% VECTOR i
+\newcommand{\vj}{\bm{j}}			%% VECTOR j 
+\newcommand{\vk}{\bm{k}}			%% VECTOR k
+
+\newcommand{\vppx}{\vec{\pp{x}}}	%% VECTOR x"
+\newcommand{\vpx}{\vec{\p{x}}}		%% VECTOR x'
+\newcommand{\vpu}{\vec{\p{u}}}		%% VECTOR u'
+\newcommand{\vx}{\vec{x}}			%% VECTOR x
+\newcommand{\vy}{\vec{y}}			%% VECTOR y
+\newcommand{\vf}{\vec{f}}			%% VECTOR f
+\newcommand{\vg}{\vec{g}}			%% VECTOR g
+\newcommand{\vu}{\vec{u}}			%% VECTOR u
+\newcommand{\dvx}{\dt\vec{x}}		%% VECTOR d/dt x
+\newcommand{\dvy}{\dt\vec{y}}		%% VECTOR d/dt y
+\newcommand{\dvu}{\dt\vec{u}}		%% VECTOR d/dt u
+
+\newcommand{\vr}{\vec{e_r}}			%% VECTOR e_r
+\newcommand{\vh}{\vec{e_\h}}		%% VECTOR e_theta
+\newcommand{\vt}{\vec{e_t}}			%% VECTOR e_t
+\newcommand{\vn}{\vec{e_n}}			%% VECTOR e_n
+\newcommand{\vb}{\vec{e_b}}			%% VECTOR e_b
+	
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TEXT CUSTOMIZATION %—————————————————————————————————————————————————————————————————%	
+%% BOXES
+\newcommand{\boxer}[1]{\textcolor{red}{\noindent \fbox{\parbox{0.8\linewidth}{\normalcolor\math$\displaystyle#1$}}}}   %% red box
+\newcommand{\bk}{\boxed}				%% BLACK BOX
+\newcommand{\br}{\boxer}				%% RED BOX
+\newcommand{\brt}[1]{\textcolor{red}	{\begin{center}\fboxsep3mm\noindent\fbox{\parbox{0.96\linewidth}{\normalcolor #1}}}	\end{center}\normalcolor}	%% BOX WITH RED LINE
+\newcommand{\pb}[1]{{\begin{center}\fboxsep3mm\noindent\fbox{\parbox{0.96\linewidth}{ #1}}}				\end{center}			\medskip} 				%% BLACK PARWIDTH BOX
+\newcommand{\pbr}[1]{\rrr{\pb{\normalcolor #1}}\normalcolor}	%% RED PARWIDTH BOX
+\newcommand{\bx}[1] { 					{\begin{center}\fboxsep1mm\noindent\fbox{\parbox{0.96\linewidth}{ #1}}}				\end{center}			} 	%% BLACK PARWIDTH BOX
+
+
+\newcommand{\rrb}[1]{\textcolor{red}	{\begin{center}\fboxsep3mm\noindent\fbox{\parbox{0.96\linewidth}{ #1}}}				\end{center}\normalcolor}
+ %% REC IN RED BOX
+\newcommand{\ct}[1]{\e \boxer{... ? \;\;$#1$ \e}}	%% FILL INRED BOX
+
+%% TEXT COLORING
+\newcommand{\rrr}[1]{{\color{red} #1}}				%% RED
+\newcommand{\kkk}[1]{{\color{black} #1}}			%% BLACK
+\newcommand{\cc}[2]{\textcolor{#1}{#2}}				%% COLOR
+
+%% TEXT FORMATTING
+\newcommand{\ii}[1]{\textit{#1}}					%% ITALIC
+\newcommand{\bb}[1]{\textbf{#1}}					%% BOLD
+\newcommand{\scb}[1]{\textbf{\textsc{#1}}}			%% BOLD SMALL CAPS			
+\newcommand{\uu}[1]{\underline{#1}}					%% UNDERLINED
+\newcommand{\tit}[2]{\medskip \noindent \large{\ii{#1}\bb{#2}}\normalsize}
+													%% TITLE + DATE
+\newcommand{\titb}[2]{\medskip \noindent \large{\bb{#1}}\noindent\large{$\;\;$\ii{#2}}\normalsize\medskip}
+													%% TITLE + DATE
+\newcommand{\s}[1]{\textsubscript{#1}}				%% subscript text (not italic)
+
+%% TEXT SIZE
+\newcommand{\fsz}{\footnotesize}	%% set text to footnote size 
+\newcommand{\nsz}{\normalsize}		%% set text to normal size
+\newcommand{\ssz}{\scriptsize}		%% set text to script size
+
+%% PARAGRAPHS
+\newcommand{\ee}[1]{\subsubparagraph{(#1) \;}}		%% SUBSUBPARAGRAPH \ LING. EXAMPLE
+\newcommand{\e}{\subparagraph{}}					%% SUBPARAGRAPH
+\newcommand{\ep}[1]{\paragraph{(#1)}}				%% PARAGRAPH
+\newcommand{\er}[1]{\subparagraph{#1}}				%% SUBPARAGRAPH
+\newcommand{\ff}[2]{\begin{itemize}\item[\bb{#1}] #2 \end{itemize}} %% PROBLEM STATEMENT
+
+%% LISTS
+\newcommand{\dls}{\begin{list}{\sbt}{}\itemsep0em	%% BEGIN DOTTED LIST
+					\item}
+\newcommand{\dl}{\item}								%% NEW LIST ITEM
+\newcommand{\dle}{\end{list}}						%% END LIST
+
+\newcommand{\qq}[1]{\begin{itemize}\item[\bb{#1}]}	%% BEGIN PROBLEM STATEMENT
+\newcommand{\qe}{\end{itemize}}						%% END PROBLEM STATEMENT
+
+\newcommand{\en}[1]{\begin{enumerate}[#1]\item}		%% BEGIN ENUMERATED LIST
+\newcommand{\ed}{\end{enumerate}}					%% END ENUMERATED LIST
+
+\newcommand{\ble}{\begin{legal}\item}				%% BEGIN LEGAL LIST
+\newcommand{\ele}{\end{legal}}						%% END LEGAL LIST
+
+\newcommand{\bq}{\begin{quote}}						%% BEGIN QUOTE
+\newcommand{\qb}{\end{quote}}						%% END QUOTE
+
+
+%% TABLES
+\newcommand{\ts}[1]{\begin{tabular}{#1}}			%% TABLE
+\newcommand{\te}{\end{tabular}}						%% END TABLE
+
+%% SPACING
+\newcommand{\xs}{\medskip}									%% A LITTLE SPACE
+\newcommand{\xz}{\medskip \medskip}							%% SPACE
+\newcommand{\xx}{\medskip  \medskip  \medskip  \medskip}	%% MORE SPACE
+\newcommand{\xb}{\bigskip}									%% EVEN MORE SPACE
+\newcommand{\xxx}{$\;$ \\\pagebreak}						%% PAGE BREAK
+
+%% IMAGES
+\newcommand{\ic}[2]{\includegraphics[#1]{#2}}				%% IMAGE
+\newcommand{\icc}[2]{\centerline{\includegraphics[#1]{#2}}}	%% CENTERED IMAGE
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% REDEFINE DEFAULTS %——————————————————————————————————————————————————————————————————%
+
+\let\oldhat\hat
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\renewcommand{\hat}[1]{\oldhat{\mathbf{#1}}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% IMPORT PACKAGES %————————————————————————————————————————————————————————————————————%
+
+\RequirePackage{amssymb,amsmath,amsthm} 
+\RequirePackage[margin=1.25in]{geometry}
+\RequirePackage{graphicx,ctable,booktabs}
+\RequirePackage{graphicx}
+\RequirePackage{hyperref,wasysym}
+\RequirePackage{qtree}
+\RequirePackage{changepage}   % for the adjustwidth environment
+\RequirePackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\RequirePackage{tikz}
+\RequirePackage{multicol}
+\RequirePackage{lscape}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{color}
+%\RequirePackage{linguex}
+\RequirePackage{fixltx2e}
+\RequirePackage{xfrac}
+\RequirePackage{setspace}
+\RequirePackage{euscript}
+\RequirePackage{enumerate}% http://ctan.org/pkg/enumerate
+
+%\RequirePackage{enumitem} % for legal list def 2015-02-24
+%\RequirePackage{caption} \captionsetup[table]{skip=10pt} % for fixing spacing on captions above tables
+\RequirePackage{float} % place figures inline properly with [H]
+				%\begin{figure}[H]
+				%    \centering
+				%    \includegraphics[width=0.99\textwidth]{sketch}
+				%    \caption{Concept Sketch of UGV Navigating Obstacle Course}
+				%    \label{fig:mesh1}
+				%\end{figure}
+				% 
+				%As you can see in the figure \ref{fig:mesh1}, the 
+				%function grows near 0. Also, in the page \pageref{fig:mesh1} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TIKZ LIBRARY %———————————————————————————————————————————————————————————————————————%
+
+\usetikzlibrary{shapes,arrows}
+
+\tikzstyle{block} = [draw, fill=blue!20, rectangle, 
+    minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LISTINGS PACKAGE FOR CODE FORMATTING %———————————————————————————————————————————————%	
+% MATLAB CODE
+%\lstinputlisting[language=Matlab]{hw2.m}
+
+\RequirePackage{listings}
+\lstset{ 
+		basicstyle=\ttfamily \footnotesize,                   % Code font, Examples: \footnotesize, \ttfamily
+%keywordstyle=\color{OliveGreen},        % Keywords font ('*' = uppercase)
+		commentstyle=\color{gray},              % Comments font
+%numbers=left,                           % Line nums position
+%numberstyle=\tiny,                      % Line-numbers fonts
+%stepnumber=1,                           % Step between two line-numbers
+%numbersep=5pt,                          % How far are line-numbers from code
+%backgroundcolor=\color{lightlightgray}, % Choose background color
+        language=Matlab,                                % choose the language of the code
+%        basicstyle=10pt,                                % the size of the fonts that are used for the code
+        numbers=left,                                   % where to put the line-numbers
+        numberstyle=\footnotesize,                      % the size of the fonts that are used for the line-numbers
+        stepnumber=1,                                           % the step between two line-numbers. If it's 1 each line will be numbered
+        numbersep=5pt,                                  % how far the line-numbers are from the code
+%       backgroundcolor=\color{white},          % choose the background color. You must add \usepackage{color}
+        showspaces=false,                               % show spaces adding particular underscores
+        showstringspaces=false,                         % underline spaces within strings
+        showtabs=false,                                         % show tabs within strings adding particular underscores
+       frame=single,                                           % adds a frame around the code
+%       tabsize=2,                                              % sets default tabsize to 2 spaces
+%       captionpos=b,                                           % sets the caption-position to bottom
+        breaklines=true,                                        % sets automatic line breaking
+        breakatwhitespace=false,                        % sets if automatic breaks should only happen at whitespace
+        escapeinside={\%*}{*)}                          % if you want to add a comment within your code
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+% Finally, we'll use \endinput to indicate that LaTeX can stop reading this file. LaTeX will ignore anything after this line.
+\endinputbl
