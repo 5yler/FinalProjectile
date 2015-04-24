@@ -6,22 +6,22 @@
 
 REQUIREMENTS
 
-[ ] add GV requirements to Word template doc
-[ ] write requirements for 
-	[ ] VehicleController
-	    [ ] UserController
-	[ ] Simulator
-	[ ] Control
-	[ ] Projectile
+[c] add GV requirements to Word template doc
+[c] write requirements for 
+	[c] VehicleController
+	    [c] UserController
+	[c] Simulator
+	[c] Control
+	[c] Projectile
 
 PROJECTILE
 
-[ ] copy over reusable code from GroundVehicle
+[c] copy over reusable code from GroundVehicle
 
 
 GROUNDVEHICLE
  
-[ ] loosen restrictions on velocity and make everything slower
+[c] loosen restrictions on velocity and make everything slower
 
 
 
