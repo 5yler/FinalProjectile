@@ -10,6 +10,8 @@ import java.net.Socket;
 
 public class FinalProjectile {
 
+    private static final boolean lead3  = true;    // set to true for multiple LeadingController test
+
     /* MAIN METHOD */
     public static void main(String[] args) {
 
@@ -44,7 +46,42 @@ public class FinalProjectile {
 
             gvThread.start();
             ucThread.start();
+
+            if (lead3) {
+                GroundVehicle lv = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
+                GroundVehicle lv2 = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
+                GroundVehicle lv3 = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
+                LeadingController lc = new LeadingController(sim, lv);
+                LeadingController lc2 = new LeadingController(sim, lv2);
+                LeadingController lc3 = new LeadingController(sim, lv3);
+                sim.addVehicle(lv);
+                sim.addVehicle(lv2);
+                sim.addVehicle(lv3);
+                Thread lvThread = new Thread(lv);
+                Thread lv2Thread = new Thread(lv2);
+                Thread lv3Thread = new Thread(lv3);
+                Thread lcThread = new Thread(lc);
+                Thread lc2Thread = new Thread(lc2);
+                Thread lc3Thread = new Thread(lc3);
+                lvThread.start();
+                lv2Thread.start();
+                lv3Thread.start();
+                lcThread.start();
+                lc2Thread.start();
+                lc3Thread.start();
+                lc.addFollower(gv);
+                lc.addFollower(lv2);
+                lc.addFollower(lv3);
+                lc2.addFollower(gv);
+                lc2.addFollower(lv);
+                lc2.addFollower(lv3);
+                lc3.addFollower(gv);
+                lc3.addFollower(lv);
+                lc3.addFollower(lv2);
+            }
+
             simThread.start();
+
 
             do {
                 Socket client = s.accept();
