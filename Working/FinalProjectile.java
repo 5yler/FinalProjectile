@@ -1,20 +1,20 @@
 /**
- * RtTest
+ * FinalProjectile
  * 16.35 Assignment #4 Pre-Deliverable
  * @author Syler Wagner [syler@mit.edu]
  **/
 
-public class RtTest {
+public class FinalProjectile {
 
     /* MAIN METHOD */
     public static void main(String[] args) {
 
         String host;
 
-        if (args.length == 2) { // if one command line argument is present
+        if (args.length == 1) { // if one command line argument is present
 
             // get IP address from first command line argument
-            host = args[1];
+            host = args[0];
 
 
 //            DisplayServer ds = new DisplayServer(host);
@@ -49,7 +49,7 @@ public class RtTest {
 
         } else { // if wrong number of arguments
             System.err.println("Allowed format:");
-            System.err.println("$ jamaicavm RtTest -realtime <IP>");
+            System.err.println("$ java FinalProjectile <IP>");
             System.exit(-1);
         }
     }

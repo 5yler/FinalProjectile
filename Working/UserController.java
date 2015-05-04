@@ -34,7 +34,7 @@ public class UserController extends VehicleController {
 //    private DisplayServer _ds;
     private ControlPanel cp;
 
-    private double minTransSpeed = 5;
+    private double minTransSpeed = 0;
     private double maxTransSpeed = 10;
     private double maxRotSpeed = Math.PI / 4;
 
@@ -87,7 +87,7 @@ public class UserController extends VehicleController {
     public Control getControl(int sec, int msec) {
         double _nextSpeed = cp.getUserSpeed();
         double _nextOmega = cp.getUserOmega();
-System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
+    System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
         return clampControl(_nextSpeed, _nextOmega);
     }
 
@@ -100,7 +100,7 @@ System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
         private double _nextSpeed = 7.5;
         private double _nextOmega = 0;
         private double dSpeed = 0.1;
-        private double dOmega = 0.1;
+        private double maxOmega = Math.PI/4;
 
         protected JFrame frame;
         protected NumberFormat format = new DecimalFormat("#####.##");
@@ -108,9 +108,9 @@ System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
 
         // set display sizes
         private int minDisplayX = 500;
-        private int minDisplayY = 500;
+        private int minDisplayY = 50;
         private int preferredDisplayX = 500;
-        private int preferredDisplayY = 500;
+        private int preferredDisplayY = 50;
 
 
   /*
@@ -209,12 +209,12 @@ System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
                     System.out.println("UP");
                 }
                 if (code == KeyEvent.VK_LEFT) {
-                    _nextOmega -= dOmega;
+                    _nextOmega = maxOmega;
                     System.out.println("LEFT");
 
                 }
                 if (code == KeyEvent.VK_RIGHT) {
-                    _nextOmega += dOmega;
+                    _nextOmega = -maxOmega;
                     System.out.println("RIGHT");
 
                 }
