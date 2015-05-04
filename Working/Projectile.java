@@ -37,6 +37,13 @@ public class Projectile extends Thread {
 	    _y = _y + _dy * t;
     }
 
+	public synchronized double[] getPosition() {
+		double[] position = new double[2];
+		position[0] = _x;
+		position[1] = _y;
+		return position;
+	}
+
 
 	/* RUN METHOD */
 	public void run() {
@@ -58,7 +65,7 @@ public class Projectile extends Thread {
 					e.printStackTrace();
 
 				} // end try-catch
-			} // end synchronized (_s)
+			} // end synchronized (_sim)
 
 			currentTime = System.nanoTime();
 

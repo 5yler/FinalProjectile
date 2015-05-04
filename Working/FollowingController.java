@@ -25,12 +25,12 @@ public class FollowingController extends VehicleController {
     private final DecimalFormat df = new DecimalFormat("+#.0;-0");
 
     /**
-     * @param s simulator object
+     * @param sim simulator object
      * @param v specific GroundVehicle being controlled
      * @param prey GroundVehicle which v follows
      */
-    public FollowingController(Simulator s, GroundVehicle v, GroundVehicle prey) {
-        super(s, v);
+    public FollowingController(Simulator sim, GroundVehicle v, GroundVehicle prey) {
+        super(sim, v);
         _prey = prey;
     }
 

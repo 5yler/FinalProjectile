@@ -11,14 +11,17 @@ public class GroundVehicle implements Runnable {
 	private double _x, _y, _theta;    	/* shared resources */
 	private double _dx, _dy, _dtheta; 	/* shared resources */
 
-	private Simulator _s;		// Simulator associated with GroundVehicle
+
+	public static final double MIN_VEL = 1;
+	public static final double MAX_VEL = 10;
+
+	private Simulator _sim;		// Simulator associated with GroundVehicle
 
 	private long _startupTime;	// time when the GroundVehicle starts running
 
 	public static final int VEHICLE_SEC_INCREMENT = 0;  	// time increment in seconds for advance()
 	public static final int VEHICLE_MSEC_INCREMENT = 100;	// increment in milliseconds for advance()
 	public static final int COMPLETELY_ARBITRARY_MS_INCREMENT = 100; // should be 100 for assignment 4
-
 
 	protected final String _ID;	// unique string identifier
 	private final int _numID; 	// unique numeric identifier for ordering all GroundVehicles
@@ -48,6 +51,7 @@ public class GroundVehicle implements Runnable {
 		_ID = randomString(2);
 		vehicleCount += 1;
 		_numID = vehicleCount;
+
 	}
 
     public GroundVehicle (double pose[], double dx, double dy, double dtheta) {
@@ -69,6 +73,8 @@ public class GroundVehicle implements Runnable {
 		_ID = randomString(2);
 		vehicleCount += 1;
 		_numID = vehicleCount;
+
+		// set max simulation size
 	}
 
 /* STATIC METHODS */
@@ -117,7 +123,7 @@ public class GroundVehicle implements Runnable {
 	 * @param sim Simulator associated with GroundVehicle
 	 */
 	public void setSimulator(Simulator sim){
-		this._s = sim;
+		this._sim = sim;
 	}
 
 	public synchronized void setPosition(double[] newPos) {
@@ -162,8 +168,8 @@ public class GroundVehicle implements Runnable {
 	}
 
 	private void clampPosition() {
-		_x = Math.min(Math.max(_x,0),100);
-		_y = Math.min(Math.max(_y,0),100);
+		_x = Math.min(Math.max(_x,0),Simulator.MAX_X);
+		_y = Math.min(Math.max(_y,0),Simulator.MAX_Y);
 		_theta = Math.min(Math.max(_theta, -Math.PI), Math.PI);
 		if (_theta - Math.PI == 0 || Math.abs(_theta - Math.PI) < 1e-6)
 			_theta = -Math.PI;
@@ -171,14 +177,14 @@ public class GroundVehicle implements Runnable {
 
 	private void clampVelocity() {
 		double velMagnitude = Math.sqrt(_dx*_dx+_dy*_dy);
-		if (velMagnitude > 10.0) {
-			_dx = 10.0 * _dx/velMagnitude;
-			_dy = 10.0 * _dy/velMagnitude;
+		if (velMagnitude > GroundVehicle.MAX_VEL) {
+			_dx = GroundVehicle.MAX_VEL * _dx/velMagnitude;
+			_dy = GroundVehicle.MAX_VEL * _dy/velMagnitude;
 		}
 
-		if (velMagnitude < 5.0) {
-			_dx = 5.0 * _dx/velMagnitude;
-			_dy = 5.0 * _dy/velMagnitude;
+		if (velMagnitude < GroundVehicle.MIN_VEL) {
+			_dx = GroundVehicle.MIN_VEL * _dx/velMagnitude;
+			_dy = GroundVehicle.MIN_VEL * _dy/velMagnitude;
 		}
 
 		_dtheta = Math.min(Math.max(_dtheta, -Math.PI/4), Math.PI/4);
@@ -313,18 +319,18 @@ public class GroundVehicle implements Runnable {
 
 		while ((currentTime - _startupTime) < 100*1e9) { // while time less than 100s
 
-			synchronized (_s) { /* Conditional critical region */
+			synchronized (_sim) { /* Conditional critical region */
 
 				try {
 					// wait for simulator to update
-					_s.wait();
+					_sim.wait();
 
 				} catch (InterruptedException e) {
 					System.err.printf("Interrupted Exception");
 					e.printStackTrace();
 
 				} // end try-catch
-			} // end synchronized (_s)
+			} // end synchronized (_sim)
 
 			currentTime = System.nanoTime();
 
@@ -351,10 +357,10 @@ public class GroundVehicle implements Runnable {
 		updateTime = System.currentTimeMillis();
 
 		while ((currentTime - _startupTime) < 100e3) { // while time less than 100s
-			synchronized (_s) { // Conditional critical region //
+			synchronized (_sim) { // Conditional critical region //
 				try {
 					// wait for simulator to update
-					_s.wait();
+					_sim.wait();
 				} catch (InterruptedException e) {
 					System.err.printf("Interrupted Exception");
 					e.printStackTrace();

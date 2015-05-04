@@ -24,8 +24,14 @@ public class DisplayServer extends JPanel implements KeyListener {
   private static int historySkip = 5;
   private static final long serialVersionUID = 1l;
 
+  // ground vehicles
   protected double gvX [], gvY[], gvTheta[];
   protected int numVehicles = 0;
+
+  // projectiles
+  protected double pX [], pY[];
+  protected int numProjectiles = 0;
+
   protected int maxNumVehicles = 20;
   protected int shapeX[], shapeY[];
   protected JFrame frame;
@@ -34,14 +40,20 @@ public class DisplayServer extends JPanel implements KeyListener {
   protected Color[] vehicleColors;
   protected Color[] pathColors;
 
-  private final int SLEEP_TIME = 0; // delay between timesteps when drawing vehicle trajectories
+  /* CUSTOM SETTINGS */
+  public static final int DISPLAY_X = 800; // display window x pixels
+  public static final int DISPLAY_Y = 600; // display window x pixels
+  public static final int SLEEP_TIME = 0; // delay between timesteps when drawing vehicle trajectories
   // 10-100 is a reasonable number
 
+  private boolean print = false;   // set to true for print statements
+  private boolean fullscreen = false; // set to true for full-screen
+
   // set display sizes
-  private int minDisplayX = 500;
-  private int minDisplayY = 500;
-  private int preferredDisplayX = 500;
-  private int preferredDisplayY = 500;
+  private int minDisplayX = DISPLAY_X;
+  private int minDisplayY = DISPLAY_Y;
+  private int preferredDisplayX = DISPLAY_X;
+  private int preferredDisplayY = DISPLAY_Y;
 
 
   /*
@@ -53,74 +65,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 					     Color.darkGray};
   */
 
-  public class DisplayController extends VehicleController {
-
-        private DisplayServer _ds;
-//    private ControlPanel cp;
-
-    private double minTransSpeed = 0;
-    private double maxTransSpeed = 10;
-    private double maxRotSpeed = Math.PI / 4;
-
-    private double _startSpeed = 7.5;
-    private double _startOmega = 0;
-
-//    private double _nextSpeed = 7.5;
-//    private double _nextOmega = 0;
-
-    private double dSpeed = 0.5;
-    private double maxOmega = Math.PI / 4;
-
-    public DisplayController(Simulator s, GroundVehicle v) {
-      super(s, v);
-
-//        _ds = ds;
-
-    }
-
-    public void addDisplayServer(DisplayServer ds) {
-      _ds = ds;
-    }
-
-
-    /**
-     * Clamps speed and omega to allowable ranges and returns control with
-     * bounded values of s and omega.
-     *
-     * @param s     forward speed
-     * @param omega angular velocity
-     * @return control with clamped linear and angular velocity values
-     */
-    private Control clampControl(double s, double omega) {
-
-      double clampedSpeed;
-      double clampedOmega;
-
-      // clamp speed if it is above 10 or below 5
-      if (s > maxTransSpeed)
-        clampedSpeed = maxTransSpeed;
-      else if (s < minTransSpeed)
-        clampedSpeed = minTransSpeed;
-      else
-        clampedSpeed = s;
-
-      // clamp angular velocity if it is above the allowed range
-      clampedOmega = Math.min(Math.max(omega, -Math.PI / 4), Math.PI / 4);
-
-      // create a control with the clamped s and omega values
-      Control clampedControl = new Control(clampedSpeed, clampedOmega);
-      return clampedControl;
-    }
-
-
-    public Control getControl(int sec, int msec) {
-      double _nextSpeed = _ds.getUserSpeed();
-      double _nextOmega = _ds.getUserOmega();
-      System.out.println("s: " + _nextSpeed + " omega: " + _nextOmega);
-      return clampControl(_nextSpeed, _nextOmega);
-    }
-
-  }
 
   public void addSimulator(Simulator sim) {
     _sim = sim;
@@ -160,7 +104,7 @@ public class DisplayServer extends JPanel implements KeyListener {
       histories[i] = new History();
   }
 
-
+//TODO: listen for projectile update messages
   public class MessageListener extends Thread {
     public BufferedReader my_client;
     public DisplayServer my_display;
@@ -312,15 +256,23 @@ public class DisplayServer extends JPanel implements KeyListener {
     setMinimumSize(new Dimension(minDisplayX, minDisplayY));
     setPreferredSize(new Dimension(preferredDisplayX, preferredDisplayY));
     addKeyListener(this);
-    container.add(this,BorderLayout.WEST);
+    container.add(this, BorderLayout.WEST);
     setVisible(true);
 
     frame.pack();
     frame.setVisible(true);
+
+    /** make display full-screen **/
+    if (fullscreen) {
+      frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
   }
 
 
-
+  /**
+   *
+   * @param e
+   */
   public void keyPressed(KeyEvent e) {
     int code = e.getKeyCode();
     _nextOmega = 0;
@@ -343,11 +295,17 @@ public class DisplayServer extends JPanel implements KeyListener {
         System.out.println("RIGHT");
 
       }
+      /* TODO: generate projectiles */
+      if (code == KeyEvent.VK_SPACE) {
+        _sim.generateProjectile();
+      }
     }
   }
 
   public double getUserSpeed() {
-    System.out.println("getUserSpeed() = "+_nextSpeed);
+    if (print) {
+      System.out.println("getUserSpeed() = " + _nextSpeed+" getUserOmega() = " + _nextOmega);
+    }
     return _nextSpeed;
   }
 
@@ -357,14 +315,26 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   public void keyReleased(KeyEvent e) { }
 
+  /**
+   * Listens to key press events and modifies settings accordingly.
+   * @param e
+   */
   public void keyTyped(KeyEvent e)
   {
     switch (e.getKeyChar()) {
-      case 'q':
       case 'Q':
+      case 'q':
         System.exit(0);
+      case 'F': // print out dimensions of window
+      case 'f':
+        Dimension size = frame.getBounds().getSize();
+        System.out.println(size);
+      case 'P': // switch debug statements on/off
+      case 'p':
+        print ^= true; // flip value of print boolean
     }
     int code = e.getKeyCode();
+
 
 //    {
 //      if (code == KeyEvent.VK_DOWN) {
@@ -462,11 +432,34 @@ public class DisplayServer extends JPanel implements KeyListener {
         double th = gvTheta[j];
         drawX[i] = (int)(x+Math.cos(th)*shapeX[i]+Math.sin(th)*shapeY[i]);
         drawY[i] = (int)(y+Math.sin( th)*shapeX[i]-Math.cos(th)*shapeY[i]);
-        drawY[i] = 500- drawY[i];
+        drawY[i] = DISPLAY_Y- drawY[i]; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
       }
       g.drawPolygon(drawX, drawY, 9);
     }
   }
+
+
+  /**
+   * Draws projectiles.
+   * @param g
+   */
+/*
+  protected synchronized void drawProjectiles(Graphics g) {
+    g.setColor(Color.black);
+
+
+    for (int j = 0; j < numProjectiles; j++) {
+
+      // set color to be random and dark
+      g.setColor(randomDarkColor());
+      int x = (int) pX[j];
+      int y = (int) pX[j];
+
+      // draw projectile as circle of radius 1
+      drawCircle(g, x, y, 1);
+    }
+  }
+  */
 
   protected synchronized void drawHistories(Graphics g) {
     g.setColor(Color.black);
@@ -497,7 +490,7 @@ public class DisplayServer extends JPanel implements KeyListener {
         double x = histories[j].myX[i]*5;
         double y = histories[j].myY[i]*5;
         drawX[i] = (int)(x);
-        drawY[i] = 500- (int)y;
+        drawY[i] = DISPLAY_Y- (int)y; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
       }
       g.drawPolygon(drawX, drawY, drawX.length);
     }

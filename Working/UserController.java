@@ -47,15 +47,21 @@ public class UserController extends VehicleController {
     private double dSpeed = 0.5;
     private double maxOmega = Math.PI/4;
 
-    public UserController(Simulator s, GroundVehicle v, DisplayServer ds){
-	super(s, v);
-        _ds = ds;
+    private final boolean debug = false; // set to true for debug statements
 
+    public UserController(Simulator sim, GroundVehicle v, DisplayServer ds){
+	super(sim, v);
+        _ds = ds;
+        _sim = sim;
 
     }
 
     public void addDisplayServer(DisplayServer ds) {
         _ds = ds;
+    }
+
+    public GroundVehicle getUserVehicle() {
+        return _v;
     }
 
     /**
@@ -90,7 +96,9 @@ public class UserController extends VehicleController {
     public Control getControl(int sec, int msec) {
         double _nextSpeed = _ds.getUserSpeed();
         double _nextOmega = _ds.getUserOmega();
-    System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
+        if (debug) {
+            System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
+        }
         return clampControl(_nextSpeed, _nextOmega);
     }
 

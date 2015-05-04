@@ -22,8 +22,8 @@ public class CircleController extends VehicleController {
      * @param s simulator object
      * @param v specific GroundVehicle being controlled
      */
-    public CircleController(Simulator s, GroundVehicle v) {
-        super(s, v);
+    public CircleController(Simulator sim, GroundVehicle v) {
+        super(sim, v);
     }
 
     /**

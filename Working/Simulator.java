@@ -14,6 +14,12 @@ public class Simulator implements Runnable {
 
     private static DisplayClient _dc;
 
+    // set maximum simulation size based on DisplayServer window dimensions
+    public static final int MAX_X = DisplayServer.DISPLAY_X/5;
+    public static final int MAX_Y = DisplayServer.DISPLAY_Y/5;
+
+
+
     // number of GroundVehicles waiting for controls
     protected int _vehicleControlQueue = 0; /* shared resource */
 
@@ -24,6 +30,9 @@ public class Simulator implements Runnable {
     protected int _turnID = 0;  /* shared resource */
 
     private ArrayList<GroundVehicle> _vehicleList;  // list of GroundVehicles inside Simulator
+
+    private UserController _uc;
+    private ArrayList<Projectile> _projectileList;  // list of projectiles inside Simulator
 
     private double _startupMS;  // time when the Simulator starts running
 
@@ -37,14 +46,19 @@ public class Simulator implements Runnable {
     private static final boolean lead3  = false;    // set to true for multiple LeadingController test
     private static final boolean circ   = true;     // one CircleController
 
-/* CONSTRUCTORS */
+    private static final boolean debug_projectiles   = true;     // projectile debug statements
+
+
+    /* CONSTRUCTORS */
     public Simulator() {
         _vehicleList = new ArrayList<GroundVehicle>();
+        _projectileList = new ArrayList<Projectile>();
         _dc = null;
     }
 
     public Simulator(DisplayClient dc) {
         _vehicleList = new ArrayList<GroundVehicle>();
+        _projectileList = new ArrayList<Projectile>();
         _dc = dc;
     }
 
@@ -117,6 +131,31 @@ public class Simulator implements Runnable {
         _vehicleControlQueue++;
     }
 
+    /**
+     * Associates a UserController with the Simulator
+     * @param uc
+     */
+    public synchronized void addUserController(UserController uc) {
+        _uc = uc;
+    }
+
+
+    /**
+     * Generates a projectile based on the position of the UserController associated with Simulator
+     *TODO: fix
+     */
+
+    public void generateProjectile() {
+        Projectile p = new Projectile(_uc.getUserVehicle(), this);
+        _projectileList.add(p);
+
+        if (debug_projectiles) {
+            System.out.println("Projectile "+_projectileList.size()+" generated!");
+
+        }
+    }
+
+
     public synchronized double getCurrentMSec() {
         return ((System.nanoTime()/1e6) - _startupMS);
     }
@@ -125,11 +164,7 @@ public class Simulator implements Runnable {
         return _startupMS;
     }
 
-    public synchronized long getCurrentRealTimeMSec() {
-//        long currentTime = System.nanoTime();
-//        return (currentTime - _startupTime);
-        return 0; //TODO: fix
-    }
+
 
     /* RUN METHOD */
     public void run() {
@@ -142,6 +177,9 @@ public class Simulator implements Runnable {
         double[] gvX = new double[_vehicleList.size()];
         double[] gvY = new double[_vehicleList.size()];
         double[] gvTheta = new double[_vehicleList.size()];
+
+        double[] pX = new double[_projectileList.size()];
+        double[] pY = new double[_projectileList.size()];
 
         _startupMS = System.nanoTime()/1e6;
         double lastUpdateTime = getCurrentMSec();
@@ -171,6 +209,32 @@ public class Simulator implements Runnable {
                 lastUpdateTime = getCurrentMSec();
                 // update display client with vehicle positions
                 _dc.update(_vehicleList.size(), gvX, gvY, gvTheta);
+
+                /*
+                synchronized (this) {
+
+                    for (int i = 0; i < _projectileList.size(); i++) {     // iterate over list of i projectiles
+                        Projectile p = _projectileList.get(i);    // get projectile at index i
+                        double[] position = p.getPosition();      // get [x, y, theta] of vehicle
+                        gvX[i] = position[0];
+                        gvY[i] = position[1];
+
+                        if (debug_projectiles) {
+                            System.out.println(position);
+                        }
+                    } // end for (int i = 0; i < __projectileList.size(); i++)
+
+                    notifyAll();
+                } // end synchronized (this)
+
+                lastUpdateTime = getCurrentMSec();
+                // update display client with vehicle positions
+
+
+                //TODO: send to DisplayClient
+                _dc.updateProjectiles(_projectileList.size(), pX, pY);
+
+*/
 
             } // end if (100ms since last update)
         } // end while (time < 100s)

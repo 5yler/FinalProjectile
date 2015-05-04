@@ -7,7 +7,7 @@
 
 public class VehicleController implements Runnable {
 
-    protected Simulator _s;         // simulator object
+    protected Simulator _sim;         // simulator object
     protected GroundVehicle _v;     // specific GroundVehicle being controlled
 
     private long _startupTime;  // time when the VehicleController starts running
@@ -21,8 +21,8 @@ public class VehicleController implements Runnable {
     // speed of the vehicle is 5 m/_s, max translation speed is 10 m/_s,
     // max rotational speed is PI/4. Radius of outer circle is 50
 
-    private double minTransSpeed = 1;
-    private double maxTransSpeed = 10;
+    private double minTransSpeed = GroundVehicle.MIN_VEL;
+    private double maxTransSpeed = GroundVehicle.MAX_VEL;
     private double maxRotSpeed = Math.PI / 4;
 
     private double circumCircleRadius = 25.0;
@@ -42,8 +42,8 @@ public class VehicleController implements Runnable {
     private final boolean debug = false;   // set to true for debug statements
 
 /* CONSTRUCTOR */
-    public VehicleController(Simulator s, GroundVehicle v) {
-        _s = s;
+    public VehicleController(Simulator sim, GroundVehicle v) {
+        _sim = sim;
         _v = v;
 
 //        _dt = _v.VEHICLE_SEC_INCREMENT+_v.VEHICLE_MSEC_INCREMENT/1e3;
@@ -107,7 +107,7 @@ public class VehicleController implements Runnable {
      * @return Simulator associated with the VehicleController
      */
     public Simulator getSimulator() {
-        return _s;
+        return _sim;
     }
 
 
@@ -191,7 +191,7 @@ public class VehicleController implements Runnable {
         edgeTravelDuration = edgeLength / maxTransSpeed;
 
 		/*
-		 * Also in method, we initialize the controller state. It'_s a little
+		 * Also in method, we initialize the controller state. It'_sim a little
 		 * ugly, but we'll start as if we're half-way through a turn, and
 		 * tangent to the outer circle. This makes it easy to put the vehicle on
 		 * a legal part of the polygon, rather than having to drive to it.

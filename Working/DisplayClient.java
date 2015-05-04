@@ -58,6 +58,23 @@ public class DisplayClient  {
     output.println(message);
     output.flush();
   }
+
+  /*
+  //TODO: finish implementation
+  public void updateProjectiles(int numProjectiles, double pX[], double pY[])
+  {
+    StringBuffer message = new StringBuffer();
+    message.append(numProjectiles);
+    message.append(" ");
+    for (int i = 0; i < numProjectiles; i++) {
+      message.append(format.format(pX[i])+" "+format.format(pY[i])+" ");
+    }
+    if (print)
+      System.out.println("Sent "+message);
+    output.println(message);
+    output.flush();
+  }
+  */
   
   public static void main(String argv[]) throws IOException {
     if (argv.length == 0) {

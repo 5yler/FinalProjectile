@@ -41,11 +41,10 @@ public class FinalProjectile {
 
             // construct a single instance of the CircleController class
             UserController uc = new UserController(sim, gv, d);
+            sim.addUserController(uc);
             uc.addDisplayServer(d);
             Thread ucThread = new Thread(uc);
 
-            gvThread.start();
-            ucThread.start();
 
             if (lead3) {
                 GroundVehicle lv = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
@@ -63,12 +62,7 @@ public class FinalProjectile {
                 Thread lcThread = new Thread(lc);
                 Thread lc2Thread = new Thread(lc2);
                 Thread lc3Thread = new Thread(lc3);
-                lvThread.start();
-                lv2Thread.start();
-                lv3Thread.start();
-                lcThread.start();
-                lc2Thread.start();
-                lc3Thread.start();
+
                 lc.addFollower(gv);
                 lc.addFollower(lv2);
                 lc.addFollower(lv3);
@@ -78,8 +72,16 @@ public class FinalProjectile {
                 lc3.addFollower(gv);
                 lc3.addFollower(lv);
                 lc3.addFollower(lv2);
+                lvThread.start();
+                lv2Thread.start();
+                lv3Thread.start();
+                lcThread.start();
+                lc2Thread.start();
+                lc3Thread.start();
             }
 
+            gvThread.start();
+            ucThread.start();
             simThread.start();
 
 

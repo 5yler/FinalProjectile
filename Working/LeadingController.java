@@ -33,8 +33,8 @@ public class LeadingController extends RandomController {
      * @param s simulator object
      * @param v specific GroundVehicle being controlled
      */
-    public LeadingController(Simulator s, GroundVehicle v) {
-        super(s, v);
+    public LeadingController(Simulator sim, GroundVehicle v) {
+        super(sim, v);
         _followerIndexList = new ArrayList<Integer>();
     }
 
@@ -76,7 +76,7 @@ public class LeadingController extends RandomController {
 
         // set placeholder value for shortest distance to be the maximum possible
         // distance between two vehicles
-        double shortestDistance = Math.sqrt(100.0*100.0 + 100.0*100.0);
+        double shortestDistance = Math.sqrt(Simulator.MAX_X*Simulator.MAX_X + Simulator.MAX_Y*Simulator.MAX_Y);
 
         // make variable to store index of closest follower
         int closestIndex = 0;
@@ -84,7 +84,7 @@ public class LeadingController extends RandomController {
         Collections.sort(_followerIndexList);
 
         for (int i = 0; i < _followerIndexList.size(); i++) {    // iterate over list of i vehicles
-            GroundVehicle follower = _s.getVehicle(_followerIndexList.get(i) - 1);  // get vehicle from sim's list
+            GroundVehicle follower = _sim.getVehicle(_followerIndexList.get(i) - 1);  // get vehicle from sim's list
 
             // get position of follower
             double[] followerPosition = follower.getPosition(); // [x, y, theta] of vehicle
@@ -121,9 +121,9 @@ public class LeadingController extends RandomController {
         double x = vehiclePosition[0];
         double y = vehiclePosition[1];
 
-        if ((x < dangerZone) || (x > 100-dangerZone)) {
+        if ((x < dangerZone) || (x > Simulator.MAX_X-dangerZone)) {
             return true;
-        } else if ((y < dangerZone) || (y > 100-dangerZone)) {
+        } else if ((y < dangerZone) || (y > Simulator.MAX_Y-dangerZone)) {
             return true;
         } else {
             return false;
@@ -157,7 +157,7 @@ public class LeadingController extends RandomController {
 
             // compute a trajectory that moves away from the nearest vehicle
 
-            GroundVehicle follower = _s.getVehicle(getClosestFollower());
+            GroundVehicle follower = _sim.getVehicle(getClosestFollower());
 
             // position and velocity of closest follower
             double[] followerPose = follower.getPosition();
@@ -202,15 +202,15 @@ public class LeadingController extends RandomController {
             if (x < dangerZone) {
                 desiredTheta = 0;
                 wallDistance += x;
-            } else if (x > 100 - dangerZone) {
+            } else if (x > Simulator.MAX_X - dangerZone) {
                 desiredTheta = -Math.PI;
-                wallDistance += 100 - x;
+                wallDistance += Simulator.MAX_X - x;
             } else if (y < dangerZone) {
                 desiredTheta = Math.PI / 2;
                 wallDistance += y;
-            } else { // if (y > 100-dangerZone)
+            } else { // if (y > Simulator.MAX_Y-dangerZone)
                 desiredTheta = -Math.PI / 2;
-                wallDistance += 100 - y;
+                wallDistance += Simulator.MAX_Y - y;
             }
 
             omega = normalizeAngle(desiredTheta - vPose[2]);
