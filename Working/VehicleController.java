@@ -21,7 +21,7 @@ public class VehicleController implements Runnable {
     // speed of the vehicle is 5 m/_s, max translation speed is 10 m/_s,
     // max rotational speed is PI/4. Radius of outer circle is 50
 
-    private double minTransSpeed = 0;
+    private double minTransSpeed = 1;
     private double maxTransSpeed = 10;
     private double maxRotSpeed = Math.PI / 4;
 
@@ -38,7 +38,7 @@ public class VehicleController implements Runnable {
     protected final int _ID; 	// unique numeric identifier for ordering all VehicleControllers
     protected static int controllerCount = 0;	// number of VehicleControllers in existence
 
-    private final boolean print = true;   // set to true for print statements
+    private final boolean print = false;   // set to true for print statements
     private final boolean debug = false;   // set to true for debug statements
 
 /* CONSTRUCTOR */

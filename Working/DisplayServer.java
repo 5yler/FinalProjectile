@@ -13,14 +13,17 @@ import java.util.*;
 
 public class DisplayServer extends JPanel implements KeyListener {
 
-//  private static double _nextSpeed = 7.5;
-//  private static double _nextOmega = 0;
-//  private double dSpeed = 0.1;
-//  private double dOmega = 0.1;
+  private double _nextSpeed = 7.5;
+  private double _nextOmega = 0;
+  private double dSpeed = 0.1;
+  private double maxOmega = Math.PI/4;
+
+  private Simulator _sim;
+
 
   private static int historySkip = 5;
   private static final long serialVersionUID = 1l;
-  
+
   protected double gvX [], gvY[], gvTheta[];
   protected int numVehicles = 0;
   protected int maxNumVehicles = 20;
@@ -50,6 +53,79 @@ public class DisplayServer extends JPanel implements KeyListener {
 					     Color.darkGray};
   */
 
+  public class DisplayController extends VehicleController {
+
+        private DisplayServer _ds;
+//    private ControlPanel cp;
+
+    private double minTransSpeed = 0;
+    private double maxTransSpeed = 10;
+    private double maxRotSpeed = Math.PI / 4;
+
+    private double _startSpeed = 7.5;
+    private double _startOmega = 0;
+
+//    private double _nextSpeed = 7.5;
+//    private double _nextOmega = 0;
+
+    private double dSpeed = 0.5;
+    private double maxOmega = Math.PI / 4;
+
+    public DisplayController(Simulator s, GroundVehicle v) {
+      super(s, v);
+
+//        _ds = ds;
+
+    }
+
+    public void addDisplayServer(DisplayServer ds) {
+      _ds = ds;
+    }
+
+
+    /**
+     * Clamps speed and omega to allowable ranges and returns control with
+     * bounded values of s and omega.
+     *
+     * @param s     forward speed
+     * @param omega angular velocity
+     * @return control with clamped linear and angular velocity values
+     */
+    private Control clampControl(double s, double omega) {
+
+      double clampedSpeed;
+      double clampedOmega;
+
+      // clamp speed if it is above 10 or below 5
+      if (s > maxTransSpeed)
+        clampedSpeed = maxTransSpeed;
+      else if (s < minTransSpeed)
+        clampedSpeed = minTransSpeed;
+      else
+        clampedSpeed = s;
+
+      // clamp angular velocity if it is above the allowed range
+      clampedOmega = Math.min(Math.max(omega, -Math.PI / 4), Math.PI / 4);
+
+      // create a control with the clamped s and omega values
+      Control clampedControl = new Control(clampedSpeed, clampedOmega);
+      return clampedControl;
+    }
+
+
+    public Control getControl(int sec, int msec) {
+      double _nextSpeed = _ds.getUserSpeed();
+      double _nextOmega = _ds.getUserOmega();
+      System.out.println("s: " + _nextSpeed + " omega: " + _nextOmega);
+      return clampControl(_nextSpeed, _nextOmega);
+    }
+
+  }
+
+  public void addSimulator(Simulator sim) {
+    _sim = sim;
+  }
+
   public class History {
     History() {
       myX = new double[100000];
@@ -71,9 +147,9 @@ public class DisplayServer extends JPanel implements KeyListener {
   public synchronized void clear() {
     if (histories !=null){
       for (int i = 0; i < histories.length; i++) {
-	histories[i].myNumPoints = 0;
-	histories[i].loopHistory = 0;
-	histories[i].trueHistoryLength = 0;
+        histories[i].myNumPoints = 0;
+        histories[i].loopHistory = 0;
+        histories[i].trueHistoryLength = 0;
       }
     }
   }
@@ -86,94 +162,94 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 
   public class MessageListener extends Thread {
-    public BufferedReader my_client; 
+    public BufferedReader my_client;
     public DisplayServer my_display;
     public MessageListener(Socket client, DisplayServer display) {
-      my_display = display; 
+      my_display = display;
       try {
-	//System.out.println("Default size: " + client.getReceiveBufferSize());
-	my_client = new BufferedReader
-	  (new InputStreamReader(client.getInputStream()));
+        //System.out.println("Default size: " + client.getReceiveBufferSize());
+        my_client = new BufferedReader
+                (new InputStreamReader(client.getInputStream()));
       }
       catch (IOException e) {
-	System.err.println("Very weird IOException in creating the BufferedReader");
-	System.err.println(e);
-	System.exit(-1);
+        System.err.println("Very weird IOException in creating the BufferedReader");
+        System.err.println(e);
+        System.exit(-1);
       }
     }
     public void run() {
       try {
-	while (true) {
-	  String message = my_client.readLine();
-	  if (message == null){
-	    System.out.println("EOF reached!");
-	    return; //EOF reached	
-	  }
-						  
-	  StringTokenizer st = new StringTokenizer(message);
-	  //System.out.println("Received: " + message);
-	  String tok = st.nextToken();	  
-	  if (tok.equals("clear")) {
-	    my_display.clear();
-	  }
-	  else if (tok.equals("traceon")) {
-	    synchronized (my_display) {
-	      my_display.trace = true;
-	    }
-	  } else if (tok.equals("traceoff")) {
-	    synchronized (my_display) {
-	      my_display.trace = false;
-	    }
-	  } else if (tok.equals("close")){
-	    return;
-	  } else {
-	    synchronized (my_display) {
-	      if (my_display.numVehicles != Integer.parseInt(tok)) {
-		my_display.numVehicles = Integer.parseInt(tok);
-		my_display.gvX = new double[my_display.numVehicles];
-		my_display.gvY = new double[my_display.numVehicles];
-		my_display.gvTheta = new double[my_display.numVehicles];
-		my_display.resetHistories(numVehicles);
-	      }
-	      for (int i = 0; i < my_display.numVehicles; i++) {
-		tok = st.nextToken();
-		my_display.gvX[i] = Double.parseDouble(tok);
-		tok = st.nextToken();
-		my_display.gvY[i] = Double.parseDouble(tok);
-		tok = st.nextToken();
-		my_display.gvTheta[i] = Double.parseDouble(tok);
-		if (trace) {
-		  if (histories[i].trueHistoryLength % historySkip == 0){
-                                                                    
-                                                                    
-		    int n;
-		    if (histories[i].myNumPoints == histories[i].myX.length) {
-		      n = 0;                                                                    
-		      histories[i].myNumPoints = 0;
-		      histories[i].loopHistory = 1;
-		    } else {
-		      n = histories[i].myNumPoints;
-		      histories[i].myNumPoints++;
-		    }
-		    histories[i].myX[n] = my_display.gvX[i];
-		    histories[i].myY[n] = my_display.gvY[i];
-		  }
-		  histories[i].trueHistoryLength++;
-		} // end if (trace) 
-	      } // end for (int i = 0; i < my_display.numVehicles; i++) 
-	    } // End synchronized (my_display) 
-	  }
-	  my_display.repaint();
-      try {
-        sleep(SLEEP_TIME);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-	}
+        while (true) {
+          String message = my_client.readLine();
+          if (message == null){
+            System.out.println("EOF reached!");
+            return; //EOF reached
+          }
+
+          StringTokenizer st = new StringTokenizer(message);
+          //System.out.println("Received: " + message);
+          String tok = st.nextToken();
+          if (tok.equals("clear")) {
+            my_display.clear();
+          }
+          else if (tok.equals("traceon")) {
+            synchronized (my_display) {
+              my_display.trace = true;
+            }
+          } else if (tok.equals("traceoff")) {
+            synchronized (my_display) {
+              my_display.trace = false;
+            }
+          } else if (tok.equals("close")){
+            return;
+          } else {
+            synchronized (my_display) {
+              if (my_display.numVehicles != Integer.parseInt(tok)) {
+                my_display.numVehicles = Integer.parseInt(tok);
+                my_display.gvX = new double[my_display.numVehicles];
+                my_display.gvY = new double[my_display.numVehicles];
+                my_display.gvTheta = new double[my_display.numVehicles];
+                my_display.resetHistories(numVehicles);
+              }
+              for (int i = 0; i < my_display.numVehicles; i++) {
+                tok = st.nextToken();
+                my_display.gvX[i] = Double.parseDouble(tok);
+                tok = st.nextToken();
+                my_display.gvY[i] = Double.parseDouble(tok);
+                tok = st.nextToken();
+                my_display.gvTheta[i] = Double.parseDouble(tok);
+                if (trace) {
+                  if (histories[i].trueHistoryLength % historySkip == 0){
+
+
+                    int n;
+                    if (histories[i].myNumPoints == histories[i].myX.length) {
+                      n = 0;
+                      histories[i].myNumPoints = 0;
+                      histories[i].loopHistory = 1;
+                    } else {
+                      n = histories[i].myNumPoints;
+                      histories[i].myNumPoints++;
+                    }
+                    histories[i].myX[n] = my_display.gvX[i];
+                    histories[i].myY[n] = my_display.gvY[i];
+                  }
+                  histories[i].trueHistoryLength++;
+                } // end if (trace)
+              } // end for (int i = 0; i < my_display.numVehicles; i++)
+            } // End synchronized (my_display)
+          }
+          my_display.repaint();
+          try {
+            sleep(SLEEP_TIME);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
       }
       catch (IOException e) {
       }
-      return; 
+      return;
     }
   }
 
@@ -215,10 +291,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 
     SwingUtilities.invokeLater(new Runnable() {
-	public void run() {
-	  startGraphics();
-	}
-      });
+      public void run() {
+        startGraphics();
+      }
+    });
   }
 
   public void startGraphics()
@@ -231,7 +307,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     //container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
     container.setLayout(new BorderLayout());
 
-    setOpaque(true);   
+    setOpaque(true);
     setFocusable(true);
     setMinimumSize(new Dimension(minDisplayX, minDisplayY));
     setPreferredSize(new Dimension(preferredDisplayX, preferredDisplayY));
@@ -240,53 +316,53 @@ public class DisplayServer extends JPanel implements KeyListener {
     setVisible(true);
 
     frame.pack();
-    frame.setVisible(true);    
+    frame.setVisible(true);
   }
 
 
 
   public void keyPressed(KeyEvent e) {
-//    int code = e.getKeyCode();
-//
-//    {
-//      if (code == KeyEvent.VK_DOWN) {
-//        _nextSpeed -= dSpeed;
-//        System.out.println("DOWN");
-//      }
-//      if (code == KeyEvent.VK_UP) {
-//        _nextSpeed += dSpeed;
-//        System.out.println("UP");
-//      }
-//      if (code == KeyEvent.VK_LEFT) {
-//        _nextOmega -= dOmega;
-//        System.out.println("LEFT");
-//
-//      }
-//      if (code == KeyEvent.VK_RIGHT) {
-//        _nextOmega += dOmega;
-//        System.out.println("RIGHT");
-//
-//      }
-//    }
+    int code = e.getKeyCode();
+    _nextOmega = 0;
+    {
+      if (code == KeyEvent.VK_DOWN) {
+        _nextSpeed -= dSpeed;
+        System.out.println("DOWN");
+      }
+      if (code == KeyEvent.VK_UP) {
+        _nextSpeed += dSpeed;
+        System.out.println("UP");
+      }
+      if (code == KeyEvent.VK_LEFT) {
+        _nextOmega = maxOmega;
+        System.out.println("LEFT");
+
+      }
+      if (code == KeyEvent.VK_RIGHT) {
+        _nextOmega = -maxOmega;
+        System.out.println("RIGHT");
+
+      }
+    }
   }
-//
-//  public static double getUserSpeed() {
-//    System.out.println("getUserSpeed() = "+_nextSpeed);
-//    return _nextSpeed;
-//  }
-//
-//  public static double getUserOmega() {
-//    return _nextOmega;
-//  }
+
+  public double getUserSpeed() {
+    System.out.println("getUserSpeed() = "+_nextSpeed);
+    return _nextSpeed;
+  }
+
+  public double getUserOmega() {
+    return _nextOmega;
+  }
 
   public void keyReleased(KeyEvent e) { }
 
   public void keyTyped(KeyEvent e)
   {
     switch (e.getKeyChar()) {
-    case 'q':
-    case 'Q':
-      System.exit(0);
+      case 'q':
+      case 'Q':
+        System.exit(0);
     }
     int code = e.getKeyCode();
 
@@ -317,18 +393,18 @@ public class DisplayServer extends JPanel implements KeyListener {
    *
    * @return array with random RGB color pair (dark color and light color)
    */
-public static Color[] randomColorPair() {
-  Random rand = new Random();
-  int r = rand.nextInt(155); // 255 will result in colors that can't be detected on a white background
-  int g = rand.nextInt(155);
-  int b = rand.nextInt(155);
-  Color darkColor = new Color(r,g,b);
-  Color lightColor = new Color(r+100,g+100,b+100);
-  Color[] colorPair = new Color[2];
-  colorPair[0] = darkColor;
-  colorPair[1] = lightColor;
-  return colorPair;
-}
+  public static Color[] randomColorPair() {
+    Random rand = new Random();
+    int r = rand.nextInt(155); // 255 will result in colors that can't be detected on a white background
+    int g = rand.nextInt(155);
+    int b = rand.nextInt(155);
+    Color darkColor = new Color(r,g,b);
+    Color lightColor = new Color(r+100,g+100,b+100);
+    Color[] colorPair = new Color[2];
+    colorPair[0] = darkColor;
+    colorPair[1] = lightColor;
+    return colorPair;
+  }
 
   /**
    *
@@ -369,24 +445,24 @@ public static Color[] randomColorPair() {
 
     for (int j = 0; j < numVehicles; j++) {
       if (j < vehicleColors.length){
-	g.setColor(vehicleColors[j]);
+        g.setColor(vehicleColors[j]);
 
       }else{
-	g.setColor(vehicleColors[vehicleColors.length-1]);
+        g.setColor(vehicleColors[vehicleColors.length-1]);
       }
       int drawX[] = new int[9];
       int drawY[] = new int[9];
 
       for (int i = 0; i < 9; i++) {
-	// We scale the x and y by 5, since the bounds on X and Y are 100x100
-	// but our windows is 500x500.
+        // We scale the x and y by 5, since the bounds on X and Y are 100x100
+        // but our windows is 500x500.
 
-	double x = gvX[j]*5;
-	double y = gvY[j]*5;
-	double th = gvTheta[j];
-	drawX[i] = (int)(x+Math.cos(th)*shapeX[i]+Math.sin(th)*shapeY[i]);
-	drawY[i] = (int)(y+Math.sin( th)*shapeX[i]-Math.cos(th)*shapeY[i]);
-	drawY[i] = 500- drawY[i];
+        double x = gvX[j]*5;
+        double y = gvY[j]*5;
+        double th = gvTheta[j];
+        drawX[i] = (int)(x+Math.cos(th)*shapeX[i]+Math.sin(th)*shapeY[i]);
+        drawY[i] = (int)(y+Math.sin( th)*shapeX[i]-Math.cos(th)*shapeY[i]);
+        drawY[i] = 500- drawY[i];
       }
       g.drawPolygon(drawX, drawY, 9);
     }
@@ -399,29 +475,29 @@ public static Color[] randomColorPair() {
 
     for (int j = 0; j < numVehicles; j++) {
       if (j < pathColors.length){
-	g.setColor(pathColors[j]);
+        g.setColor(pathColors[j]);
 
       }else{
-	g.setColor(pathColors[pathColors.length-1]);
+        g.setColor(pathColors[pathColors.length-1]);
       }
       int drawX[]; int drawY[];
       if (histories[j].loopHistory == 0){
-	drawX = new int[histories[j].myNumPoints];
-	drawY = new int[histories[j].myNumPoints];
+        drawX = new int[histories[j].myNumPoints];
+        drawY = new int[histories[j].myNumPoints];
       }
       else{
 
-	drawX = new int[histories[j].myX.length];
-	drawY = new int[histories[j].myY.length];
+        drawX = new int[histories[j].myX.length];
+        drawY = new int[histories[j].myY.length];
       }
       for (int i = 0; i < drawX.length;i++){
-	// We scale the x and y by 5, since the bounds on X and Y are 100x100
-	// but our windows is 500x500.
+        // We scale the x and y by 5, since the bounds on X and Y are 100x100
+        // but our windows is 500x500.
 
-	double x = histories[j].myX[i]*5;
-	double y = histories[j].myY[i]*5;
-	drawX[i] = (int)(x);
-	drawY[i] = 500- (int)y;
+        double x = histories[j].myX[i]*5;
+        double y = histories[j].myY[i]*5;
+        drawX[i] = (int)(x);
+        drawY[i] = 500- (int)y;
       }
       g.drawPolygon(drawX, drawY, drawX.length);
     }
@@ -467,26 +543,62 @@ public static Color[] randomColorPair() {
     MessageListener l = new MessageListener(client, this);
     l.start();
   }
-
+/*
   public static void main(String [] argv) {
+    double[] pos = {10, 10, 0};
+
+    // construct a single GroundVehicle
+//            GroundVehicle gv = new GroundVehicle(
+//                    Simulator.randomStartingPosition(),
+//                    Simulator.randomDoubleInRange(0, 10),
+//                    Simulator.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
+
+    GroundVehicle gv = new GroundVehicle(pos, 1, 0);
+
+
+    Thread gvThread = new Thread(gv);
+
     try {
       ServerSocket s = new ServerSocket(5065);
-      s.setReuseAddress(true);      
-      if (!s.isBound())
-	System.exit(-1);
+      s.setReuseAddress(true);
+      if (!s.isBound()) {
+        System.exit(-1);
+      }
       String address = GeneralInetAddress.getLocalHost().getHostAddress();
+
       DisplayServer d = new DisplayServer(address);
+      // create DisplayClient
+      DisplayClient dc = new DisplayClient(address);
+
+      // construct a single Simulator
+      Simulator sim = new Simulator(dc);
+      sim.addVehicle(gv);
+      Thread simThread = new Thread(sim);
+
+      // construct a single instance of the CircleController class
+      UserController uc = new UserController(sim,gv);
+      uc.addDisplayServer(dc);
+      Thread ucThread = new Thread(uc);
+
+      gvThread.start();
+      ucThread.start();
+      simThread.start();
+
       do {
-	Socket client = s.accept();
-	d.addClient(client);
+        Socket client = s.accept();
+        d.addClient(client);
       } while (true);
-    } 
+    }
     catch (IOException e) {
       System.err.println("I couldn't create a new socket.\n"+
-			 "You probably are already running DisplayServer.\n");
+              "You probably are already running DisplayServer.\n");
       System.err.println(e);
       System.exit(-1);
     }
+
+
+
   }
+  */
 
 }

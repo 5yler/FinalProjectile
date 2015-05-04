@@ -30,8 +30,8 @@ public class Simulator implements Runnable {
 
 /* SETTINGS */
 
-    private final boolean print = true;         // set to true for print statements
-    private final boolean debug = true;         // set to true for debug statements
+    private final boolean print = false;         // set to true for print statements
+    private final boolean debug = false;         // set to true for debug statements
 
     private static final boolean lead   = false;    // set to true for LeadingController
     private static final boolean lead3  = false;    // set to true for multiple LeadingController test

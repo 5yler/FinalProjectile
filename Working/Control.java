@@ -14,7 +14,7 @@ public class Control {
      */
     public Control (double s, double omega){
         // check to make sure s is in range.
-        if (s < 0 || s > 10)
+        if (s < 1 || s > 10)
             throw new IllegalArgumentException("S out of range");
         // check to make sure theta is in range.
         if (omega < -Math.PI || omega >= Math.PI)
