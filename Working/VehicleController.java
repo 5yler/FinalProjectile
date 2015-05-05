@@ -5,7 +5,7 @@
  **/
 
 
-public class VehicleController implements Runnable {
+public class VehicleController extends Thread {
 
     protected Simulator _sim;         // simulator object
     protected GroundVehicle _v;     // specific GroundVehicle being controlled

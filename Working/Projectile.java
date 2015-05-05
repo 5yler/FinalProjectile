@@ -17,6 +17,10 @@ public class Projectile extends Thread {
 
 
 	public Projectile(double[] shooterPosition, Simulator sim) {
+
+		if (shooterPosition.length != 3)
+			throw new IllegalArgumentException("First argument must be array of length 3");
+
 		_sim = sim;
 
     	_x = shooterPosition[0];

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class Simulator implements Runnable {
+public class Simulator extends Thread {
 
     public static final int COMPLETELY_ARBITRARY_MS_INCREMENT = 50; // should be 100 for assignment 4
 

@@ -6,7 +6,7 @@
 
 import java.util.Random;
 
-public class GroundVehicle implements Runnable {
+public class GroundVehicle extends Thread {
 
 	private double _x, _y, _theta;    	/* shared resources */
 	private double _dx, _dy, _dtheta; 	/* shared resources */

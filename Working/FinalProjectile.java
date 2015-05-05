@@ -56,12 +56,12 @@ public class FinalProjectile {
                 sim.addVehicle(lv);
                 sim.addVehicle(lv2);
                 sim.addVehicle(lv3);
-                Thread lvThread = new Thread(lv);
-                Thread lv2Thread = new Thread(lv2);
-                Thread lv3Thread = new Thread(lv3);
-                Thread lcThread = new Thread(lc);
-                Thread lc2Thread = new Thread(lc2);
-                Thread lc3Thread = new Thread(lc3);
+//                Thread lvThread = new Thread(lv);
+//                Thread lv2Thread = new Thread(lv2);
+//                Thread lv3Thread = new Thread(lv3);
+//                Thread lcThread = new Thread(lc);
+//                Thread lc2Thread = new Thread(lc2);
+//                Thread lc3Thread = new Thread(lc3);
 
                 lc.addFollower(gv);
                 lc.addFollower(lv2);
@@ -72,17 +72,17 @@ public class FinalProjectile {
                 lc3.addFollower(gv);
                 lc3.addFollower(lv);
                 lc3.addFollower(lv2);
-                lvThread.start();
-                lv2Thread.start();
-                lv3Thread.start();
-                lcThread.start();
-                lc2Thread.start();
-                lc3Thread.start();
+                lv.start();
+                lv2.start();
+                lv3.start();
+                lc.start();
+                lc2.start();
+                lc3.start();
             }
 
-            gvThread.start();
-            ucThread.start();
-            simThread.start();
+            gv.start();
+            uc.start();
+            sim.start();
 
 
             do {
@@ -121,9 +121,9 @@ public class FinalProjectile {
             UserController uc = new UserController(sim,gv);
             Thread ucThread = new Thread(uc);
 
-            gvThread.start();
-            ucThread.start();
-            simThread.start();
+            gv.start();
+            uc.start();
+            sim.start();
 
         } else { // if wrong number of arguments
             System.err.println("Allowed format:");
