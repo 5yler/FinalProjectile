@@ -167,6 +167,24 @@ public class Simulator extends Thread {
         return _startupMS;
     }
 
+    /**
+     * Removes Projectiles that went offscreen from Projectile list.
+     */
+    public void removeOffscreenProjectiles() {
+
+        for (Projectile p : _projectileList) {
+            double[] position = p.getPosition();      // get [x, y, theta] of vehicle
+            double x = position[0];
+            double y = position[1];
+
+            if (x > SIM_X || x < 0) {
+                _projectileList.remove(p);
+            }
+            if (y > SIM_Y || y < 0) {
+                _projectileList.remove(p);
+            }
+        }
+    }
 
 
     /* RUN METHOD */
@@ -212,18 +230,21 @@ public class Simulator extends Thread {
                     notifyAll();
                 } // end synchronized (this)
 
-                updateTime = System.nanoTime();
                 // update display client with vehicle positions
                 _dc.update(_vehicleList.size(), gvX, gvY, gvTheta);
 
-                /*
+                /**/
                 synchronized (this) {
+
+                    removeOffscreenProjectiles();
 
                     for (int i = 0; i < _projectileList.size(); i++) {     // iterate over list of i projectiles
                         Projectile p = _projectileList.get(i);    // get projectile at index i
                         double[] position = p.getPosition();      // get [x, y, theta] of vehicle
-                        gvX[i] = position[0];
-                        gvY[i] = position[1];
+                        pX[i] = position[0];
+                        pY[i] = position[1];
+
+
 
                         if (debug_projectiles) {
                             System.out.println(position);
@@ -233,14 +254,15 @@ public class Simulator extends Thread {
                     notifyAll();
                 } // end synchronized (this)
 
-                lastUpdateTime = getCurrentMSec();
+                updateTime = System.nanoTime();
+
                 // update display client with vehicle positions
 
 
                 //TODO: send to DisplayClient
-                _dc.updateProjectiles(_projectileList.size(), pX, pY);
+//                _dc.updateProjectiles(_projectileList.size(), pX, pY);
 
-*/
+
 
             } // end if (100ms since last update)
         } // end while (time < 100s)
