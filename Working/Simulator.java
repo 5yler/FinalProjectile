@@ -10,7 +10,9 @@ import java.util.Random;
 
 public class Simulator extends Thread {
 
-    public static final int COMPLETELY_ARBITRARY_MS_INCREMENT = 50; // should be 100 for assignment 4
+    public static final int SIM_MS_INCREMENT = 50; // should be 100 for assignment 4
+
+    private long _startupTime;  // time when the VehicleController starts running
 
     private static DisplayClient _dc;
 
@@ -182,12 +184,15 @@ public class Simulator extends Thread {
         double[] pX = new double[_projectileList.size()];
         double[] pY = new double[_projectileList.size()];
 
-        _startupMS = System.nanoTime()/1e6;
-        double lastUpdateTime = getCurrentMSec();
+        _startupTime = System.nanoTime();
+        long currentTime = System.nanoTime();
+        long updateTime = System.nanoTime();
 
-        while (getCurrentMSec() < 100*1e3) { // while time less than 100s
+        while ((currentTime - _startupTime) < 100*1e9) { // while time less than 100s
 
-            if ((getCurrentMSec() - lastUpdateTime) >= COMPLETELY_ARBITRARY_MS_INCREMENT) { // update once every 100ms
+            currentTime = System.nanoTime();
+
+            if ((currentTime - updateTime) >= SIM_MS_INCREMENT*1e6) { // update once every 100ms
 
                 synchronized (this) {
 
@@ -207,7 +212,7 @@ public class Simulator extends Thread {
                     notifyAll();
                 } // end synchronized (this)
 
-                lastUpdateTime = getCurrentMSec();
+                updateTime = System.nanoTime();
                 // update display client with vehicle positions
                 _dc.update(_vehicleList.size(), gvX, gvY, gvTheta);
 

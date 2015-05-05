@@ -4,7 +4,7 @@ public class Projectile extends Thread {
 	//start at user vehicle angel/position and travel in a straight line
 	//disappear when hit radius around target or go off screen
 
-	public static final double PROJECTILE_SPEED = GroundVehicle.MAX_VEL;
+	public static final double PROJECTILE_SPEED = 3*GroundVehicle.MAX_VEL;
 
     private double _x, _y, _theta;
     private double _dx, _dy;

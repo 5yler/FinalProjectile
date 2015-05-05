@@ -19,9 +19,7 @@ public class GroundVehicle extends Thread {
 
 	private long _startupTime;	// time when the GroundVehicle starts running
 
-	public static final int VEHICLE_SEC_INCREMENT = 0;  	// time increment in seconds for advance()
-	public static final int VEHICLE_MSEC_INCREMENT = 100;	// increment in milliseconds for advance()
-	public static final int COMPLETELY_ARBITRARY_MS_INCREMENT = 100; // should be 100 for assignment 4
+	public static final int GV_MS_INCREMENT = 100; // should be 100 for assignment 4
 
 	protected final String _ID;	// unique string identifier
 	private final int _numID; 	// unique numeric identifier for ordering all GroundVehicles
@@ -334,7 +332,7 @@ public class GroundVehicle extends Thread {
 
 			currentTime = System.nanoTime();
 
-			if ((currentTime - updateTime) >= COMPLETELY_ARBITRARY_MS_INCREMENT*1e6) { // update once every 100ms
+			if ((currentTime - updateTime) >= GV_MS_INCREMENT *1e6) { // update once every 100ms
 
 				long advanceTime = currentTime - updateTime;
 				int advanceSec = (int) (advanceTime/1e9);

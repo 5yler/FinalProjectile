@@ -11,7 +11,7 @@ public class VehicleController extends Thread {
     protected GroundVehicle _v;     // specific GroundVehicle being controlled
 
     private long _startupTime;  // time when the VehicleController starts running
-    public static final int COMPLETELY_ARBITRARY_MS_INCREMENT = 100; // should be 100 for assignment 4
+    public static final int VC_MS_INCREMENT = 100; // should be 100 for assignment 4
 
     public final double _dt;    // timestep increment for advancing GroundVehicles
 
@@ -47,7 +47,7 @@ public class VehicleController extends Thread {
         _v = v;
 
 //        _dt = _v.VEHICLE_SEC_INCREMENT+_v.VEHICLE_MSEC_INCREMENT/1e3;
-        _dt = COMPLETELY_ARBITRARY_MS_INCREMENT;
+        _dt = VC_MS_INCREMENT;
 
         _ID = controllerCount;
         controllerCount++;
@@ -239,7 +239,7 @@ public class VehicleController extends Thread {
 
             currentTime = System.nanoTime();
 
-            if ((currentTime - updateTime) >= COMPLETELY_ARBITRARY_MS_INCREMENT*1e6) { // update once every 100ms
+            if ((currentTime - updateTime) >= VC_MS_INCREMENT *1e6) { // update once every 100ms
 
                 long controlTime = currentTime - _startupTime;
                 int controlSec = (int) (controlTime/1e9);
