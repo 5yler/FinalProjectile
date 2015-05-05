@@ -146,8 +146,9 @@ public class Simulator implements Runnable {
      */
 
     public void generateProjectile() {
-        Projectile p = new Projectile(_uc.getUserVehicle(), this);
+        Projectile p = new Projectile(_uc.getUserVehicle().getPosition(), this);
         _projectileList.add(p);
+        p.start();
 
         if (debug_projectiles) {
             System.out.println("Projectile "+_projectileList.size()+" generated!");
