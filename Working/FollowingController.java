@@ -104,21 +104,6 @@ public class FollowingController extends VehicleController {
     }
 
     /**
-     * 
-     * @param theta angle
-     * @return angle wrapped normalized to interval [-PI, PI]
-     */
-    public static double normalizeAngle(double theta) {
-        while (theta < -Math.PI) {
-            theta += 2 * Math.PI;
-        }
-        while (theta > Math.PI) {
-            theta -= 2 * Math.PI;
-        }
-        return theta;
-    }
-
-    /**
      * Clamps speed and omega to allowable ranges and returns control with
      * bounded values of s and omega.
      * @param s forward speed

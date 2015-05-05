@@ -263,20 +263,6 @@ public class LeadingController extends RandomController {
         return clampedControl;
     }
 
-    /**
-     *
-     * @param theta angle
-     * @return angle wrapped normalized to interval [-PI, PI]
-     */
-    public static double normalizeAngle(double theta) {
-        while (theta < -Math.PI) {
-            theta += 2 * Math.PI;
-        }
-        while (theta > Math.PI) {
-            theta -= 2 * Math.PI;
-        }
-        return theta;
-    }
 
 }
 
