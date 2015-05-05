@@ -34,8 +34,8 @@ public class UserController extends VehicleController {
     private DisplayServer _ds;
 //    private ControlPanel cp;
 
-    private double minTransSpeed = 0;
-    private double maxTransSpeed = 10;
+    private double minTransSpeed = GroundVehicle.MIN_VEL;
+    private double maxTransSpeed = GroundVehicle.MAX_VEL;
     private double maxRotSpeed = Math.PI / 4;
 
     private double _startSpeed = 7.5;
@@ -56,9 +56,9 @@ public class UserController extends VehicleController {
 
     }
 
-    public void addDisplayServer(DisplayServer ds) {
-        _ds = ds;
-    }
+//    public void addDisplayServer(DisplayServer ds) {
+//        _ds = ds;
+//    }
 
     public GroundVehicle getUserVehicle() {
         return _v;

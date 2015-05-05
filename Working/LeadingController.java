@@ -76,7 +76,7 @@ public class LeadingController extends RandomController {
 
         // set placeholder value for shortest distance to be the maximum possible
         // distance between two vehicles
-        double shortestDistance = Math.sqrt(Simulator.MAX_X*Simulator.MAX_X + Simulator.MAX_Y*Simulator.MAX_Y);
+        double shortestDistance = Math.sqrt(Simulator.SIM_X *Simulator.SIM_X + Simulator.SIM_Y *Simulator.SIM_Y);
 
         // make variable to store index of closest follower
         int closestIndex = 0;
@@ -121,9 +121,9 @@ public class LeadingController extends RandomController {
         double x = vehiclePosition[0];
         double y = vehiclePosition[1];
 
-        if ((x < dangerZone) || (x > Simulator.MAX_X-dangerZone)) {
+        if ((x < dangerZone) || (x > Simulator.SIM_X -dangerZone)) {
             return true;
-        } else if ((y < dangerZone) || (y > Simulator.MAX_Y-dangerZone)) {
+        } else if ((y < dangerZone) || (y > Simulator.SIM_Y -dangerZone)) {
             return true;
         } else {
             return false;
@@ -202,15 +202,15 @@ public class LeadingController extends RandomController {
             if (x < dangerZone) {
                 desiredTheta = 0;
                 wallDistance += x;
-            } else if (x > Simulator.MAX_X - dangerZone) {
+            } else if (x > Simulator.SIM_X - dangerZone) {
                 desiredTheta = -Math.PI;
-                wallDistance += Simulator.MAX_X - x;
+                wallDistance += Simulator.SIM_X - x;
             } else if (y < dangerZone) {
                 desiredTheta = Math.PI / 2;
                 wallDistance += y;
-            } else { // if (y > Simulator.MAX_Y-dangerZone)
+            } else { // if (y > Simulator.SIM_Y-dangerZone)
                 desiredTheta = -Math.PI / 2;
-                wallDistance += Simulator.MAX_Y - y;
+                wallDistance += Simulator.SIM_Y - y;
             }
 
             omega = normalizeAngle(desiredTheta - vPose[2]);

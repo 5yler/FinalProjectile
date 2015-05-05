@@ -168,8 +168,8 @@ public class GroundVehicle implements Runnable {
 	}
 
 	private void clampPosition() {
-		_x = Math.min(Math.max(_x,0),Simulator.MAX_X);
-		_y = Math.min(Math.max(_y,0),Simulator.MAX_Y);
+		_x = Math.min(Math.max(_x,0),Simulator.SIM_X);
+		_y = Math.min(Math.max(_y,0),Simulator.SIM_Y);
 		_theta = Math.min(Math.max(_theta, -Math.PI), Math.PI);
 		if (_theta - Math.PI == 0 || Math.abs(_theta - Math.PI) < 1e-6)
 			_theta = -Math.PI;

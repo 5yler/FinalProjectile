@@ -15,8 +15,8 @@ public class Simulator implements Runnable {
     private static DisplayClient _dc;
 
     // set maximum simulation size based on DisplayServer window dimensions
-    public static final int MAX_X = DisplayServer.DISPLAY_X/5;
-    public static final int MAX_Y = DisplayServer.DISPLAY_Y/5;
+    public static final int SIM_X = DisplayServer.DISPLAY_X/5;
+    public static final int SIM_Y = DisplayServer.DISPLAY_Y/5;
 
 
 

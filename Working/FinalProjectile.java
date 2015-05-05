@@ -42,7 +42,7 @@ public class FinalProjectile {
             // construct a single instance of the CircleController class
             UserController uc = new UserController(sim, gv, d);
             sim.addUserController(uc);
-            uc.addDisplayServer(d);
+//            uc.addDisplayServer(d);
             Thread ucThread = new Thread(uc);
 
 
