@@ -102,6 +102,17 @@ public class VehicleController extends Thread {
         return _v;
     }
 
+
+    public void setGroundVehicle(GroundVehicle v) {
+        _v = v;
+    }
+
+
+    public void removeGroundVehicle() {
+        _v = null;
+    }
+
+
     /**
      *
      * @return Simulator associated with the VehicleController

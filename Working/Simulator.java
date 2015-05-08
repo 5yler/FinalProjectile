@@ -167,6 +167,29 @@ public class Simulator extends Thread {
         return _startupMS;
     }
 
+    public synchronized void switchVehicleControllers(VehicleController oldController, VehicleController newController) {
+        //TODO: check if OC actually has a vehicle
+            //TODO: throw exception
+        //TODO: check if NC has a vehicle? probably not but....
+            //TODO: throw exception
+            //TODO: remove NC existing vehicle
+
+        // get vehicle from OC
+        GroundVehicle v = oldController.getGroundVehicle();
+        newController.setGroundVehicle(v);
+        oldController.removeGroundVehicle();
+
+        //TODO tests:
+            // invalid arguments
+            // test if GV set correctly
+            // test if OC had vehicle removed
+
+        //TODO: test if this actually works in simulation???
+
+
+    }
+
+
     /**
      * Removes Projectiles that went offscreen from Projectile list.
      */

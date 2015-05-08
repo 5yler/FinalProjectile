@@ -15,8 +15,8 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   private double _nextSpeed = 7.5;
   private double _nextOmega = 0;
-  private double dSpeed = 0.1;
-  private double maxOmega = Math.PI/4;
+  private double SPEED_INCREMENT = 0.1;
+  private double MAX_OMEGA = Math.PI/4;
 
   private Simulator _sim;
 
@@ -278,20 +278,20 @@ public class DisplayServer extends JPanel implements KeyListener {
     _nextOmega = 0;
     {
       if (code == KeyEvent.VK_DOWN) {
-        _nextSpeed -= dSpeed;
+        _nextSpeed -= SPEED_INCREMENT;
         System.out.println("DOWN");
       }
       if (code == KeyEvent.VK_UP) {
-        _nextSpeed += dSpeed;
+        _nextSpeed += SPEED_INCREMENT;
         System.out.println("UP");
       }
       if (code == KeyEvent.VK_LEFT) {
-        _nextOmega = maxOmega;
+        _nextOmega = MAX_OMEGA;
         System.out.println("LEFT");
 
       }
       if (code == KeyEvent.VK_RIGHT) {
-        _nextOmega = -maxOmega;
+        _nextOmega = -MAX_OMEGA;
         System.out.println("RIGHT");
 
       }
@@ -338,11 +338,11 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 //    {
 //      if (code == KeyEvent.VK_DOWN) {
-//        _nextSpeed -= dSpeed;
+//        _nextSpeed -= SPEED_INCREMENT;
 //        System.out.println("DOWN");
 //      }
 //      if (code == KeyEvent.VK_UP) {
-//        _nextSpeed += dSpeed;
+//        _nextSpeed += SPEED_INCREMENT;
 //        System.out.println("UP");
 //      }
 //      if (code == KeyEvent.VK_LEFT) {
