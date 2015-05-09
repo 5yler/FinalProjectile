@@ -209,16 +209,44 @@ public class Simulator extends Thread {
         }
     }
 
-    
+    /**
+     * Checks if a projectile has gone offscreen
+     */
     public boolean checkifOffScreen(double[] projectilePos){
-    	// TODO: checks if projectile position is offscreen
+    	if (projectilePos.length != 3)
+			throw new IllegalArgumentException("obj1pos must be of length 3");
+    	
+    	boolean isOffScreen = false;
+    	
+    	// check projectiles x-limits
+    	if (projectilePos[0] > SIM_X || projectilePos[0] < 0)
+    		isOffScreen = true;
+    	
+    	// check projectiles y-limits
+    	if (projectilePos[1] > SIM_Y || projectilePos[1] < 0)
+    		isOffScreen = true;
+    	
+    	return isOffScreen;
     }
     
+    /**
+     * Checks if a GroundVehicle or Projectile is within a certain distance of each other
+     */
     public boolean checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance){
+    	if (obj1pos.length != 3)
+			throw new IllegalArgumentException("obj1pos must be of length 3"); 
+    	if (obj2pos.length != 3)
+			throw new IllegalArgumentException("obj2pos must be of length 3"); 
+    	if (thresholdDistance <= 0)
+    		throw new IllegalArgumentExpeption("Threshold must be greater than 0");
+    	
     	boolean isWithinDistance = false;
     	
+    	double xDiff = obj1pos[0]-obj2pos[0];
+    	double yDiff = obj1pos[1]-obj2pos[1];
+    	
     	// calculate distance  sqrt(x^2+x^2)
-    	double distance = Math.sqrt(obj1pos[0]*obj1pos[0]+obj1pos[1]*obj1pos[1]);
+    	double distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
     	
     	// return true if distance < thresholdDistance
     	if (distance < thresholdDistance){
@@ -227,7 +255,20 @@ public class Simulator extends Thread {
     	
     	return isWithinDistance;
     }
-
+    
+    /**
+     * Calculates linear distance between two positions
+     */
+    public double distance(double[] obj1pos, double[] obj2pos){
+    	double xDiff = obj1pos[0]-obj2pos[0];
+    	double yDiff = obj1pos[1]-obj2pos[1];
+    	
+    	// calculate distance  sqrt(x^2+x^2)
+    	double distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+    	
+    	return distance;
+    }
+    
     /* RUN METHOD */
     public void run() {
 

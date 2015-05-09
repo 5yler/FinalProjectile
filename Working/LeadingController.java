@@ -96,7 +96,7 @@ public class LeadingController extends RandomController {
             double DY = followerY - vPose[1];
 
             // calculate linear distance of follower
-            double distance = Math.sqrt(DX * DX + DY * DY);
+            double followerDistance = Math.sqrt(DX * DX + DY * DY);
 
             if (distance < shortestDistance) {
                 // update distance to closest follower
@@ -224,6 +224,17 @@ public class LeadingController extends RandomController {
         return nextControl;
 
     }
+    
+    /**
+     * Calculates angle from an X and Y
+     */
+    public double getAngle(double X, double Y){
+    	double nextAngle = Math.atan(Y/X);
+    	if (X < 0)
+    		nextAngle += Math.PI;
+    	return nextAngle
+    }
+
 
     /**
      *
