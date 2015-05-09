@@ -154,7 +154,6 @@ public class Simulator extends Thread {
 
         if (debug_projectiles) {
             System.out.println("Projectile "+_projectileList.size()+" generated!");
-
         }
     }
 
@@ -196,54 +195,63 @@ public class Simulator extends Thread {
     public void removeOffscreenProjectiles() {
 
         for (Projectile p : _projectileList) {
-            double[] position = p.getPosition();      // get [x, y, theta] of vehicle
+            double[] position = p.getPosition();    // get [x, y, theta] of projectile
             double x = position[0];
             double y = position[1];
 
-            if (x > SIM_X || x < 0) {
-                _projectileList.remove(p);
-            }
-            if (y > SIM_Y || y < 0) {
-                _projectileList.remove(p);
+            if (projectileOffScreen(position)) {    // check if projectile is offscreen
+                _projectileList.remove(p);          // remove offscreen projectile
             }
         }
     }
 
     /**
      * Checks if a projectile has gone offscreen
+     * @param projectilePos projectile [x, y, theta]
+     * @return true if projectile position is outside the bounds of the simulation
      */
-    public boolean checkifOffScreen(double[] projectilePos){
-    	if (projectilePos.length != 3)
-			throw new IllegalArgumentException("obj1pos must be of length 3");
-    	
+    public boolean projectileOffScreen(double[] projectilePos) {
+    	if (projectilePos.length != 3) {
+            throw new IllegalArgumentException("obj1pos must be of length 3");
+        }
     	boolean isOffScreen = false;
-    	
+
+        double x = projectilePos[0];
+        double y = projectilePos[1];
+
     	// check projectiles x-limits
-    	if (projectilePos[0] > SIM_X || projectilePos[0] < 0)
-    		isOffScreen = true;
-    	
+        if (x > SIM_X || x < 0) {
+            isOffScreen = true;
+        }
     	// check projectiles y-limits
-    	if (projectilePos[1] > SIM_Y || projectilePos[1] < 0)
-    		isOffScreen = true;
-    	
+        if (y > SIM_Y || y < 0) {
+            isOffScreen = true;
+        }
     	return isOffScreen;
     }
     
     /**
-     * Checks if a GroundVehicle or Projectile is within a certain distance of each other
+     * Checks if two GroundVehicle/Projectile objects are within a certain distance of each other
+     * @param obj1pos object 1 [x, y, theta]
+     * @param obj2pos object 2 [x, y, theta]
+     * @param thresholdDistance threshold distance for comparison
+     * @return true if distance between objects is at or below the threshold distance
      */
-    public boolean checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance){
-    	if (obj1pos.length != 3)
-			throw new IllegalArgumentException("obj1pos must be of length 3"); 
-    	if (obj2pos.length != 3)
-			throw new IllegalArgumentException("obj2pos must be of length 3"); 
-    	if (thresholdDistance <= 0)
-    		throw new IllegalArgumentExpeption("Threshold must be greater than 0");
+    public boolean checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance) {
+    	if (obj1pos.length != 3) {
+            throw new IllegalArgumentException("obj1pos must be of length 3");
+        }
+    	if (obj2pos.length != 3) {
+            throw new IllegalArgumentException("obj2pos must be of length 3");
+        }
+    	if (thresholdDistance <= 0) {
+            throw new IllegalArgumentException("Threshold must be greater than 0");
+        }
     	
     	boolean isWithinDistance = false;
     	
-    	double xDiff = obj1pos[0]-obj2pos[0];
-    	double yDiff = obj1pos[1]-obj2pos[1];
+    	double xDiff = obj1pos[0] - obj2pos[0];
+    	double yDiff = obj1pos[1] - obj2pos[1];
     	
     	// calculate distance  sqrt(x^2+x^2)
     	double distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
@@ -258,15 +266,16 @@ public class Simulator extends Thread {
     
     /**
      * Calculates linear distance between two positions
+     * @param obj1pos object 1 [x, y, theta]
+     * @param obj2pos object 2 [x, y, theta]
+     * @return linear distance between two object positions
      */
-    public double distance(double[] obj1pos, double[] obj2pos){
-    	double xDiff = obj1pos[0]-obj2pos[0];
-    	double yDiff = obj1pos[1]-obj2pos[1];
+    public double distance(double[] obj1pos, double[] obj2pos) {
+    	double xDiff = obj1pos[0] - obj2pos[0];
+    	double yDiff = obj1pos[1] - obj2pos[1];
     	
     	// calculate distance  sqrt(x^2+x^2)
-    	double distance = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
-    	
-    	return distance;
+    	return Math.sqrt(xDiff*xDiff + yDiff*yDiff);
     }
     
     /* RUN METHOD */
