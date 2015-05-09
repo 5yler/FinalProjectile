@@ -146,7 +146,6 @@ public class Simulator extends Thread {
      * Generates a projectile based on the position of the UserController associated with Simulator
      *TODO: fix
      */
-
     public void generateProjectile() {
         Projectile p = new Projectile(_uc.getUserVehicle().getPosition(), this);
         _projectileList.add(p);
@@ -166,17 +165,31 @@ public class Simulator extends Thread {
         return _startupMS;
     }
 
+    /**
+     *
+     * @param oldController
+     * @param newController
+     */
     public synchronized void switchVehicleControllers(VehicleController oldController, VehicleController newController) {
-        //TODO: check if OC actually has a vehicle
-            //TODO: throw exception
-        //TODO: check if NC has a vehicle? probably not but....
-            //TODO: throw exception
-            //TODO: remove NC existing vehicle
+
+        //  check if OC actually has a vehicle
+        if (oldController.getGroundVehicle() == null) {
+            throw new IllegalArgumentException("Old VehicleController has no GroundVehicle!");
+        }
+
+        // check if NC has a vehicle? probably not but....
+        if (newController.getGroundVehicle() != null) {
+            newController.removeGroundVehicle(); // remove NC pre-existing vehicle if present
+            System.out.println("Removed pre-existing target VehicleController vehicle.");
+            throw new IllegalArgumentException("Target VehicleController already had a GroundVehicle! What's up with that?");
+        }
 
         // get vehicle from OC
         GroundVehicle v = oldController.getGroundVehicle();
-        newController.setGroundVehicle(v);
+        // remove vehicle from OC
         oldController.removeGroundVehicle();
+        // set the vehicle in NC
+        newController.setGroundVehicle(v);
 
         //TODO tests:
             // invalid arguments
@@ -271,7 +284,14 @@ public class Simulator extends Thread {
      * @return linear distance between two object positions
      */
     public double distance(double[] obj1pos, double[] obj2pos) {
-    	double xDiff = obj1pos[0] - obj2pos[0];
+        if (obj1pos.length != 3) {
+            throw new IllegalArgumentException("obj1pos must be of length 3");
+        }
+        if (obj2pos.length != 3) {
+            throw new IllegalArgumentException("obj2pos must be of length 3");
+        }
+
+        double xDiff = obj1pos[0] - obj2pos[0];
     	double yDiff = obj1pos[1] - obj2pos[1];
     	
     	// calculate distance  sqrt(x^2+x^2)
