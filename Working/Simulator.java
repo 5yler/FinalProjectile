@@ -217,8 +217,13 @@ public class Simulator extends Thread {
     public boolean checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance){
     	boolean isWithinDistance = false;
     	
-    	// TODO: calculate distance  sqrt(x^2+x^2)
-    	// TODO: return true if distance < thresholdDistance
+    	// calculate distance  sqrt(x^2+x^2)
+    	double distance = Math.sqrt(obj1pos[0]*obj1pos[0]+obj1pos[1]*obj1pos[1]);
+    	
+    	// return true if distance < thresholdDistance
+    	if (distance < thresholdDistance){
+    		isWithinDistance = true;
+    	}
     	
     	return isWithinDistance;
     }
