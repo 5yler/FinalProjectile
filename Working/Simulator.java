@@ -209,6 +209,19 @@ public class Simulator extends Thread {
         }
     }
 
+    
+    public boolean checkifOffScreen(double[] projectilePos){
+    	// TODO: checks if projectile position is offscreen
+    }
+    
+    public boolean checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance){
+    	boolean isWithinDistance = false;
+    	
+    	// TODO: calculate distance  sqrt(x^2+x^2)
+    	// TODO: return true if distance < thresholdDistance
+    	
+    	return isWithinDistance;
+    }
 
     /* RUN METHOD */
     public void run() {
