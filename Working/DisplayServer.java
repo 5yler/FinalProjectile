@@ -275,25 +275,22 @@ public class DisplayServer extends JPanel implements KeyListener {
    */
   public void keyPressed(KeyEvent e) {
     int code = e.getKeyCode();
-    _nextOmega = 0;
     {
       if (code == KeyEvent.VK_DOWN) {
-        _nextSpeed -= SPEED_INCREMENT;
+        decreaseSpeed();
         System.out.println("DOWN");
       }
       if (code == KeyEvent.VK_UP) {
-        _nextSpeed += SPEED_INCREMENT;
+        increaseSpeed();
         System.out.println("UP");
       }
       if (code == KeyEvent.VK_LEFT) {
-        _nextOmega = MAX_OMEGA;
+        turnLeft();
         System.out.println("LEFT");
-
       }
       if (code == KeyEvent.VK_RIGHT) {
-        _nextOmega = -MAX_OMEGA;
+        turnRight();
         System.out.println("RIGHT");
-
       }
       /* TODO: generate projectiles */
       if (code == KeyEvent.VK_SPACE) {
@@ -301,6 +298,44 @@ public class DisplayServer extends JPanel implements KeyListener {
       }
     }
   }
+
+  /** Handle the key-released event from the text field. */
+  public void keyReleased(KeyEvent e) {
+    int code = e.getKeyCode();
+    // reset rotational velocity
+    if (code == KeyEvent.VK_LEFT) {
+      stopTurning();
+    }
+    if (code == KeyEvent.VK_RIGHT) {
+      stopTurning();
+    }
+  }
+
+
+  public void increaseSpeed() {
+    _nextSpeed += SPEED_INCREMENT;
+  }
+
+
+  public void decreaseSpeed() {
+    _nextSpeed -= SPEED_INCREMENT;
+  }
+
+  public void turnLeft() {
+    _nextOmega = MAX_OMEGA;
+  }
+
+  public void turnRight() {
+    _nextOmega = -MAX_OMEGA;
+  }
+
+  public void stopTurning() {
+    _nextOmega = 0;
+  }
+
+
+
+
 
   public double getUserSpeed() {
     if (print) {
@@ -313,7 +348,6 @@ public class DisplayServer extends JPanel implements KeyListener {
     return _nextOmega;
   }
 
-  public void keyReleased(KeyEvent e) { }
 
   /**
    * Listens to key press events and modifies settings accordingly.
