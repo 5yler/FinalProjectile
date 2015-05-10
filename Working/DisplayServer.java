@@ -13,10 +13,11 @@ import java.util.*;
 
 public class DisplayServer extends JPanel implements KeyListener {
 
-  private double _nextSpeed = 7.5;
-  private double _nextOmega = 0;
-  private double SPEED_INCREMENT = 0.1;
+
   private double MAX_OMEGA = Math.PI/4;
+  private double SPEED_INCREMENT = 0.1;
+  private double userSpeed = 7.5;
+  private double userOmega = 0;
 
   private Simulator _sim;
 
@@ -54,6 +55,8 @@ public class DisplayServer extends JPanel implements KeyListener {
   private int minDisplayY = DISPLAY_Y;
   private int preferredDisplayX = DISPLAY_X;
   private int preferredDisplayY = DISPLAY_Y;
+
+  private int NUM_CIRCLES = 3;
 
 
   /*
@@ -313,24 +316,24 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 
   public void increaseSpeed() {
-    _nextSpeed += SPEED_INCREMENT;
+    userSpeed += SPEED_INCREMENT;
   }
 
 
   public void decreaseSpeed() {
-    _nextSpeed -= SPEED_INCREMENT;
+    userSpeed -= SPEED_INCREMENT;
   }
 
   public void turnLeft() {
-    _nextOmega = MAX_OMEGA;
+    userOmega = MAX_OMEGA;
   }
 
   public void turnRight() {
-    _nextOmega = -MAX_OMEGA;
+    userOmega = -MAX_OMEGA;
   }
 
   public void stopTurning() {
-    _nextOmega = 0;
+    userOmega = 0;
   }
 
 
@@ -339,13 +342,13 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   public double getUserSpeed() {
     if (print) {
-      System.out.println("getUserSpeed() = " + _nextSpeed+" getUserOmega() = " + _nextOmega);
+      System.out.println("getUserSpeed() = " + userSpeed+" getUserOmega() = " + userOmega);
     }
-    return _nextSpeed;
+    return userSpeed;
   }
 
   public double getUserOmega() {
-    return _nextOmega;
+    return userOmega;
   }
 
 
@@ -372,20 +375,20 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 //    {
 //      if (code == KeyEvent.VK_DOWN) {
-//        _nextSpeed -= SPEED_INCREMENT;
+//        userSpeed -= SPEED_INCREMENT;
 //        System.out.println("DOWN");
 //      }
 //      if (code == KeyEvent.VK_UP) {
-//        _nextSpeed += SPEED_INCREMENT;
+//        userSpeed += SPEED_INCREMENT;
 //        System.out.println("UP");
 //      }
 //      if (code == KeyEvent.VK_LEFT) {
-//        _nextOmega -= dOmega;
+//        userOmega -= dOmega;
 //        System.out.println("LEFT");
 //
 //      }
 //      if (code == KeyEvent.VK_RIGHT) {
-//        _nextOmega += dOmega;
+//        userOmega += dOmega;
 //        System.out.println("RIGHT");
 //
 //      }
@@ -546,6 +549,24 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   }
 
+
+  /**
+   * Draws random circle in simulation.
+   * @param g   graphics object
+   */
+  public static void drawRandomCircle(Graphics g) {
+
+
+    int diameter = (int) Simulator.randomDoubleInRange(0,Math.min(Simulator.SIM_X,Simulator.SIM_Y));
+    int R = diameter/2;
+    int Xc = (int) Simulator.randomDoubleInRange(0, Simulator.SIM_X);
+    int Yc = (int) Simulator.randomDoubleInRange(0, Simulator.SIM_Y);
+
+    // shift x and y by circle radius to center it
+    g.fillOval((Xc - R) * 5, (Yc - R) * 5, diameter * 5, diameter * 5);
+
+  }
+
   protected void paintComponent(Graphics g) {
     super.paintComponent(g); //paints the background and image
 
@@ -553,14 +574,19 @@ public class DisplayServer extends JPanel implements KeyListener {
     g.setColor(Color.white);
     g.fillRect(0, 0, bounds.width, bounds.height);
 
-    // draw circle for ideal CircleController trajectory
-    g.setColor(randomLightColor());
-    drawCircle(g,50,50,25);
+    /*
+    // draw circles
+    for (int i = 0; i < NUM_CIRCLES; i++) {
+      g.setColor(randomLightColor());
+      drawRandomCircle(g);
+    }
+
+*/
 
     g.setColor(Color.black);
     g.setColor(randomLightColor());
     g.drawString("Display running in the 90's", 10, 12);
-    g.drawString("on "+myHostname, 10,25);
+    g.drawString("on " + myHostname, 10, 25);
     if (trace)
       drawHistories(g);
     drawVehicles(g);
