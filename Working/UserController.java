@@ -65,17 +65,7 @@ public class UserController extends VehicleController {
         }
         return clampControl(_nextSpeed, _nextOmega);
     }
-
-
-
-
-
-
-
-
-
-
-
+    
 }
 
 
