@@ -30,7 +30,7 @@ public class LeadingController extends RandomController {
     private final boolean debug = false;   // set to true for debug statements
 
     /**
-     * @param s simulator object
+     * @param sim simulator object
      * @param v specific GroundVehicle being controlled
      */
     public LeadingController(Simulator sim, GroundVehicle v) {
@@ -98,9 +98,9 @@ public class LeadingController extends RandomController {
             // calculate linear distance of follower
             double followerDistance = Math.sqrt(DX * DX + DY * DY);
 
-            if (distance < shortestDistance) {
+            if (followerDistance < shortestDistance) {
                 // update distance to closest follower
-                shortestDistance = distance;
+                shortestDistance = followerDistance;
                 // save index of closest follower
                 closestIndex = i;
             }
@@ -178,7 +178,6 @@ public class LeadingController extends RandomController {
                 nextPhi += Math.PI;
             }
 
-
             // make rotational vel of control proportional to future angle between vehicles
             nextPhi = normalizeAngle(nextPhi);
             omega = normalizeAngle(nextPhi - vPose[2]);
@@ -186,7 +185,6 @@ public class LeadingController extends RandomController {
 
             // clamp velocities
             nextControl = clampControl(s, omega);
-
         }
 
         // stay in the boundary of the visible space
@@ -218,21 +216,10 @@ public class LeadingController extends RandomController {
 
             // clamp velocities
             nextControl = clampControl(s, omega);
-
         }
 
         return nextControl;
 
-    }
-    
-    /**
-     * Calculates angle from an X and Y
-     */
-    public double getAngle(double X, double Y){
-    	double nextAngle = Math.atan(Y/X);
-    	if (X < 0)
-    		nextAngle += Math.PI;
-    	return nextAngle
     }
 
 

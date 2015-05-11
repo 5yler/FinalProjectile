@@ -102,16 +102,6 @@ public class FollowingController extends VehicleController {
 
         return nextControl;
     }
-    
-    /**
-     * Calculates angle from an X and Y
-     */
-    public double getAngle(double X, double Y){
-    	double nextAngle = Math.atan(Y/X);
-    	if (X < 0)
-    		nextAngle += Math.PI;
-    	return nextAngle
-    }
 
     /**
      * Clamps speed and omega to allowable ranges and returns control with

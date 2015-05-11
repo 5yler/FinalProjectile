@@ -167,8 +167,6 @@ public class DisplayServer extends JPanel implements KeyListener {
                 my_display.gvTheta[i] = Double.parseDouble(tok);
                 if (trace) {
                   if (histories[i].trueHistoryLength % historySkip == 0){
-
-
                     int n;
                     if (histories[i].myNumPoints == histories[i].myX.length) {
                       n = 0;
@@ -335,9 +333,6 @@ public class DisplayServer extends JPanel implements KeyListener {
   public void stopTurning() {
     userOmega = 0;
   }
-
-
-
 
 
   public double getUserSpeed() {
