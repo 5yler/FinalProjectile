@@ -280,7 +280,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   {
     JFrame.setDefaultLookAndFeelDecorated(true);
 
-    frame = new JFrame("16.35 Display");
+    frame = new JFrame("Do you feel lucky... punk? Well... DO YA?");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Container container = frame.getContentPane();
     //container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
@@ -327,7 +327,7 @@ public class DisplayServer extends JPanel implements KeyListener {
         turnRight();
         System.out.println("RIGHT");
       }
-      /* TODO: generate projectiles */
+      // generate projectiles */
       if (code == KeyEvent.VK_SPACE) {
         projectileGenerated = true;
       }
@@ -527,7 +527,6 @@ public class DisplayServer extends JPanel implements KeyListener {
    * Draws projectiles.
    * @param g
    */
-
   protected synchronized void drawProjectiles(Graphics g) {
     // set color to projectile color
     g.setColor(PROJECTILE_COLOR);
