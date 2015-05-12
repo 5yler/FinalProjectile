@@ -19,9 +19,9 @@ public class LeadingController extends RandomController {
     private ArrayList<Integer> _followerIndexList;  // list of indexes of GroundVehicles following LeadingController
 
 
-    private double maxTransSpeed = 10;
-    private double minTransSpeed = 5;
-    double dangerZone = 20; // size of boundary that is judged too close to wall
+    private double LEADING_MAX_VEL = GroundVehicle.MAX_VEL;
+    private double LEADING_MIN_VEL = 5;
+    double DANGER_ZONE = 20; // size of boundary that is judged too close to wall
 
 
     private final boolean print = true;   // set to true for print statements
@@ -121,9 +121,9 @@ public class LeadingController extends RandomController {
         double x = vehiclePosition[0];
         double y = vehiclePosition[1];
 
-        if ((x < dangerZone) || (x > Simulator.SIM_X -dangerZone)) {
+        if ((x < DANGER_ZONE) || (x > Simulator.SIM_X - DANGER_ZONE)) {
             return true;
-        } else if ((y < dangerZone) || (y > Simulator.SIM_Y -dangerZone)) {
+        } else if ((y < DANGER_ZONE) || (y > Simulator.SIM_Y - DANGER_ZONE)) {
             return true;
         } else {
             return false;
@@ -181,7 +181,7 @@ public class LeadingController extends RandomController {
             // make rotational vel of control proportional to future angle between vehicles
             nextPhi = normalizeAngle(nextPhi);
             omega = normalizeAngle(nextPhi - vPose[2]);
-            s = maxTransSpeed;
+            s = LEADING_MAX_VEL;
 
             // clamp velocities
             nextControl = clampControl(s, omega);
@@ -197,22 +197,22 @@ public class LeadingController extends RandomController {
             double desiredTheta;
             // point away from walls
             double wallDistance = 0;
-            if (x < dangerZone) {
+            if (x < DANGER_ZONE) {
                 desiredTheta = 0;
                 wallDistance += x;
-            } else if (x > Simulator.SIM_X - dangerZone) {
+            } else if (x > Simulator.SIM_X - DANGER_ZONE) {
                 desiredTheta = -Math.PI;
                 wallDistance += Simulator.SIM_X - x;
-            } else if (y < dangerZone) {
+            } else if (y < DANGER_ZONE) {
                 desiredTheta = Math.PI / 2;
                 wallDistance += y;
-            } else { // if (y > Simulator.SIM_Y-dangerZone)
+            } else { // if (y > Simulator.SIM_Y-DANGER_ZONE)
                 desiredTheta = -Math.PI / 2;
                 wallDistance += Simulator.SIM_Y - y;
             }
 
             omega = normalizeAngle(desiredTheta - vPose[2]);
-            s = maxTransSpeed - (dangerZone - wallDistance) / dangerZone * (maxTransSpeed - minTransSpeed);
+            s = LEADING_MAX_VEL - (DANGER_ZONE - wallDistance) / DANGER_ZONE * (LEADING_MAX_VEL - LEADING_MIN_VEL);
 
             // clamp velocities
             nextControl = clampControl(s, omega);
@@ -233,33 +233,6 @@ public class LeadingController extends RandomController {
         Collections.sort(_followerIndexList);
     }
 
-    /**
-     * Clamps speed and omega to allowable ranges and returns control with
-     * bounded values of s and omega.
-     * @param s forward speed
-     * @param omega angular velocity
-     * @return control with clamped linear and angular velocity values
-     */
-    private Control clampControl(double s, double omega) {
-
-        double clampedSpeed;
-        double clampedOmega;
-
-        // clamp speed if it is above 10 or below 5
-        if (s > maxTransSpeed)
-            clampedSpeed = maxTransSpeed;
-        else if (s < minTransSpeed)
-            clampedSpeed = minTransSpeed;
-        else
-            clampedSpeed = s;
-
-        // clamp angular velocity if it is above the allowed range
-        clampedOmega = Math.min(Math.max(omega, -Math.PI/4), Math.PI/4);
-
-        // create a control with the clamped s and omega values
-        Control clampedControl = new Control(clampedSpeed, clampedOmega);
-        return clampedControl;
-    }
 
 
 }

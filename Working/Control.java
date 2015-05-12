@@ -17,7 +17,7 @@ public class Control {
         if (s < GroundVehicle.MIN_VEL || s > GroundVehicle.MAX_VEL)
             throw new IllegalArgumentException("S out of range");
         // check to make sure theta is in range.
-        if (omega < -Math.PI || omega >= Math.PI)
+        if (omega < -GroundVehicle.MAX_OMEGA || omega >= GroundVehicle.MAX_OMEGA)
             throw new IllegalArgumentException("Omega out of range");
 
         this.s = s;

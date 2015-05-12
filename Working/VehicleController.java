@@ -148,6 +148,38 @@ public class VehicleController extends Thread {
     }
 
 /* OTHER METHODS */
+
+
+    /**
+     * Clamps speed and omega to allowable ranges and returns control with
+     * bounded values of s and omega.
+     * @param s forward speed
+     * @param omega angular velocity
+     * @return control with clamped linear and angular velocity values
+     */
+    public Control clampControl(double s, double omega) {
+
+        double clampedSpeed;
+        double clampedOmega;
+
+        // clamp speed if it is above 10 or below 5
+        if (s > GroundVehicle.MAX_VEL) {
+            clampedSpeed = GroundVehicle.MAX_VEL;
+        } else if (s < GroundVehicle.MIN_VEL){
+            clampedSpeed = GroundVehicle.MIN_VEL;
+        } else {
+            clampedSpeed = s;
+        }
+
+        // clamp angular velocity if it is above the allowed range
+        clampedOmega = Math.min(Math.max(omega, -GroundVehicle.MAX_OMEGA), GroundVehicle.MAX_OMEGA);
+
+        // create a control with the clamped s and omega values
+        Control clampedControl = new Control(clampedSpeed, clampedOmega);
+
+        return clampedControl;
+    }
+
     /**
      *
      * The bulk of this method is to determine how long to spend turning at

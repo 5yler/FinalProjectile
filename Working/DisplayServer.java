@@ -14,10 +14,10 @@ import java.util.*;
 public class DisplayServer extends JPanel implements KeyListener {
 
 
-  private double MAX_OMEGA = Math.PI/4;
   private double SPEED_INCREMENT = 0.1;
   private double userSpeed = 7.5;
   private double userOmega = 0;
+  private static Random rand = new Random();
 
   private Simulator _sim;
 
@@ -44,6 +44,13 @@ public class DisplayServer extends JPanel implements KeyListener {
   /* CUSTOM SETTINGS */
   public static final int DISPLAY_X = 800; // display window x pixels
   public static final int DISPLAY_Y = 600; // display window x pixels
+  public static final Color DISPLAY_BACKGROUND_COLOR = Color.black; // display background color
+  public static final Color USER_COLOR = Color.red; // user vehicle color
+  public static final Color PROJECTILE_COLOR = Color.black; // projectile color
+  public static final Color LEADING_COLOR = Color.black; // leading vehicle color
+  public static final Color FOLLOWING_COLOR = Color.black; // display background color
+
+
   public static final int SLEEP_TIME = 0; // delay between timesteps when drawing vehicle trajectories
   // 10-100 is a reasonable number
 
@@ -323,11 +330,11 @@ public class DisplayServer extends JPanel implements KeyListener {
   }
 
   public void turnLeft() {
-    userOmega = MAX_OMEGA;
+    userOmega = GroundVehicle.MAX_OMEGA;
   }
 
   public void turnRight() {
-    userOmega = -MAX_OMEGA;
+    userOmega = -GroundVehicle.MAX_OMEGA;
   }
 
   public void stopTurning() {
@@ -395,8 +402,7 @@ public class DisplayServer extends JPanel implements KeyListener {
    *
    * @return array with random RGB color pair (dark color and light color)
    */
-  public static Color[] randomColorPair() {
-    Random rand = new Random();
+  public Color[] randomColorPair() {
     int r = rand.nextInt(155); // 255 will result in colors that can't be detected on a white background
     int g = rand.nextInt(155);
     int b = rand.nextInt(155);
@@ -413,7 +419,6 @@ public class DisplayServer extends JPanel implements KeyListener {
    * @return random dark RGB color
    */
   public static Color randomDarkColor() {
-    Random rand = new Random();
     int r = rand.nextInt(155); // 255 will result in colors that can't be detected on a white background
     int g = rand.nextInt(155);
     int b = rand.nextInt(155);
@@ -425,12 +430,24 @@ public class DisplayServer extends JPanel implements KeyListener {
    * @return random light RGB color
    */
   public static Color randomLightColor() {
-    Random rand = new Random();
     int r = rand.nextInt(205) + 50;
     int g = rand.nextInt(205) + 50;
     int b = rand.nextInt(155) + 100;
     return new Color(r, g, b);
   }
+
+
+  /**
+   *
+   * @return random grey RGB color
+   */
+  public static Color randomGreyColor() {
+    int r = rand.nextInt(50);
+    int g = rand.nextInt(50);
+    int b = rand.nextInt(50);
+    return new Color(r, g, b);
+  }
+
 
   protected synchronized void drawVehicles(Graphics g) {
     g.setColor(Color.black);
@@ -566,19 +583,20 @@ public class DisplayServer extends JPanel implements KeyListener {
     super.paintComponent(g); //paints the background and image
 
     Rectangle bounds = this.getBounds();
-    g.setColor(Color.white);
+
+    // set distplay background
+    g.setColor(DISPLAY_BACKGROUND_COLOR);
     g.fillRect(0, 0, bounds.width, bounds.height);
 
-    /*
+
     // draw circles
     for (int i = 0; i < NUM_CIRCLES; i++) {
-      g.setColor(randomLightColor());
+      g.setColor(randomGreyColor());
       drawRandomCircle(g);
     }
 
-*/
 
-    g.setColor(Color.black);
+
     g.setColor(randomLightColor());
     g.drawString("Display running in the 90's", 10, 12);
     g.drawString("on " + myHostname, 10, 25);

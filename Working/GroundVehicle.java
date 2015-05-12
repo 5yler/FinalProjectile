@@ -14,6 +14,7 @@ public class GroundVehicle extends Thread {
 
 	public static final double MIN_VEL = 1;
 	public static final double MAX_VEL = 10;
+	public static final double MAX_OMEGA = Math.PI/2;
 
 	private Simulator _sim;		// Simulator associated with GroundVehicle
 
@@ -185,7 +186,7 @@ public class GroundVehicle extends Thread {
 			_dy = GroundVehicle.MIN_VEL * _dy/velMagnitude;
 		}
 
-		_dtheta = Math.min(Math.max(_dtheta, -Math.PI/4), Math.PI/4);
+		_dtheta = Math.min(Math.max(_dtheta, -MAX_OMEGA), MAX_OMEGA);
 	}
 
 	/**
