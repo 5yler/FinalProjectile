@@ -12,7 +12,7 @@ import java.util.Collections;
  * VehicleController subclass called LeadingController that generates
  * controls to move away from all the other GroundVehicle objects.
  */
-public class LeadingController extends RandomController {
+public class LeadingController extends VehicleController {
 
     //TODO: remove followerList?
 //    private ArrayList<GroundVehicle> _followerList;  // list of GroundVehicles following LeadingController

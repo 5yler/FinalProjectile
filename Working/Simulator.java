@@ -430,6 +430,7 @@ public class Simulator extends Thread {
                         		//FollowingController fc = _followerList.get(j);
                         		this.switchVehicleControllers(lc);
                         		_projectileList.remove(i);
+                                //TODO: update scores and make FC follow correct user
                         	}
                         }
 
