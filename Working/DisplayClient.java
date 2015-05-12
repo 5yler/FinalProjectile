@@ -44,26 +44,18 @@ public class DisplayClient  {
     output.println("traceoff");
   }
 
-  public void update(int numVehicles, double gvX[], double gvY[], double gvTheta[])
+  //TODO: write requirements
+  public void update(int numVehicles, double gvX[], double gvY[], double gvTheta[], int numProjectiles, double pX[], double pY[])
   {
     StringBuffer message = new StringBuffer();
+    message.append("vehicles");
     message.append(numVehicles);
     message.append(" ");
     for (int i = 0; i < numVehicles; i++) {
       message.append(format.format(gvX[i])+" "+format.format(gvY[i])+" "+
 		     format.format(gvTheta[i])+" ");
     }
-    if (print)
-      System.out.println("Sent "+message);
-    output.println(message);
-    output.flush();
-  }
-
-  /*
-  //TODO: finish implementation
-  public void updateProjectiles(int numProjectiles, double pX[], double pY[])
-  {
-    StringBuffer message = new StringBuffer();
+    message.append("projectiles");
     message.append(numProjectiles);
     message.append(" ");
     for (int i = 0; i < numProjectiles; i++) {
@@ -74,8 +66,8 @@ public class DisplayClient  {
     output.println(message);
     output.flush();
   }
-  */
-  
+
+  /*
   public static void main(String argv[]) throws IOException {
     if (argv.length == 0) {
       System.err.println("Usage: DisplayClient <hostname>\n"+
@@ -139,4 +131,5 @@ public class DisplayClient  {
     System.out.print("Press return to exit...");
     System.in.read();
   }
+  */
 }

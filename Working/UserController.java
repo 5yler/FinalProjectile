@@ -27,6 +27,11 @@ public class UserController extends VehicleController {
     public Control getControl(int sec, int msec) {
         double _nextSpeed = _ds.getUserSpeed();
         double _nextOmega = _ds.getUserOmega();
+        boolean isShooting = _ds.getProjectileGenerated();
+        if (isShooting) {
+            _sim.generateProjectile();
+        }
+
         if (debug) {
             System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
         }

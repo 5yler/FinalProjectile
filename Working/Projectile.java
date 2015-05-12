@@ -39,10 +39,12 @@ public class Projectile extends Thread {
 	    _y = _y + _dy * t;
     }
 
+	//TODO: requirements changed
 	public synchronized double[] getPosition() {
-		double[] position = new double[2];
+		double[] position = new double[3];
 		position[0] = _x;
 		position[1] = _y;
+		position[2] = _theta;
 		return position;
 	}
 

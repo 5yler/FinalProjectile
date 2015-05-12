@@ -4,8 +4,11 @@
  * @author Syler Wagner [syler@mit.edu]
  **/
 
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class Simulator extends Thread {
@@ -34,7 +37,7 @@ public class Simulator extends Thread {
     private ArrayList<GroundVehicle> _vehicleList;  // list of GroundVehicles inside Simulator
 
     private UserController _uc;
-    private ArrayList<Projectile> _projectileList;  // list of projectiles inside Simulator
+    private List<Projectile> _projectileList;  // list of projectiles inside Simulator
 
     private double _startupMS;  // time when the Simulator starts running
 
@@ -54,14 +57,22 @@ public class Simulator extends Thread {
     /* CONSTRUCTORS */
     public Simulator() {
         _vehicleList = new ArrayList<GroundVehicle>();
-        _projectileList = new ArrayList<Projectile>();
+        _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
         _dc = null;
     }
 
     public Simulator(DisplayClient dc) {
         _vehicleList = new ArrayList<GroundVehicle>();
-        _projectileList = new ArrayList<Projectile>();
+        _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
         _dc = dc;
+
+        if (debug_projectiles) {
+            //TODO: this is just testing, remove it for later
+            Projectile p = new Projectile(randomStartingPosition(), this);
+            _projectileList.add(p);
+            p.start();
+        }
+
     }
 
 /* STATIC METHODS */
@@ -205,7 +216,7 @@ public class Simulator extends Thread {
     /**
      * Removes Projectiles that went offscreen from Projectile list.
      */
-    public void removeOffscreenProjectiles() {
+    public  void removeOffscreenProjectiles() {
 
         for (Projectile p : _projectileList) {
             double[] position = p.getPosition();    // get [x, y, theta] of projectile
@@ -216,6 +227,7 @@ public class Simulator extends Thread {
                 _projectileList.remove(p);          // remove offscreen projectile
             }
         }
+
     }
 
     /**
@@ -341,13 +353,12 @@ public class Simulator extends Thread {
                     notifyAll();
                 } // end synchronized (this)
 
-                // update display client with vehicle positions
-                _dc.update(_vehicleList.size(), gvX, gvY, gvTheta);
-
                 /**/
                 synchronized (this) {
 
-                    removeOffscreenProjectiles();
+                    pX = new double[_projectileList.size()];
+                    pY = new double[_projectileList.size()];
+
 
                     for (int i = 0; i < _projectileList.size(); i++) {     // iterate over list of i projectiles
                         Projectile p = _projectileList.get(i);    // get projectile at index i
@@ -356,11 +367,13 @@ public class Simulator extends Thread {
                         pY[i] = position[1];
 
 
-
                         if (debug_projectiles) {
-                            System.out.println(position);
+                            System.out.println("px " + position[0] + " py " + position[1]);
                         }
                     } // end for (int i = 0; i < __projectileList.size(); i++)
+
+                    removeOffscreenProjectiles();
+
 
                     notifyAll();
                 } // end synchronized (this)
@@ -368,10 +381,8 @@ public class Simulator extends Thread {
                 updateTime = System.nanoTime();
 
                 // update display client with vehicle positions
-
-
-                //TODO: send to DisplayClient
-//                _dc.updateProjectiles(_projectileList.size(), pX, pY);
+                // update display client with projectile positions
+                _dc.update(_vehicleList.size(), gvX, gvY, gvTheta, _projectileList.size(), pX, pY);
 
 
 

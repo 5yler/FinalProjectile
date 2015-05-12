@@ -17,6 +17,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   private double SPEED_INCREMENT = 0.1;
   private double userSpeed = 7.5;
   private double userOmega = 0;
+  private boolean projectileGenerated = false;
   private static Random rand = new Random();
 
   private Simulator _sim;
@@ -158,37 +159,58 @@ public class DisplayServer extends JPanel implements KeyListener {
             return;
           } else {
             synchronized (my_display) {
-              if (my_display.numVehicles != Integer.parseInt(tok)) {
-                my_display.numVehicles = Integer.parseInt(tok);
-                my_display.gvX = new double[my_display.numVehicles];
-                my_display.gvY = new double[my_display.numVehicles];
-                my_display.gvTheta = new double[my_display.numVehicles];
-                my_display.resetHistories(numVehicles);
-              }
-              for (int i = 0; i < my_display.numVehicles; i++) {
+              if (tok.equals("vehicles")) {
                 tok = st.nextToken();
-                my_display.gvX[i] = Double.parseDouble(tok);
-                tok = st.nextToken();
-                my_display.gvY[i] = Double.parseDouble(tok);
-                tok = st.nextToken();
-                my_display.gvTheta[i] = Double.parseDouble(tok);
-                if (trace) {
-                  if (histories[i].trueHistoryLength % historySkip == 0){
-                    int n;
-                    if (histories[i].myNumPoints == histories[i].myX.length) {
-                      n = 0;
-                      histories[i].myNumPoints = 0;
-                      histories[i].loopHistory = 1;
-                    } else {
-                      n = histories[i].myNumPoints;
-                      histories[i].myNumPoints++;
-                    }
-                    histories[i].myX[n] = my_display.gvX[i];
-                    histories[i].myY[n] = my_display.gvY[i];
+                if (my_display.numVehicles != Integer.parseInt(tok)) {
+                  my_display.numVehicles = Integer.parseInt(tok);
+                  my_display.gvX = new double[my_display.numVehicles];
+                  my_display.gvY = new double[my_display.numVehicles];
+                  my_display.gvTheta = new double[my_display.numVehicles];
+                  my_display.resetHistories(numVehicles);
+                }
+                outerloop:
+                for (int i = 0; i < my_display.numVehicles; i++) { //TODO: DEBUG
+                  if (tok.equals("projectiles")) {
+                    break outerloop;
                   }
-                  histories[i].trueHistoryLength++;
-                } // end if (trace)
-              } // end for (int i = 0; i < my_display.numVehicles; i++)
+                  tok = st.nextToken();
+                  my_display.gvX[i] = Double.parseDouble(tok);
+                  tok = st.nextToken();
+                  my_display.gvY[i] = Double.parseDouble(tok);
+                  tok = st.nextToken();
+                  my_display.gvTheta[i] = Double.parseDouble(tok);
+                  if (trace) {
+                    if (histories[i].trueHistoryLength % historySkip == 0) {
+                      int n;
+                      if (histories[i].myNumPoints == histories[i].myX.length) {
+                        n = 0;
+                        histories[i].myNumPoints = 0;
+                        histories[i].loopHistory = 1;
+                      } else {
+                        n = histories[i].myNumPoints;
+                        histories[i].myNumPoints++;
+                      }
+                      histories[i].myX[n] = my_display.gvX[i];
+                      histories[i].myY[n] = my_display.gvY[i];
+                    }
+                    histories[i].trueHistoryLength++;
+                  } // end if (trace)
+                } // end for (int i = 0; i < my_display.numVehicles; i++)
+              } // end if (tok.equals("vehicles"))
+              if (tok.equals("projectiles")) {
+                tok = st.nextToken();
+                if (my_display.numProjectiles != Integer.parseInt(tok)) {
+                  my_display.numProjectiles = Integer.parseInt(tok);
+                  my_display.pX = new double[my_display.numProjectiles];
+                  my_display.pY = new double[my_display.numProjectiles];
+                }
+                for (int i = 0; i < my_display.numProjectiles; i++) {
+                  tok = st.nextToken();
+                  my_display.pX[i] = Double.parseDouble(tok);
+                  tok = st.nextToken();
+                  my_display.pY[i] = Double.parseDouble(tok);
+                } // end for (int i = 0; i < my_display.numProjectiles; i++)
+              } // end if (tok.equals("vehicles"))
             } // End synchronized (my_display)
           }
           my_display.repaint();
@@ -302,7 +324,7 @@ public class DisplayServer extends JPanel implements KeyListener {
       }
       /* TODO: generate projectiles */
       if (code == KeyEvent.VK_SPACE) {
-        _sim.generateProjectile();
+        projectileGenerated = true;
       }
     }
   }
@@ -316,6 +338,9 @@ public class DisplayServer extends JPanel implements KeyListener {
     }
     if (code == KeyEvent.VK_RIGHT) {
       stopTurning();
+    }
+    if (code == KeyEvent.VK_SPACE) {
+      projectileGenerated = false;
     }
   }
 
@@ -351,6 +376,11 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   public double getUserOmega() {
     return userOmega;
+  }
+
+  //TODO: requirements
+  public boolean getProjectileGenerated() {
+    return projectileGenerated;
   }
 
 
@@ -492,7 +522,7 @@ public class DisplayServer extends JPanel implements KeyListener {
    * Draws projectiles.
    * @param g
    */
-/*
+
   protected synchronized void drawProjectiles(Graphics g) {
     g.setColor(Color.black);
 
@@ -508,7 +538,7 @@ public class DisplayServer extends JPanel implements KeyListener {
       drawCircle(g, x, y, 1);
     }
   }
-  */
+
 
   protected synchronized void drawHistories(Graphics g) {
     g.setColor(Color.black);
