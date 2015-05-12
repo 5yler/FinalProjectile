@@ -54,9 +54,19 @@ public class FinalProjectile {
                 LeadingController lc = new LeadingController(sim, lv);
                 LeadingController lc2 = new LeadingController(sim, lv2);
                 LeadingController lc3 = new LeadingController(sim, lv3);
+//                FollowingController fc = null;
+//                FollowingController fc2 = null;
+//                FollowingController fc3 = null;
                 sim.addVehicle(lv);
                 sim.addVehicle(lv2);
                 sim.addVehicle(lv3);
+                sim.addLeadingController(lc);
+                sim.addLeadingController(lc2);
+                sim.addLeadingController(lc3);
+//                sim.addFollowingController(fc);
+//                sim.addFollowingController(fc2);
+//                sim.addFollowingController(fc3);
+                
 //                Thread lvThread = new Thread(lv);
 //                Thread lv2Thread = new Thread(lv2);
 //                Thread lv3Thread = new Thread(lv3);

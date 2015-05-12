@@ -40,6 +40,9 @@ public class Simulator extends Thread {
     private List<Projectile> _projectileList;  // list of projectiles inside Simulator
 
     private double _startupMS;  // time when the Simulator starts running
+    
+    private ArrayList<FollowingController> _followerList;  // list of FollowingControllers inside Simulator
+    private ArrayList<LeadingController> _leaderList;  // list of LeadingControllers inside Simulator
 
 
 /* SETTINGS */
@@ -65,6 +68,8 @@ public class Simulator extends Thread {
         _vehicleList = new ArrayList<GroundVehicle>();
         _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
         _dc = dc;
+        _followerList = new ArrayList<FollowingController>();
+        _leaderList = new ArrayList<LeadingController>();
 
         if (debug_projectiles) {
             //TODO: this is just testing, remove it for later
@@ -151,6 +156,23 @@ public class Simulator extends Thread {
     public synchronized void addUserController(UserController uc) {
         _uc = uc;
     }
+    
+    /**
+     * Adds a FollowingController to the list inside Simulator
+     * @param fc
+     */
+    public synchronized void addFollowingController(FollowingController fc){
+    	
+    	_followerList.add(fc);
+    }
+    
+    /**
+     * Adds a LeadingController to the list inside Simulator
+     * @param lc
+     */
+    public synchronized void addLeadingController(LeadingController lc){
+    	_leaderList.add(lc);
+    }
 
 
     /**
@@ -181,7 +203,7 @@ public class Simulator extends Thread {
      * @param oldController
      * @param newController
      */
-    public synchronized void switchVehicleControllers(VehicleController oldController, VehicleController newController) {
+    public synchronized void switchVehicleControllers(VehicleController oldController) {
 
         //  check if OC actually has a vehicle
         if (oldController.getGroundVehicle() == null) {
@@ -189,18 +211,30 @@ public class Simulator extends Thread {
         }
 
         // check if NC has a vehicle? probably not but....
-        if (newController.getGroundVehicle() != null) {
-            newController.removeGroundVehicle(); // remove NC pre-existing vehicle if present
-            System.out.println("Removed pre-existing target VehicleController vehicle.");
-            throw new IllegalArgumentException("Target VehicleController already had a GroundVehicle! What's up with that?");
-        }
+//        if (newController.getGroundVehicle() != null) {
+//            newController.removeGroundVehicle(); // remove NC pre-existing vehicle if present
+//            System.out.println("Removed pre-existing target VehicleController vehicle.");
+//            throw new IllegalArgumentException("Target VehicleController already had a GroundVehicle! What's up with that?");
+//        }
 
         // get vehicle from OC
         GroundVehicle v = oldController.getGroundVehicle();
+        
+        System.out.println("Old Position " + v.getPosition());
+        
+        v.setPosition(this.randomStartingPosition());
+        
+        System.out.println("New Position " + v.getPosition());
         // remove vehicle from OC
         oldController.removeGroundVehicle();
+                
+        FollowingController newController = new FollowingController(this,v,_uc.getGroundVehicle());
+        
+        this.addFollowingController(newController);
+        
+        //System.out.println("Added New Following Controller");
         // set the vehicle in NC
-        newController.setGroundVehicle(v);
+        //newController.setGroundVehicle(v);
 
         //TODO tests:
             // invalid arguments
@@ -377,6 +411,33 @@ public class Simulator extends Thread {
 
                     notifyAll();
                 } // end synchronized (this)
+                
+                // Check if projectile is near GroundVehicle and switch controller if so
+                synchronized (this) {
+                    for (int i = 0; i < _projectileList.size(); i++) {     // iterate over list of i projectiles
+                        Projectile p = _projectileList.get(i);    // get projectile at index i
+                        double[] projectilePos = p.getPosition();      // get [x, y, theta] of projectile
+                        
+                        for (int j = 1; j < _vehicleList.size(); j++) {	// iterate of list of j GroundVehicles
+                        	GroundVehicle gv = _vehicleList.get(j);	// get vehicle at index j
+                        	double[] gvPos = gv.getPosition();	// get [x y theta] of vehicle
+                        	boolean isWithinDistance = this.checkWithinDistance(projectilePos, gvPos, 10);	// check if vehicle and projectile are within 10 of each other
+                        	
+                        	if (isWithinDistance) {
+                        		System.out.println("SwitchingControllers at " + (j-1));
+                        		System.out.println(_vehicleList.size());
+                        		LeadingController lc = _leaderList.get(j-1);
+                        		//FollowingController fc = _followerList.get(j);
+                        		this.switchVehicleControllers(lc);
+                        		_projectileList.remove(i);
+                        	}
+                        }
+
+                    }
+                    
+                    notifyAll();
+
+                }	// end synchronized (this)
 
                 updateTime = System.nanoTime();
 
