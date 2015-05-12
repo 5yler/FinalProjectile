@@ -47,7 +47,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final int DISPLAY_Y = 600; // display window x pixels
   public static final Color DISPLAY_BACKGROUND_COLOR = Color.black; // display background color
   public static final Color USER_COLOR = Color.red; // user vehicle color
-  public static final Color PROJECTILE_COLOR = Color.black; // projectile color
+  public static final Color PROJECTILE_COLOR = Color.white; // projectile color
   public static final Color LEADING_COLOR = Color.black; // leading vehicle color
   public static final Color FOLLOWING_COLOR = Color.black; // display background color
 
@@ -159,8 +159,12 @@ public class DisplayServer extends JPanel implements KeyListener {
             return;
           } else {
             synchronized (my_display) {
+              outerif:
               if (tok.equals("vehicles")) {
                 tok = st.nextToken();
+                if (tok.equals("projectiles")) {
+                  break outerif;
+                }
                 if (my_display.numVehicles != Integer.parseInt(tok)) {
                   my_display.numVehicles = Integer.parseInt(tok);
                   my_display.gvX = new double[my_display.numVehicles];
@@ -197,20 +201,21 @@ public class DisplayServer extends JPanel implements KeyListener {
                   } // end if (trace)
                 } // end for (int i = 0; i < my_display.numVehicles; i++)
               } // end if (tok.equals("vehicles"))
-              if (tok.equals("projectiles")) {
+//              if (tok.equals("projectiles")) {
+              tok = st.nextToken();
+              tok = st.nextToken();
+              if (my_display.numProjectiles != Integer.parseInt(tok)) {
+                my_display.numProjectiles = Integer.parseInt(tok);
+                my_display.pX = new double[my_display.numProjectiles];
+                my_display.pY = new double[my_display.numProjectiles];
+              }
+              for (int i = 0; i < my_display.numProjectiles; i++) {
                 tok = st.nextToken();
-                if (my_display.numProjectiles != Integer.parseInt(tok)) {
-                  my_display.numProjectiles = Integer.parseInt(tok);
-                  my_display.pX = new double[my_display.numProjectiles];
-                  my_display.pY = new double[my_display.numProjectiles];
-                }
-                for (int i = 0; i < my_display.numProjectiles; i++) {
-                  tok = st.nextToken();
-                  my_display.pX[i] = Double.parseDouble(tok);
-                  tok = st.nextToken();
-                  my_display.pY[i] = Double.parseDouble(tok);
-                } // end for (int i = 0; i < my_display.numProjectiles; i++)
-              } // end if (tok.equals("vehicles"))
+                my_display.pX[i] = Double.parseDouble(tok);
+                tok = st.nextToken();
+                my_display.pY[i] = Double.parseDouble(tok);
+              } // end for (int i = 0; i < my_display.numProjectiles; i++)
+//              } // end if (tok.equals("vehicles"))
             } // End synchronized (my_display)
           }
           my_display.repaint();
@@ -253,15 +258,15 @@ public class DisplayServer extends JPanel implements KeyListener {
 
     // preset colors
     vehicleColors[0] = new Color(255,21,60); // red
-    pathColors[0] = new Color(255,21+50,60+50);
+    pathColors[0] = new Color(55+20,20,20); // red
     vehicleColors[1] = new Color(69,127,255); // blue
-    pathColors[1] = new Color(69+50,127+50,255);
+    pathColors[1] = new Color(35,40,85);
     vehicleColors[2] = new Color(232,117,31); // orange
-    pathColors[2] = new Color(255,117+50,31+50);
+    pathColors[2] = new Color(75,45,40);
     vehicleColors[3] = new Color(255,209,21); // yellow
-    pathColors[3] = new Color(255,255,21+50);
+    pathColors[3] = new Color(65,60,0);
     vehicleColors[4] = new Color(160,67,232); // purple
-    pathColors[4] = new Color(160+50,67+50,255);
+    pathColors[4] = new Color(50,0,50);
 
 
     SwingUtilities.invokeLater(new Runnable() {
@@ -275,7 +280,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   {
     JFrame.setDefaultLookAndFeelDecorated(true);
 
-    frame = new JFrame("16.35 Display");
+    frame = new JFrame("Do you feel lucky... punk? Well... DO YA?");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Container container = frame.getContentPane();
     //container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
@@ -322,7 +327,7 @@ public class DisplayServer extends JPanel implements KeyListener {
         turnRight();
         System.out.println("RIGHT");
       }
-      /* TODO: generate projectiles */
+      // generate projectiles */
       if (code == KeyEvent.VK_SPACE) {
         projectileGenerated = true;
       }
@@ -511,7 +516,7 @@ public class DisplayServer extends JPanel implements KeyListener {
         double th = gvTheta[j];
         drawX[i] = (int)(x+Math.cos(th)*shapeX[i]+Math.sin(th)*shapeY[i]);
         drawY[i] = (int)(y+Math.sin( th)*shapeX[i]-Math.cos(th)*shapeY[i]);
-        drawY[i] = DISPLAY_Y- drawY[i]; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
+        drawY[i] = DISPLAY_Y - drawY[i]; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
       }
       g.drawPolygon(drawX, drawY, 9);
     }
@@ -522,17 +527,18 @@ public class DisplayServer extends JPanel implements KeyListener {
    * Draws projectiles.
    * @param g
    */
-
   protected synchronized void drawProjectiles(Graphics g) {
-    g.setColor(Color.black);
-
+    // set color to projectile color
+    g.setColor(PROJECTILE_COLOR);
 
     for (int j = 0; j < numProjectiles; j++) {
 
-      // set color to be random and dark
-      g.setColor(randomDarkColor());
+      // cast projectile positions to be integers
       int x = (int) pX[j];
-      int y = (int) pX[j];
+      int y = (int) pY[j];
+
+      // correct for simulation y direction being different from display
+      y = Simulator.SIM_Y - y; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
 
       // draw projectile as circle of radius 1
       drawCircle(g, x, y, 1);
@@ -587,7 +593,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     int diameter = 2*R;
 
     // shift x and y by circle radius to center it
-    g.fillOval((Xc-R)*5, (Yc-R)*5, diameter*5, diameter*5);
+    g.fillOval((Xc-R)*5, (Yc-R)*5, 2*R, 2*R);
 
   }
 
@@ -633,6 +639,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     if (trace)
       drawHistories(g);
     drawVehicles(g);
+    drawProjectiles(g);
   }
 
   protected void addClient(Socket client) {

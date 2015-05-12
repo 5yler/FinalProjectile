@@ -4,7 +4,8 @@ public class Projectile extends Thread {
 	//start at user vehicle angel/position and travel in a straight line
 	//disappear when hit radius around target or go off screen
 
-	public static final double PROJECTILE_SPEED = 3*GroundVehicle.MAX_VEL;
+	//TODO: change speed in requirements
+	public static final double PROJECTILE_SPEED = 6*GroundVehicle.MAX_VEL;
 
     private double _x, _y, _theta;
     private double _dx, _dy;
@@ -13,7 +14,11 @@ public class Projectile extends Thread {
 
 	private long _startupTime;  // time when the VehicleController starts running
 
-	public static final int COMPLETELY_ARBITRARY_MS_INCREMENT = 100; // should be 100 for assignment 4
+	public static final int COMPLETELY_ARBITRARY_MS_INCREMENT = 50; // should be 100 for assignment 4
+
+	//TODO: add to requirement
+	public static int SHOTS_FIRED = 0;	// total number of projectiles fired
+
 
 
 	public Projectile(double[] shooterPosition, Simulator sim) {
@@ -29,6 +34,8 @@ public class Projectile extends Thread {
 
     	_dx = PROJECTILE_SPEED * Math.cos(_theta);
 		_dy = PROJECTILE_SPEED * Math.sin(_theta);
+
+		SHOTS_FIRED++; //TODO: req
     }
 
 	public synchronized void shoot(int sec, int msec) {

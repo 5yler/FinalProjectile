@@ -363,7 +363,7 @@ public class Simulator extends Thread {
         long currentTime = System.nanoTime();
         long updateTime = System.nanoTime();
 
-        while ((currentTime - _startupTime) < 100*1e9) { // while time less than 100s
+        while ((currentTime - _startupTime) < 20*1e9) { // while time less than 100s
 
             currentTime = System.nanoTime();
 
@@ -451,7 +451,11 @@ public class Simulator extends Thread {
         } // end while (time < 100s)
 
         _dc.traceOff();
-        System.out.println("Cleared");
+        System.out.println("SHOTS FIRED: " + Projectile.SHOTS_FIRED);
+
+        // kill application after time is over
+        System.exit(0);
+
 
     } // end run()
 
