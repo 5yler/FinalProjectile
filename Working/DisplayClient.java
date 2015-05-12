@@ -49,6 +49,7 @@ public class DisplayClient  {
   {
     StringBuffer message = new StringBuffer();
     message.append("vehicles");
+    message.append(" ");
     message.append(numVehicles);
     message.append(" ");
     for (int i = 0; i < numVehicles; i++) {
@@ -56,6 +57,7 @@ public class DisplayClient  {
 		     format.format(gvTheta[i])+" ");
     }
     message.append("projectiles");
+    message.append(" ");
     message.append(numProjectiles);
     message.append(" ");
     for (int i = 0; i < numProjectiles; i++) {
