@@ -49,19 +49,36 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final int DISPLAY_X = 800; // display window x pixels
   public static final int DISPLAY_Y = 600; // display window x pixels
   public static final Color DISPLAY_BACKGROUND_COLOR = Color.black; // display background color
-  public static final Color PROJECTILE_COLOR = Color.white; // projectile color
-  public static final Color USER1_COLOR = Color.red; // user vehicle color
-  public static final Color USER2_COLOR = Color.red; // user vehicle color
-  public static final Color LEADING_COLOR = Color.blue; // leading vehicle color
-  public static final Color FOLLOWING_COLOR = new Color(232,117,31); // display background color
 
-  public static final Color[] COLORS = new Color[] {
+
+  public static final Color[] RED = { new Color(255,21,60), // red
+                                      new Color(55+20,20,20)}; // red
+  public static final Color[] BLUE = {new Color(69,127,255),new Color(35,40,85)};
+  public static final Color[] ORANGE = {new Color(232,117,31),new Color(75,45,40)};
+  public static final Color[] YELLOW = {new Color(255,209,21),new Color(65,60,0)};
+  public static final Color[] PURPLE = {new Color(160,67,232),new Color(50,0,50)};
+  public static final Color[] WHITE = {new Color(215,215,215),new Color(55,55,55)};
+
+
+  public static final Color[] PROJECTILE_COLOR = WHITE; // projectile color //TODO: remove from req
+  public static final Color[] USER1_COLOR = RED; // red // user vehicle color
+  public static final Color[] USER2_COLOR = PURPLE; // purple // user vehicle color
+  public static final Color[] LEADING_COLOR = BLUE; // blue // leading vehicle color
+  public static final Color[] FOLLOWING_COLOR = WHITE; // orangedisplay background color
+
+
+  //TODO: req
+  public static final Color[][] COLORS = new Color[][] {
           PROJECTILE_COLOR, // 0
           USER1_COLOR,      // 1
           USER2_COLOR,      // 2
           LEADING_COLOR,    // 3
           FOLLOWING_COLOR,  // 4
   };
+
+
+
+
 
   public static final int SLEEP_TIME = 0; // delay between timesteps when drawing vehicle trajectories
   // 10-100 is a reasonable number
@@ -525,7 +542,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 
       // set color matching index in COLORS array
 
-      g.setColor(COLORS[gvC[j]]);
+      g.setColor(COLORS[gvC[j]][0]);
 
       int drawX[] = new int[9];
       int drawY[] = new int[9];
@@ -552,13 +569,11 @@ public class DisplayServer extends JPanel implements KeyListener {
    */
   protected synchronized void drawProjectiles(Graphics g) {
     // set color to projectile color
-    g.setColor(PROJECTILE_COLOR);
-
     for (int j = 0; j < numProjectiles; j++) {
 
       // set color to user color with matching index in COLORS array
       System.out.println("pC[j] = "+pC[j]);
-      g.setColor(COLORS[pC[j]]);
+      g.setColor(COLORS[pC[j]][0]);
 
       // cast projectile positions to be integers
       int x = (int) pX[j];
@@ -579,12 +594,18 @@ public class DisplayServer extends JPanel implements KeyListener {
     // This chunk of code just translate and rotates the shape.
 
     for (int j = 0; j < numVehicles; j++) {
+      /* old color code
       if (j < pathColors.length){
         g.setColor(pathColors[j]);
 
       }else{
         g.setColor(pathColors[pathColors.length-1]);
-      }
+      }*/
+
+      // set color
+      g.setColor(COLORS[gvC[j]][1]);
+
+
       int drawX[]; int drawY[];
       if (histories[j].loopHistory == 0){
         drawX = new int[histories[j].myNumPoints];

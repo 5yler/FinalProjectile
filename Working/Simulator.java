@@ -405,7 +405,8 @@ public class Simulator extends Thread {
                         	if (isWithinDistance) {
                         		// Get GroundVehicleID
                         		int ID = gv.getNumID();
-                        		
+
+                                /*
                         		// Check if GroundVehicle is associated with a FollowingController by comparing numIDs
                         		for (int l = 0; l < _followerList.size(); l++) {
                         			FollowingController fc = _followerList.get(l);
@@ -414,11 +415,21 @@ public class Simulator extends Thread {
                         				if (ID == compareID){
                         					fc.removeGroundVehicle();
                         					_vehicleList.remove(j);
-                        					System.out.println("Removed vehicle"); // debug
+                        					System.out.println("Removed vehicle "); // debug
                         				}
                         			}
                         		}
-                        		
+                                */
+
+                                for (int l = 0; l < _followerList.size(); l++) {
+                                    FollowingController fc = _followerList.get(l);
+                                    if (gv == fc.getGroundVehicle()) {
+                                        _vehicleList.remove(j);
+                                        System.out.println("Removed vehicle "); // debug
+                                    }
+                                }
+
+
                         		// Check if GroundVehicle is associated with a LeadingController by comparing numIDs
                         		for (int k = 0; k < _leaderList.size(); k++) {
                         			LeadingController lc = _leaderList.get(k);
@@ -436,7 +447,7 @@ public class Simulator extends Thread {
                         	}
                         }
 
-                    }
+                        }
                     
                     notifyAll();
 

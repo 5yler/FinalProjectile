@@ -11,6 +11,7 @@ import java.net.Socket;
 public class FinalProjectile {
 
     private static final boolean lead3  = true;    // set to true for multiple LeadingController test
+    private static final boolean fc_debug  = true;    // set to true for FC debug
 
     /* MAIN METHOD */
     public static void main(String[] args) {
@@ -33,18 +34,15 @@ public class FinalProjectile {
             GroundVehicle gv = new GroundVehicle(pos, 1, 0);
 
 
-            Thread gvThread = new Thread(gv);
             // construct a single Simulator
             Simulator sim = new Simulator(dc);
             sim.addVehicle(gv);
-            Thread simThread = new Thread(sim);
 
             // construct a single instance of the CircleController class
             UserController uc = new UserController(sim, gv, d);
             sim.addUserController(uc);
 //            d.addUserController(uc);
 //            uc.addDisplayServer(d);
-            Thread ucThread = new Thread(uc);
 
             //TODO: make all of this some sort of nice for loop in Simulator?
             if (lead3) {
@@ -54,6 +52,8 @@ public class FinalProjectile {
                 LeadingController lc = new LeadingController(sim, lv);
                 LeadingController lc2 = new LeadingController(sim, lv2);
                 LeadingController lc3 = new LeadingController(sim, lv3);
+
+
                 sim.addVehicle(lv);
                 sim.addVehicle(lv2);
                 sim.addVehicle(lv3);
@@ -84,6 +84,16 @@ public class FinalProjectile {
                 lc.start();
                 lc2.start();
                 lc3.start();
+
+                if(fc_debug) {
+                    GroundVehicle fv = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
+                    FollowingController fc = new FollowingController(sim, fv, gv);
+                    sim.addFollowingController(fc);
+                    sim.addVehicle(fv);
+                    fv.start();
+                    fc.start();
+                }
+
             }
 
             gv.start();
