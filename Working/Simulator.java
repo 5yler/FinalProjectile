@@ -204,7 +204,7 @@ public class Simulator extends Thread {
      * @param newController
      */
     public synchronized void switchVehicleControllers(VehicleController oldController) {
-
+    	//TODO: Requirements
         //  check if OC actually has a vehicle
         if (oldController.getGroundVehicle() == null) {
             throw new IllegalArgumentException("Old VehicleController has no GroundVehicle!");
@@ -221,14 +221,6 @@ public class Simulator extends Thread {
         
         // add followingController to list in Simulator
         this.addFollowingController(newController);
-  
-
-        //TODO tests:
-            // invalid arguments
-            // test if GV set correctly
-            // test if OC had vehicle removed
-
-        //TODO: test if this actually works in simulation???
 
 
     }
@@ -408,11 +400,13 @@ public class Simulator extends Thread {
                         for (int j = 1; j < _vehicleList.size(); j++) {	// iterate of list of j GroundVehicles excluding UserControlled vehicle
                         	GroundVehicle gv = _vehicleList.get(j);	// get vehicle at index j
                         	double[] gvPos = gv.getPosition();	// get [x y theta] of vehicle
-                        	boolean isWithinDistance = this.checkWithinDistance(projectilePos, gvPos, 5);	// check if vehicle and projectile are within 10 of each other
+                        	boolean isWithinDistance = this.checkWithinDistance(projectilePos, gvPos, 5);	// check if vehicle and projectile are within 5 of each other
                         	
                         	if (isWithinDistance) {
+                        		// Get GroundVehicleID
                         		int ID = gv.getNumID();
                         		
+                        		// Check if GroundVehicle is associated with a FollowingController by comparing numIDs
                         		for (int l = 0; l < _followerList.size(); l++) {
                         			FollowingController fc = _followerList.get(l);
                         			if (fc.hasVehicle()){
@@ -420,19 +414,19 @@ public class Simulator extends Thread {
                         				if (ID == compareID){
                         					fc.removeGroundVehicle();
                         					_vehicleList.remove(j);
-                        					System.out.println("Removed vehicle");
+                        					System.out.println("Removed vehicle"); // debug
                         				}
                         			}
                         		}
                         		
-                        		
+                        		// Check if GroundVehicle is associated with a LeadingController by comparing numIDs
                         		for (int k = 0; k < _leaderList.size(); k++) {
                         			LeadingController lc = _leaderList.get(k);
                         			if (lc.hasVehicle()){
                         				int compareID = lc.getGroundVehicle().getNumID();
                         				if (ID == compareID) {
                         					this.switchVehicleControllers(lc);
-                        					System.out.println("Changed to Follower");
+                        					System.out.println("Changed to Follower"); // debug
                         				}
                         			}
                         		}
