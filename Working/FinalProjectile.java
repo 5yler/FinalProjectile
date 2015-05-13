@@ -11,9 +11,14 @@ import java.net.Socket;
 public class FinalProjectile {
 
     private static final boolean lead3  = true;    // set to true for multiple LeadingController test
-    private static final boolean debug_follower  = true;    // set to true for FC debug
-    public static final boolean debug_projectiles  = true;    // set to true for FC debug
     public static boolean multiplayer  = true;    // set to true for FC debug //TODO:req
+
+    // debug print statement toggle
+    public static final boolean debug_follower      = true;    // set to true for FC debug
+    public static final boolean debug_projectiles   = false;    // set to true for FC debug
+    public static final boolean debug_keys          = false;    // set to true for FC debug
+    public static final boolean debug_display_msgs  = false;    // set to true for FC debug
+
 
     /* MAIN METHOD */
     public static void main(String[] args) {
@@ -95,15 +100,15 @@ public class FinalProjectile {
                 sim.addLeadingController(lc2);
                 sim.addLeadingController(lc3);
 
-                lc.addFollower(uv1);
-                lc.addFollower(lv2);
-                lc.addFollower(lv3);
-                lc2.addFollower(uv1);
-                lc2.addFollower(lv);
-                lc2.addFollower(lv3);
-                lc3.addFollower(uv1);
-                lc3.addFollower(lv);
-                lc3.addFollower(lv2);
+//                lc.addFollower(uv1);
+//                lc.addFollower(lv2);
+//                lc.addFollower(lv3);
+//                lc2.addFollower(uv1);
+//                lc2.addFollower(lv);
+//                lc2.addFollower(lv3);
+//                lc3.addFollower(uv1);
+//                lc3.addFollower(lv);
+//                lc3.addFollower(lv2);
                 lv.start();
                 lv2.start();
                 lv3.start();
@@ -128,9 +133,9 @@ public class FinalProjectile {
                     UserController uc2 = new UserController(sim, uv2, ds);
                     sim.addUserController(uc2);
 
-                    lc.addFollower(uv2);
-                    lc2.addFollower(uv2);
-                    lc3.addFollower(uv2);
+//                    lc.addFollower(uv2);
+//                    lc2.addFollower(uv2);
+//                    lc3.addFollower(uv2);
 
                     uv2.start();
                     uc2.start();

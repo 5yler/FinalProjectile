@@ -11,6 +11,8 @@ public class GroundVehicle extends Thread {
 	private double _x, _y, _theta;    	/* shared resources */
 	private double _dx, _dy, _dtheta; 	/* shared resources */
 
+	public VehicleController controller;
+
 	//TODO: add to requirements doc
 	public int color;	// index of vehicle color in DisplayServer.COLORS array
 

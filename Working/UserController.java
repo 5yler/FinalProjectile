@@ -6,7 +6,11 @@ public class UserController extends VehicleController {
 //    private ControlPanel cp;
     //TODO: add to requirements
     protected static int userControllerCount = 0;	// number of VehicleControllers in existence
-    private final int UserID;
+    public final int UserID;
+
+    //TODO: req
+    public int shots = 0;
+    public int hits = 0;
 
     private final boolean debug = false; // set to true for debug statements
 
@@ -36,6 +40,7 @@ public class UserController extends VehicleController {
         boolean isShooting = _ds.getProjectileGenerated(UserID);
         if (isShooting) {
             _sim.generateProjectile(this);
+            shots++;
         }
 
         if (debug) {

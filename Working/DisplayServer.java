@@ -333,6 +333,17 @@ public class DisplayServer extends JPanel implements KeyListener {
     }
   }
 
+  public static void print(String s) {
+    if (FinalProjectile.debug_keys) {
+      System.out.print(s);
+    }
+  }
+
+  public static void printmsg(String s) {
+    if (FinalProjectile.debug_display_msgs) {
+      System.out.print(s);
+    }
+  }
 
   /**
    *
@@ -345,20 +356,20 @@ public class DisplayServer extends JPanel implements KeyListener {
       // forward velocity control
       if (code == KeyEvent.VK_DOWN) {
         decreaseSpeed(0);
-        System.out.println("User 1: DOWN");
+        print("User 1: DOWN");
       }
       if (code == KeyEvent.VK_UP) {
         increaseSpeed(0);
-        System.out.println("User 1: UP");
+        print("User 1: UP");
       }
       // turning
       if (code == KeyEvent.VK_LEFT) {
         turnLeft(0);
-        System.out.println("User 1: LEFT");
+        print("User 1: LEFT");
       }
       if (code == KeyEvent.VK_RIGHT) {
         turnRight(0);
-        System.out.println("User 1: RIGHT");
+        print("User 1: RIGHT");
       }
       // generate projectiles
       if (code == KeyEvent.VK_SPACE) {
@@ -368,20 +379,20 @@ public class DisplayServer extends JPanel implements KeyListener {
       // forward velocity control
       if (code == KeyEvent.VK_S) {
         decreaseSpeed(1);
-        System.out.println("User 2: DOWN");
+        print("User 2: DOWN");
       }
       if (code == KeyEvent.VK_W) {
         increaseSpeed(1);
-        System.out.println("User 2: UP");
+        print("User 2: UP");
       }
       // turning
       if (code == KeyEvent.VK_A) {
         turnLeft(1);
-        System.out.println("User 2: LEFT");
+        print("User 2: LEFT");
       }
       if (code == KeyEvent.VK_D) {
         turnRight(1);
-        System.out.println("User 2: RIGHT");
+        print("User 2: RIGHT");
       }
       // generate projectiles
       if (code == KeyEvent.VK_SHIFT) {
@@ -618,7 +629,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     for (int j = 0; j < numProjectiles; j++) {
 
       // set color to user color with matching index in COLORS array
-      System.out.println("pC[j] = "+pC[j]);
+      printmsg("pC[j] = "+pC[j]);
       g.setColor(COLORS[pC[j]][0]);
 
       // cast projectile positions to be integers

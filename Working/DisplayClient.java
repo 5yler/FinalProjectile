@@ -32,6 +32,12 @@ public class DisplayClient  {
     }
   }
 
+  public static void printmsg(String s) {
+    if (FinalProjectile.debug_display_msgs) {
+      System.out.print(s);
+    }
+  }
+
   public void clear() {
     output.println("clear");
   }
@@ -62,7 +68,7 @@ public class DisplayClient  {
     message.append(" ");
     for (int i = 0; i < numProjectiles; i++) {
       message.append(format.format(pX[i])+" "+format.format(pY[i])+" "+format.format(pC[i])+" ");
-      System.out.println("pC[i] = "+pC[i]);
+      printmsg("pC[i] = " + pC[i]);
     }
     if (print)
       System.out.println("Sent "+message);

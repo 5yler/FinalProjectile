@@ -48,6 +48,7 @@ public class VehicleController extends Thread {
     public VehicleController(Simulator sim, GroundVehicle v) {
         _sim = sim;
         _v = v;
+        _v.controller = this;
 
 //        _dt = _v.VEHICLE_SEC_INCREMENT+_v.VEHICLE_MSEC_INCREMENT/1e3;
         _dt = VC_MS_INCREMENT;

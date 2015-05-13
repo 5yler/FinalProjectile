@@ -17,7 +17,7 @@ public class FollowingController extends VehicleController {
 
     private double maxTransSpeed = 10;
     private double minTransSpeed = 5;
-    private double targetFollowingDistance = 0;
+    private double targetFollowingDistance = 0.5;
 
     private final boolean print = true;   // set to true for print statements
     private final boolean debug = true;   // set to true for debug statements
@@ -33,7 +33,7 @@ public class FollowingController extends VehicleController {
         super(sim, v);
         _prey = prey;
         //TODO: req
-        _v.color = 4;
+        _v.color = Simulator.FOLLOWING;
     }
 
     /**
@@ -61,25 +61,22 @@ public class FollowingController extends VehicleController {
         // position of follower vehicle
         vPose = _v.getPosition();
         vVel = _v.getVelocity();
-        vSpeed = Math.sqrt(Math.pow(vVel[0], 2) + Math.pow(vVel[1], 2));
 
         // define difference in x, y, and theta between vehicles
         double DX = preyPose[0] - vPose[0];
         double DY = preyPose[1] - vPose[1];
-        double DTheta = preyPose[2] - vPose[2];
 
         // define next difference in x, y
         double X = DX+(preyVel[0] - vVel[0])*_dt;
         double Y = DY+(preyVel[1] - vVel[1])*_dt;
 
         // linear distance between vehicles
-        double preyDistance = Math.sqrt(Math.pow(DX,2) + Math.pow(DY,2)); // d = (x^2 + y^2)^(1/2)
+      //  double preyDistance = Math.sqrt(Math.pow(DX,2) + Math.pow(DY,2)); // d = (x^2 + y^2)^(1/2)
+        double preyDistance = Simulator.distance(preyPose,vPose); // d = (x^2 + y^2)^(1/2)
+
 
         // define next angle between vehicles
-        double nextPhi = Math.atan(Y/X);
-        if (X<0) {
-            nextPhi += Math.PI;
-        }
+        double nextPhi = getAngle(X,Y);
         
         // if vehicles are in the same place
          if (DX == 0 && DY == 0) {
@@ -88,7 +85,6 @@ public class FollowingController extends VehicleController {
              omega = 0;
          } else {
              // make rotational vel of control proportional to future angle between vehicles
-             omega = nextPhi - vPose[2];
              nextPhi = normalizeAngle(nextPhi);
              omega = normalizeAngle(nextPhi - vPose[2]);
 

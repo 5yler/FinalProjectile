@@ -13,6 +13,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Simulator extends Thread {
 
     public static final int SIM_MS_INCREMENT = 50; // should be 100 for assignment 4
+    public static final int USER1 = 1;
+    public static final int USER2 = 2;
+    public static final int LEADING = 3;
+    public static final int FOLLOWING = 4;
+
+
 
     private long _startupTime;  // time when the VehicleController starts running
 
@@ -33,7 +39,7 @@ public class Simulator extends Thread {
     // ID of VehicleController whose turn it is to update
     protected int _turnID = 0;  /* shared resource */
 
-    private ArrayList<GroundVehicle> _vehicleList;  // list of GroundVehicles inside Simulator
+    public List<GroundVehicle> _vehicleList;  // list of GroundVehicles inside Simulator
 
     // user controllers //TODO: req
     private UserController _uc1;
@@ -61,13 +67,14 @@ public class Simulator extends Thread {
 
     /* CONSTRUCTORS */
     public Simulator() {
-        _vehicleList = new ArrayList<GroundVehicle>();
+        //TODO: req copyonwrite arrays
+        _vehicleList = new CopyOnWriteArrayList<GroundVehicle>();
         _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
         _dc = null;
     }
 
     public Simulator(DisplayClient dc) {
-        _vehicleList = new ArrayList<GroundVehicle>();
+        _vehicleList = new CopyOnWriteArrayList<GroundVehicle>();
         _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
         _dc = dc;
         _followerList = new ArrayList<FollowingController>();
@@ -232,7 +239,7 @@ public class Simulator extends Thread {
     /**
      * Removes Projectiles that went offscreen from Projectile list.
      */
-    public  void removeOffscreenProjectiles() {
+    public void removeOffscreenProjectiles() {
 
         for (Projectile p : _projectileList) {
             double[] position = p.getPosition();    // get [x, y, theta] of projectile
@@ -246,30 +253,80 @@ public class Simulator extends Thread {
 
     }
 
+
     /**
-     * Checks if a projectile has gone offscreen
+     * //TODO: NEW REQUIREMENTS
+     * Checks if projectile shot a vehicle.
      * @param projectilePos projectile [x, y, theta]
-     * @return true if projectile position is outside the bounds of the simulation
+     * @param vPos vehicle [x, y, theta]
      */
-    public boolean projectileOffScreen(double[] projectilePos) {
-    	if (projectilePos.length != 3) {
+    public boolean projectileShotVehicle(double[] projectilePos, double[] vPos) {
+        if (projectilePos.length != 3) {
+            throw new IllegalArgumentException("projectilePos must be of length 3");
+        }
+        if (vPos.length != 3) {
+            throw new IllegalArgumentException("vPos must be of length 3");
+        }
+
+        boolean wasShot = false;
+
+        if (checkWithinDistance(projectilePos, vPos, Projectile.HIT_DISTANCE)) {
+            wasShot = true;
+        }
+
+        return wasShot;
+    }
+
+
+    /**
+     * Removes Projectiles that went offscreen from Projectile list.
+     */
+    public void changeShotVehicles() {
+        for (GroundVehicle v : _vehicleList) {
+            for (Projectile p : _projectileList) {
+                if (projectileShotVehicle(p.getPosition(), v.getPosition())) {
+                    System.out.println("VEHICLE SHOT!");
+                    if (v.color == FOLLOWING) {
+                        _vehicleList.remove(v);
+                        System.out.println("VEHICLE SHOT AGAIN! GAME OVER, BUDDY!");
+
+//                        _projectileList.remove(p);
+                    }
+                    if (v.color == LEADING) {
+                        switchVehicleControllers(v.controller);
+                        System.out.println("Switched controllers!");
+//                        _projectileList.remove(p);
+                    }
+                }
+            }
+
+        }
+
+    }
+
+
+    boolean projectileOffScreen(double[] projectilePos) {
+        if (projectilePos.length != 3) {
             throw new IllegalArgumentException("obj1pos must be of length 3");
         }
-    	boolean isOffScreen = false;
+        boolean isOffScreen = false;
 
         double x = projectilePos[0];
         double y = projectilePos[1];
 
-    	// check projectiles x-limits
+        // check projectiles x-limits
         if (x > SIM_X || x < 0) {
             isOffScreen = true;
         }
-    	// check projectiles y-limits
+        // check projectiles y-limits
         if (y > SIM_Y || y < 0) {
             isOffScreen = true;
         }
-    	return isOffScreen;
+        return isOffScreen;
+
     }
+
+
     
     /**
      * Checks if two GroundVehicle/Projectile objects are within a certain distance of each other
@@ -311,7 +368,7 @@ public class Simulator extends Thread {
      * @param obj2pos object 2 [x, y, theta]
      * @return linear distance between two object positions
      */
-    public double distance(double[] obj1pos, double[] obj2pos) {
+    public static double distance(double[] obj1pos, double[] obj2pos) {
         if (obj1pos.length != 3) {
             throw new IllegalArgumentException("obj1pos must be of length 3");
         }
@@ -335,10 +392,10 @@ public class Simulator extends Thread {
         // not just current positions
 
         // vehicle arrays to send to display
-        double[] gvX = new double[_vehicleList.size()];
-        double[] gvY = new double[_vehicleList.size()];
-        double[] gvTheta = new double[_vehicleList.size()];
-        double[] gvC = new double[_vehicleList.size()]; // color array
+        double[] gvX;
+        double[] gvY;
+        double[] gvTheta;
+        double[] gvC; // color array
 
         // projectile arrays to send to display
         double[] pX;
@@ -356,6 +413,11 @@ public class Simulator extends Thread {
             if ((currentTime - updateTime) >= SIM_MS_INCREMENT*1e6) { // update once every 100ms
 
                 synchronized (this) {
+
+                    gvX = new double[_vehicleList.size()];
+                    gvY = new double[_vehicleList.size()];
+                    gvTheta = new double[_vehicleList.size()];
+                    gvC = new double[_vehicleList.size()]; // color array
 
                     for (int i = 0; i < _vehicleList.size(); i++) {     // iterate over list of i vehicles
                         GroundVehicle vehicle = _vehicleList.get(i);    // get vehicle at index i
@@ -399,76 +461,22 @@ public class Simulator extends Thread {
 
                     notifyAll();
                 } // end synchronized (this)
-                
-                // Check if projectile is near GroundVehicle and switch controller if so
-                synchronized (this) {
-                    for (int i = 0; i < _projectileList.size(); i++) {     // iterate over list of i projectiles
-                        Projectile p = _projectileList.get(i);    // get projectile at index i
-                        double[] projectilePos = p.getPosition();      // get [x, y, theta] of projectile
-                        
-                        for (int j = 1; j < _vehicleList.size(); j++) {	// iterate of list of j GroundVehicles excluding UserControlled vehicle
-                        	GroundVehicle gv = _vehicleList.get(j);	// get vehicle at index j
-                        	double[] gvPos = gv.getPosition();	// get [x y theta] of vehicle
-                        	boolean isWithinDistance = this.checkWithinDistance(projectilePos, gvPos, 5);	// check if vehicle and projectile are within 5 of each other
-                        	
-                        	if (isWithinDistance) {
-                        		// Get GroundVehicleID
-                        		int ID = gv.getNumID();
 
-                                /*
-                        		// Check if GroundVehicle is associated with a FollowingController by comparing numIDs
-                        		for (int l = 0; l < _followerList.size(); l++) {
-                        			FollowingController fc = _followerList.get(l);
-                        			if (fc.hasVehicle()){
-                        				int compareID = fc.getGroundVehicle().getNumID();
-                        				if (ID == compareID){
-                        					fc.removeGroundVehicle();
-                        					_vehicleList.remove(j);
-                        					System.out.println("Removed vehicle "); // debug
-                        				}
-                        			}
-                        		}
-                                */
-
-                                for (int l = 0; l < _followerList.size(); l++) {
-                                    FollowingController fc = _followerList.get(l);
-                                    if (gv == fc.getGroundVehicle()) {
-                                        _vehicleList.remove(j);
-                                        System.out.println("Removed vehicle "); // debug
-                                    }
-
-                                }
-
-
-                        		// Check if GroundVehicle is associated with a LeadingController by comparing numIDs
-                        		for (int k = 0; k < _leaderList.size(); k++) {
-                        			LeadingController lc = _leaderList.get(k);
-                        			if (lc.hasVehicle()){
-                        				int compareID = lc.getGroundVehicle().getNumID();
-                        				if (ID == compareID) {
-                        					this.switchVehicleControllers(lc);
-                        					System.out.println("Changed to Follower"); // debug
-                        				}
-                        			}
-
-                                }
-//                                _projectileList.remove(i);
-
-                                //TODO: update scores and make FC follow correct user
-                        	}
-                        }
-
-                        }
-                    
-                    notifyAll();
-
-                }	// end synchronized (this)
 
                 updateTime = System.nanoTime();
 
                 // update display client with vehicle positions
                 // update display client with projectile positions
                 _dc.update(_vehicleList.size(), gvX, gvY, gvTheta, gvC, _projectileList.size(), pX, pY, pC);
+
+                // Check if projectile is near GroundVehicle and switch controller if so
+                synchronized (this) {
+                    changeShotVehicles();
+                    notifyAll();
+
+                }	// end synchronized (this)
+
+
 
             } // end if (100ms since last update)
         } // end while (time < 100s)

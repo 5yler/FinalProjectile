@@ -6,13 +6,15 @@ public class Projectile extends Thread {
 
 	//TODO: change speed in requirements
 	public static final double PROJECTILE_SPEED = 6*GroundVehicle.MAX_VEL;
+	public static final double HIT_DISTANCE = 3;
+
 
     private double _x, _y, _theta;
     private double _dx, _dy;
 
 	//TODO: add to requirements doc
 	public int color;	// index of vehicle color in DisplayServer.COLORS array
-
+	public int ID; 		//
 
 	private Simulator _sim;
 	private UserController _uc;
@@ -35,6 +37,7 @@ public class Projectile extends Thread {
 		_uc = uc;
 
 		color = _uc.getUserVehicle().color; 		//TODO: req
+		ID = _uc.UserID;
 
 		_x = shooterPosition[0];
     	_y = shooterPosition[1];
