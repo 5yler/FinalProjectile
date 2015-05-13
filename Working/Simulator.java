@@ -438,6 +438,7 @@ public class Simulator extends Thread {
                         		}
                         		
                         		_projectileList.remove(i);
+                                //TODO: update scores and make FC follow correct user
                         	}
                         }
 

@@ -115,7 +115,6 @@ public class DisplayServer extends JPanel implements KeyListener {
       histories[i] = new History();
   }
 
-//TODO: listen for projectile update messages
   public class MessageListener extends Thread {
     public BufferedReader my_client;
     public DisplayServer my_display;
@@ -173,7 +172,7 @@ public class DisplayServer extends JPanel implements KeyListener {
                   my_display.resetHistories(numVehicles);
                 }
                 outerloop:
-                for (int i = 0; i < my_display.numVehicles; i++) { //TODO: DEBUG
+                for (int i = 0; i < my_display.numVehicles; i++) {
                   if (tok.equals("projectiles")) {
                     break outerloop;
                   }

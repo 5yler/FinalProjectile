@@ -46,7 +46,7 @@ public class FinalProjectile {
 //            uc.addDisplayServer(d);
             Thread ucThread = new Thread(uc);
 
-
+            //TODO: make all of this some sort of nice for loop in Simulator?
             if (lead3) {
                 GroundVehicle lv = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
                 GroundVehicle lv2 = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
