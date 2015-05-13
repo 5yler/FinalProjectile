@@ -76,7 +76,7 @@ public class FollowingController extends VehicleController {
 
 
         // define next angle between vehicles
-        double nextPhi = getAngle(X,Y);
+        double nextPhi = getAngle(DX,DY);
         
         // if vehicles are in the same place
          if (DX == 0 && DY == 0) {
