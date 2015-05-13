@@ -14,14 +14,13 @@ import java.util.*;
 public class DisplayServer extends JPanel implements KeyListener {
 
 
-  private double SPEED_INCREMENT = 0.1;
-  private double userSpeed = 7.5;
-  private double userOmega = 0;
-  private boolean projectileGenerated = false;
+  private double SPEED_INCREMENT = 0.5;
+  private double[] userSpeed = {5, 5}; //TODO: req
+  private double[] userOmega = {0, 0}; //TODO: req
+  private boolean[] projectileGenerated = {false, false}; //TODO: req
   private static Random rand = new Random();
 
   private Simulator _sim;
-
 
   private static int historySkip = 5;
   private static final long serialVersionUID = 1l;
@@ -57,12 +56,13 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final Color[] ORANGE = {new Color(232,117,31),new Color(75,45,40)};
   public static final Color[] YELLOW = {new Color(255,209,21),new Color(65,60,0)};
   public static final Color[] PURPLE = {new Color(160,67,232),new Color(50,0,50)};
-  public static final Color[] WHITE = {new Color(215,215,215),new Color(55,55,55)};
+//  public static final Color[] WHITE = {new Color(215,215,215),new Color(55,55,55)};
+  public static final Color[] WHITE = {new Color(49,57,135),new Color(20,25,45)};
 
 
   public static final Color[] PROJECTILE_COLOR = WHITE; // projectile color //TODO: remove from req
   public static final Color[] USER1_COLOR = RED; // red // user vehicle color
-  public static final Color[] USER2_COLOR = PURPLE; // purple // user vehicle color
+  public static final Color[] USER2_COLOR = ORANGE; // purple // user vehicle color
   public static final Color[] LEADING_COLOR = BLUE; // blue // leading vehicle color
   public static final Color[] FOLLOWING_COLOR = WHITE; // orangedisplay background color
 
@@ -104,10 +104,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 					     Color.darkGray};
   */
 
-
-  public void addSimulator(Simulator sim) {
-    _sim = sim;
-  }
 
   public class History {
     History() {
@@ -186,6 +182,7 @@ public class DisplayServer extends JPanel implements KeyListener {
             return;
           } else {
             synchronized (my_display) {
+              //TODO: req
               outerif:
               if (tok.equals("vehicles")) {
                 tok = st.nextToken();
@@ -313,7 +310,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   {
     JFrame.setDefaultLookAndFeelDecorated(true);
 
-    frame = new JFrame("Do you feel lucky... punk? Well... DO YA?");
+    frame = new JFrame("I'm Feeling Lucky!");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Container container = frame.getContentPane();
     //container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
@@ -344,25 +341,51 @@ public class DisplayServer extends JPanel implements KeyListener {
   public void keyPressed(KeyEvent e) {
     int code = e.getKeyCode();
     {
+      // USER 1
+      // forward velocity control
       if (code == KeyEvent.VK_DOWN) {
-        decreaseSpeed();
-        System.out.println("DOWN");
+        decreaseSpeed(0);
+        System.out.println("User 1: DOWN");
       }
       if (code == KeyEvent.VK_UP) {
-        increaseSpeed();
-        System.out.println("UP");
+        increaseSpeed(0);
+        System.out.println("User 1: UP");
       }
+      // turning
       if (code == KeyEvent.VK_LEFT) {
-        turnLeft();
-        System.out.println("LEFT");
+        turnLeft(0);
+        System.out.println("User 1: LEFT");
       }
       if (code == KeyEvent.VK_RIGHT) {
-        turnRight();
-        System.out.println("RIGHT");
+        turnRight(0);
+        System.out.println("User 1: RIGHT");
       }
-      // generate projectiles */
+      // generate projectiles
       if (code == KeyEvent.VK_SPACE) {
-        projectileGenerated = true;
+        toggleProjectile(true,0);
+      }
+      // USER 2
+      // forward velocity control
+      if (code == KeyEvent.VK_S) {
+        decreaseSpeed(1);
+        System.out.println("User 2: DOWN");
+      }
+      if (code == KeyEvent.VK_W) {
+        increaseSpeed(1);
+        System.out.println("User 2: UP");
+      }
+      // turning
+      if (code == KeyEvent.VK_A) {
+        turnLeft(1);
+        System.out.println("User 2: LEFT");
+      }
+      if (code == KeyEvent.VK_D) {
+        turnRight(1);
+        System.out.println("User 2: RIGHT");
+      }
+      // generate projectiles
+      if (code == KeyEvent.VK_SHIFT) {
+        toggleProjectile(true,1);
       }
     }
   }
@@ -370,55 +393,78 @@ public class DisplayServer extends JPanel implements KeyListener {
   /** Handle the key-released event from the text field. */
   public void keyReleased(KeyEvent e) {
     int code = e.getKeyCode();
+    // USER 1
     // reset rotational velocity
     if (code == KeyEvent.VK_LEFT) {
-      stopTurning();
+      stopTurning(0);
     }
     if (code == KeyEvent.VK_RIGHT) {
-      stopTurning();
+      stopTurning(0);
     }
+    // stop generating projectile
     if (code == KeyEvent.VK_SPACE) {
-      projectileGenerated = false;
+      toggleProjectile(false,0);
+    }
+    // USER 2
+    // reset rotational velocity
+    if (code == KeyEvent.VK_A) {
+      stopTurning(1);
+    }
+    if (code == KeyEvent.VK_D) {
+      stopTurning(1);
+    }
+    // stop generating projectile
+    if (code == KeyEvent.VK_SHIFT) {
+      toggleProjectile(false,1);
     }
   }
 
 
-  public void increaseSpeed() {
-    userSpeed += SPEED_INCREMENT;
+  //TODO: requirements need to be completely rewritten for added user and how this is handled
+
+  public void increaseSpeed(int UserID) {
+    userSpeed[UserID] += SPEED_INCREMENT;
   }
 
 
-  public void decreaseSpeed() {
-    userSpeed -= SPEED_INCREMENT;
+  public void decreaseSpeed(int UserID) {
+    userSpeed[UserID] -= SPEED_INCREMENT;
   }
 
-  public void turnLeft() {
-    userOmega = GroundVehicle.MAX_OMEGA;
+  public void turnLeft(int UserID) {
+    userOmega[UserID] = GroundVehicle.MAX_OMEGA;
   }
 
-  public void turnRight() {
-    userOmega = -GroundVehicle.MAX_OMEGA;
+  public void turnRight(int UserID) {
+    userOmega[UserID] = -GroundVehicle.MAX_OMEGA;
   }
 
-  public void stopTurning() {
-    userOmega = 0;
+  public void stopTurning(int UserID) {
+    userOmega[UserID] = 0;
   }
 
 
-  public double getUserSpeed() {
+  public void toggleProjectile(boolean generated, int UserID) {
+    projectileGenerated[UserID] = generated;
+  }
+
+
+
+
+  public double getUserSpeed(int UserID) {
     if (print) {
       System.out.println("getUserSpeed() = " + userSpeed+" getUserOmega() = " + userOmega);
     }
-    return userSpeed;
+    return userSpeed[UserID];
   }
 
-  public double getUserOmega() {
-    return userOmega;
+  public double getUserOmega(int UserID) {
+    return userOmega[UserID];
   }
 
   //TODO: requirements
-  public boolean getProjectileGenerated() {
-    return projectileGenerated;
+  public boolean getProjectileGenerated(int UserID) {
+    return projectileGenerated[UserID];
   }
 
 

@@ -6,6 +6,7 @@ public class UserController extends VehicleController {
 //    private ControlPanel cp;
     //TODO: add to requirements
     protected static int userControllerCount = 0;	// number of VehicleControllers in existence
+    private final int UserID;
 
     private final boolean debug = false; // set to true for debug statements
 
@@ -15,8 +16,8 @@ public class UserController extends VehicleController {
         _sim = sim;
 
         //TODO: req update for below
+        UserID = userControllerCount;
         userControllerCount++;
-
         _v.color = userControllerCount;
     }
 
@@ -28,11 +29,11 @@ public class UserController extends VehicleController {
         return _v;
     }
 
-
+    //TODO: req modified for multiplayer
     public Control getControl(int sec, int msec) {
-        double _nextSpeed = _ds.getUserSpeed();
-        double _nextOmega = _ds.getUserOmega();
-        boolean isShooting = _ds.getProjectileGenerated();
+        double _nextSpeed = _ds.getUserSpeed(UserID);
+        double _nextOmega = _ds.getUserOmega(UserID);
+        boolean isShooting = _ds.getProjectileGenerated(UserID);
         if (isShooting) {
             _sim.generateProjectile(this);
         }

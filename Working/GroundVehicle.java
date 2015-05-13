@@ -15,7 +15,7 @@ public class GroundVehicle extends Thread {
 	public int color;	// index of vehicle color in DisplayServer.COLORS array
 
 	public static final double MIN_VEL = 1;
-	public static final double MAX_VEL = 10;
+	public static final double MAX_VEL = 20;
 	public static final double MAX_OMEGA = Math.PI/2;
 
 	private Simulator _sim;		// Simulator associated with GroundVehicle

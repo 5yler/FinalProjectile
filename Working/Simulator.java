@@ -6,7 +6,6 @@
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -36,7 +35,10 @@ public class Simulator extends Thread {
 
     private ArrayList<GroundVehicle> _vehicleList;  // list of GroundVehicles inside Simulator
 
-    private UserController _uc;
+    // user controllers //TODO: req
+    private UserController _uc1;
+    private UserController _uc2;
+
     private List<Projectile> _projectileList;  // list of projectiles inside Simulator
 
     private double _startupMS;  // time when the Simulator starts running
@@ -54,7 +56,7 @@ public class Simulator extends Thread {
     private static final boolean lead3  = false;    // set to true for multiple LeadingController test
     private static final boolean circ   = true;     // one CircleController
 
-    private static final boolean debug_projectiles   = true;     // projectile debug statements
+    private static final boolean debug_projectiles   = FinalProjectile.debug_projectiles;     // projectile debug statements
 
 
     /* CONSTRUCTORS */
@@ -144,10 +146,17 @@ public class Simulator extends Thread {
 
     /**
      * Associates a UserController with the Simulator
+     * //TODO: req modified for multiplayer
      * @param uc
      */
     public synchronized void addUserController(UserController uc) {
-        _uc = uc;
+        if (_uc1 == null) {
+            _uc1 = uc;
+        } else if (_uc2 == null) {
+            _uc2 = uc;
+        } else {
+            throw new IllegalStateException("Cannot add third UserController to simulation");
+        }
     }
     
     /**
@@ -210,7 +219,7 @@ public class Simulator extends Thread {
         oldController.removeGroundVehicle();
         
         // Create new following controller
-        FollowingController newController = new FollowingController(this,v,_uc.getGroundVehicle());
+        FollowingController newController = new FollowingController(this,v, _uc1.getGroundVehicle());
         newController.start();
 
         // add followingController to list in Simulator
@@ -427,6 +436,7 @@ public class Simulator extends Thread {
                                         _vehicleList.remove(j);
                                         System.out.println("Removed vehicle "); // debug
                                     }
+
                                 }
 
 
@@ -440,9 +450,10 @@ public class Simulator extends Thread {
                         					System.out.println("Changed to Follower"); // debug
                         				}
                         			}
-                        		}
-                        		
-                        		_projectileList.remove(i);
+
+                                }
+//                                _projectileList.remove(i);
+
                                 //TODO: update scores and make FC follow correct user
                         	}
                         }
@@ -458,8 +469,6 @@ public class Simulator extends Thread {
                 // update display client with vehicle positions
                 // update display client with projectile positions
                 _dc.update(_vehicleList.size(), gvX, gvY, gvTheta, gvC, _projectileList.size(), pX, pY, pC);
-
-                System.out.println(pC);
 
             } // end if (100ms since last update)
         } // end while (time < 100s)
