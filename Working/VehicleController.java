@@ -115,6 +115,10 @@ public class VehicleController extends Thread {
         _v = null;
         hasGroundVehicle = false;
     }
+    
+    public boolean hasVehicle(){
+    	return hasGroundVehicle;
+    }
 
 
     /**

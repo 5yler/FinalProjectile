@@ -199,7 +199,7 @@ public class Simulator extends Thread {
     }
 
     /**
-     *
+     * Switches GroundVehicle from a Leading to a FollowingController
      * @param oldController
      * @param newController
      */
@@ -210,31 +210,18 @@ public class Simulator extends Thread {
             throw new IllegalArgumentException("Old VehicleController has no GroundVehicle!");
         }
 
-        // check if NC has a vehicle? probably not but....
-//        if (newController.getGroundVehicle() != null) {
-//            newController.removeGroundVehicle(); // remove NC pre-existing vehicle if present
-//            System.out.println("Removed pre-existing target VehicleController vehicle.");
-//            throw new IllegalArgumentException("Target VehicleController already had a GroundVehicle! What's up with that?");
-//        }
-
         // get vehicle from OC
         GroundVehicle v = oldController.getGroundVehicle();
         
-        System.out.println("Old Position " + v.getPosition());
-        
-        v.setPosition(this.randomStartingPosition());
-        
-        System.out.println("New Position " + v.getPosition());
         // remove vehicle from OC
         oldController.removeGroundVehicle();
-                
+        
+        // Create new following controller
         FollowingController newController = new FollowingController(this,v,_uc.getGroundVehicle());
         
+        // add followingController to list in Simulator
         this.addFollowingController(newController);
-        
-        //System.out.println("Added New Following Controller");
-        // set the vehicle in NC
-        //newController.setGroundVehicle(v);
+  
 
         //TODO tests:
             // invalid arguments
@@ -418,17 +405,38 @@ public class Simulator extends Thread {
                         Projectile p = _projectileList.get(i);    // get projectile at index i
                         double[] projectilePos = p.getPosition();      // get [x, y, theta] of projectile
                         
-                        for (int j = 1; j < _vehicleList.size(); j++) {	// iterate of list of j GroundVehicles
+                        for (int j = 1; j < _vehicleList.size(); j++) {	// iterate of list of j GroundVehicles excluding UserControlled vehicle
                         	GroundVehicle gv = _vehicleList.get(j);	// get vehicle at index j
                         	double[] gvPos = gv.getPosition();	// get [x y theta] of vehicle
-                        	boolean isWithinDistance = this.checkWithinDistance(projectilePos, gvPos, 10);	// check if vehicle and projectile are within 10 of each other
+                        	boolean isWithinDistance = this.checkWithinDistance(projectilePos, gvPos, 5);	// check if vehicle and projectile are within 10 of each other
                         	
                         	if (isWithinDistance) {
-                        		System.out.println("SwitchingControllers at " + (j-1));
-                        		System.out.println(_vehicleList.size());
-                        		LeadingController lc = _leaderList.get(j-1);
-                        		//FollowingController fc = _followerList.get(j);
-                        		this.switchVehicleControllers(lc);
+                        		int ID = gv.getNumID();
+                        		
+                        		for (int l = 0; l < _followerList.size(); l++) {
+                        			FollowingController fc = _followerList.get(l);
+                        			if (fc.hasVehicle()){
+                        				int compareID = fc.getGroundVehicle().getNumID();
+                        				if (ID == compareID){
+                        					fc.removeGroundVehicle();
+                        					_vehicleList.remove(j);
+                        					System.out.println("Removed vehicle");
+                        				}
+                        			}
+                        		}
+                        		
+                        		
+                        		for (int k = 0; k < _leaderList.size(); k++) {
+                        			LeadingController lc = _leaderList.get(k);
+                        			if (lc.hasVehicle()){
+                        				int compareID = lc.getGroundVehicle().getNumID();
+                        				if (ID == compareID) {
+                        					this.switchVehicleControllers(lc);
+                        					System.out.println("Changed to Follower");
+                        				}
+                        			}
+                        		}
+                        		
                         		_projectileList.remove(i);
                         	}
                         }
