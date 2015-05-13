@@ -29,10 +29,13 @@ public class DisplayServer extends JPanel implements KeyListener {
   // ground vehicles
   protected double gvX [], gvY[], gvTheta[];
   protected int numVehicles = 0;
+  protected int gvC[]; // vehicle color indexes in COLORS array
 
   // projectiles
   protected double pX [], pY[];
   protected int numProjectiles = 0;
+  protected int pC[]; // projectile color indexes in COLORS array
+
 
   protected int maxNumVehicles = 20;
   protected int shapeX[], shapeY[];
@@ -46,11 +49,19 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final int DISPLAY_X = 800; // display window x pixels
   public static final int DISPLAY_Y = 600; // display window x pixels
   public static final Color DISPLAY_BACKGROUND_COLOR = Color.black; // display background color
-  public static final Color USER_COLOR = Color.red; // user vehicle color
   public static final Color PROJECTILE_COLOR = Color.white; // projectile color
-  public static final Color LEADING_COLOR = Color.black; // leading vehicle color
-  public static final Color FOLLOWING_COLOR = Color.black; // display background color
+  public static final Color USER1_COLOR = Color.red; // user vehicle color
+  public static final Color USER2_COLOR = Color.red; // user vehicle color
+  public static final Color LEADING_COLOR = Color.blue; // leading vehicle color
+  public static final Color FOLLOWING_COLOR = new Color(232,117,31); // display background color
 
+  public static final Color[] COLORS = new Color[] {
+          PROJECTILE_COLOR, // 0
+          USER1_COLOR,      // 1
+          USER2_COLOR,      // 2
+          LEADING_COLOR,    // 3
+          FOLLOWING_COLOR,  // 4
+  };
 
   public static final int SLEEP_TIME = 0; // delay between timesteps when drawing vehicle trajectories
   // 10-100 is a reasonable number
@@ -169,6 +180,7 @@ public class DisplayServer extends JPanel implements KeyListener {
                   my_display.gvX = new double[my_display.numVehicles];
                   my_display.gvY = new double[my_display.numVehicles];
                   my_display.gvTheta = new double[my_display.numVehicles];
+                  my_display.gvC = new int[my_display.numVehicles];
                   my_display.resetHistories(numVehicles);
                 }
                 outerloop:
@@ -182,6 +194,8 @@ public class DisplayServer extends JPanel implements KeyListener {
                   my_display.gvY[i] = Double.parseDouble(tok);
                   tok = st.nextToken();
                   my_display.gvTheta[i] = Double.parseDouble(tok);
+                  tok = st.nextToken();
+                  my_display.gvC[i] = (int) Double.parseDouble(tok);
                   if (trace) {
                     if (histories[i].trueHistoryLength % historySkip == 0) {
                       int n;
@@ -207,12 +221,15 @@ public class DisplayServer extends JPanel implements KeyListener {
                 my_display.numProjectiles = Integer.parseInt(tok);
                 my_display.pX = new double[my_display.numProjectiles];
                 my_display.pY = new double[my_display.numProjectiles];
+                my_display.pC = new int[my_display.numProjectiles];
               }
               for (int i = 0; i < my_display.numProjectiles; i++) {
                 tok = st.nextToken();
                 my_display.pX[i] = Double.parseDouble(tok);
                 tok = st.nextToken();
                 my_display.pY[i] = Double.parseDouble(tok);
+                tok = st.nextToken();
+                my_display.pC[i] = (int) Double.parseDouble(tok);
               } // end for (int i = 0; i < my_display.numProjectiles; i++)
 //              } // end if (tok.equals("vehicles"))
             } // End synchronized (my_display)
@@ -497,12 +514,19 @@ public class DisplayServer extends JPanel implements KeyListener {
     // This chunk of code just translate and rotates the shape.
 
     for (int j = 0; j < numVehicles; j++) {
+      /*
+      // set colors to jth index of vehicleColors
       if (j < vehicleColors.length){
         g.setColor(vehicleColors[j]);
 
       }else{
         g.setColor(vehicleColors[vehicleColors.length-1]);
-      }
+      }*/
+
+      // set color matching index in COLORS array
+
+      g.setColor(COLORS[gvC[j]]);
+
       int drawX[] = new int[9];
       int drawY[] = new int[9];
 
@@ -531,6 +555,10 @@ public class DisplayServer extends JPanel implements KeyListener {
     g.setColor(PROJECTILE_COLOR);
 
     for (int j = 0; j < numProjectiles; j++) {
+
+      // set color to user color with matching index in COLORS array
+      System.out.println("pC[j] = "+pC[j]);
+      g.setColor(COLORS[pC[j]]);
 
       // cast projectile positions to be integers
       int x = (int) pX[j];

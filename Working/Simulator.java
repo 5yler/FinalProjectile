@@ -71,13 +71,6 @@ public class Simulator extends Thread {
         _followerList = new ArrayList<FollowingController>();
         _leaderList = new ArrayList<LeadingController>();
 
-        if (debug_projectiles) {
-            //TODO: this is just testing, remove it for later
-            Projectile p = new Projectile(randomStartingPosition(), this);
-            _projectileList.add(p);
-            p.start();
-        }
-
     }
 
 /* STATIC METHODS */
@@ -177,10 +170,11 @@ public class Simulator extends Thread {
 
     /**
      * Generates a projectile based on the position of the UserController associated with Simulator
-     *TODO: fix
+     *TODO: make this accommodate multiple userControllers
+     * TODO: req changed
      */
-    public void generateProjectile() {
-        Projectile p = new Projectile(_uc.getUserVehicle().getPosition(), this);
+    public void generateProjectile(UserController uc) {
+        Projectile p = new Projectile(uc.getUserVehicle().getPosition(), this, uc);
         _projectileList.add(p);
         p.start();
 
@@ -201,7 +195,6 @@ public class Simulator extends Thread {
     /**
      * Switches GroundVehicle from a Leading to a FollowingController
      * @param oldController
-     * @param newController
      */
     public synchronized void switchVehicleControllers(VehicleController oldController) {
     	//TODO: Requirements
@@ -218,7 +211,8 @@ public class Simulator extends Thread {
         
         // Create new following controller
         FollowingController newController = new FollowingController(this,v,_uc.getGroundVehicle());
-        
+        newController.start();
+
         // add followingController to list in Simulator
         this.addFollowingController(newController);
 
@@ -331,18 +325,22 @@ public class Simulator extends Thread {
         _dc.traceOn();  // display mode showing complete trajectories,
         // not just current positions
 
+        // vehicle arrays to send to display
         double[] gvX = new double[_vehicleList.size()];
         double[] gvY = new double[_vehicleList.size()];
         double[] gvTheta = new double[_vehicleList.size()];
+        double[] gvC = new double[_vehicleList.size()]; // color array
 
-        double[] pX = new double[_projectileList.size()];
-        double[] pY = new double[_projectileList.size()];
+        // projectile arrays to send to display
+        double[] pX;
+        double[] pY;
+        double[] pC; // color array
 
         _startupTime = System.nanoTime();
         long currentTime = System.nanoTime();
         long updateTime = System.nanoTime();
 
-        while ((currentTime - _startupTime) < 20*1e9) { // while time less than 100s
+        while ((currentTime - _startupTime) < 200*1e9) { // while time less than 100s
 
             currentTime = System.nanoTime();
 
@@ -352,10 +350,12 @@ public class Simulator extends Thread {
 
                     for (int i = 0; i < _vehicleList.size(); i++) {     // iterate over list of i vehicles
                         GroundVehicle vehicle = _vehicleList.get(i);    // get vehicle at index i
-                        double[] position = vehicle.getPosition();      // get [x, y, theta] of vehicle
-                        gvX[i] = position[0];
-                        gvY[i] = position[1];
-                        gvTheta[i] = position[2];
+                        double[] displayData = vehicle.getDisplayData();      // get [x, y, theta] of vehicle
+                        gvX[i] = displayData[0];
+                        gvY[i] = displayData[1];
+                        gvTheta[i] = displayData[2];
+                        gvC[i] = displayData[3];
+
 
                         if (debug) {
                             System.out.println(vehicle.getNumID() + "[>  ] position on display is being updated");
@@ -371,17 +371,17 @@ public class Simulator extends Thread {
 
                     pX = new double[_projectileList.size()];
                     pY = new double[_projectileList.size()];
-
+                    pC = new double[_projectileList.size()];
 
                     for (int i = 0; i < _projectileList.size(); i++) {     // iterate over list of i projectiles
                         Projectile p = _projectileList.get(i);    // get projectile at index i
-                        double[] position = p.getPosition();      // get [x, y, theta] of vehicle
-                        pX[i] = position[0];
-                        pY[i] = position[1];
-
+                        double[] displayData = p.getDisplayData();      // get [x, y, theta] of vehicle
+                        pX[i] = displayData[0];
+                        pY[i] = displayData[1];
+                        pC[i] = displayData[2];
 
                         if (debug_projectiles) {
-                            System.out.println("px " + position[0] + " py " + position[1]);
+                            System.out.println("px " + displayData[0] + " py " + displayData[1]);
                         }
                     } // end for (int i = 0; i < __projectileList.size(); i++)
 
@@ -446,9 +446,9 @@ public class Simulator extends Thread {
 
                 // update display client with vehicle positions
                 // update display client with projectile positions
-                _dc.update(_vehicleList.size(), gvX, gvY, gvTheta, _projectileList.size(), pX, pY);
+                _dc.update(_vehicleList.size(), gvX, gvY, gvTheta, gvC, _projectileList.size(), pX, pY, pC);
 
-
+                System.out.println(pC);
 
             } // end if (100ms since last update)
         } // end while (time < 100s)

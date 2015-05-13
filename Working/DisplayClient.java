@@ -45,7 +45,7 @@ public class DisplayClient  {
   }
 
   //TODO: write requirements
-  public void update(int numVehicles, double gvX[], double gvY[], double gvTheta[], int numProjectiles, double pX[], double pY[])
+  public void update(int numVehicles, double gvX[], double gvY[], double gvTheta[], double gvC[], int numProjectiles, double pX[], double pY[], double pC[])
   {
     StringBuffer message = new StringBuffer();
     message.append("vehicles");
@@ -54,14 +54,15 @@ public class DisplayClient  {
     message.append(" ");
     for (int i = 0; i < numVehicles; i++) {
       message.append(format.format(gvX[i])+" "+format.format(gvY[i])+" "+
-		     format.format(gvTheta[i])+" ");
+		     format.format(gvTheta[i])+" "+format.format(gvC[i])+" ");
     }
     message.append("projectiles");
     message.append(" ");
     message.append(numProjectiles);
     message.append(" ");
     for (int i = 0; i < numProjectiles; i++) {
-      message.append(format.format(pX[i])+" "+format.format(pY[i])+" ");
+      message.append(format.format(pX[i])+" "+format.format(pY[i])+" "+format.format(pC[i])+" ");
+      System.out.println("pC[i] = "+pC[i]);
     }
     if (print)
       System.out.println("Sent "+message);

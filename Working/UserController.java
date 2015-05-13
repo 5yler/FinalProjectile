@@ -4,7 +4,8 @@ public class UserController extends VehicleController {
 
     private DisplayServer _ds;
 //    private ControlPanel cp;
-
+    //TODO: add to requirements
+    protected static int userControllerCount = 0;	// number of VehicleControllers in existence
 
     private final boolean debug = false; // set to true for debug statements
 
@@ -13,6 +14,10 @@ public class UserController extends VehicleController {
         _ds = ds;
         _sim = sim;
 
+        //TODO: req update for below
+        userControllerCount++;
+
+        _v.color = userControllerCount;
     }
 
 //    public void addDisplayServer(DisplayServer ds) {
@@ -29,7 +34,7 @@ public class UserController extends VehicleController {
         double _nextOmega = _ds.getUserOmega();
         boolean isShooting = _ds.getProjectileGenerated();
         if (isShooting) {
-            _sim.generateProjectile();
+            _sim.generateProjectile(this);
         }
 
         if (debug) {

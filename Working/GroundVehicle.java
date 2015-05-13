@@ -11,6 +11,8 @@ public class GroundVehicle extends Thread {
 	private double _x, _y, _theta;    	/* shared resources */
 	private double _dx, _dy, _dtheta; 	/* shared resources */
 
+	//TODO: add to requirements doc
+	public int color;	// index of vehicle color in DisplayServer.COLORS array
 
 	public static final double MIN_VEL = 1;
 	public static final double MAX_VEL = 10;
@@ -101,6 +103,16 @@ public class GroundVehicle extends Thread {
 		position[2] = _theta;
 
 		return position;
+	}
+
+	//TODO: requirements changed
+	public synchronized double[] getDisplayData() {
+		double[] displayData = new double[4];
+		displayData[0] = _x;
+		displayData[1] = _y;
+		displayData[2] = _theta;
+		displayData[3] = color;
+		return displayData;
 	}
 
 	public synchronized double[] getVelocity() {

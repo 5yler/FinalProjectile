@@ -17,7 +17,7 @@ public class FollowingController extends VehicleController {
 
     private double maxTransSpeed = 10;
     private double minTransSpeed = 5;
-    private double targetFollowingDistance = 0.5;
+    private double targetFollowingDistance = 0;
 
     private final boolean print = true;   // set to true for print statements
     private final boolean debug = true;   // set to true for debug statements
@@ -32,6 +32,8 @@ public class FollowingController extends VehicleController {
     public FollowingController(Simulator sim, GroundVehicle v, GroundVehicle prey) {
         super(sim, v);
         _prey = prey;
+        //TODO: req
+        _v.color = 4;
     }
 
     /**

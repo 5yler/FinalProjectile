@@ -10,7 +10,12 @@ public class Projectile extends Thread {
     private double _x, _y, _theta;
     private double _dx, _dy;
 
-    private Simulator _sim;
+	//TODO: add to requirements doc
+	public int color;	// index of vehicle color in DisplayServer.COLORS array
+
+
+	private Simulator _sim;
+	private UserController _uc;
 
 	private long _startupTime;  // time when the VehicleController starts running
 
@@ -20,15 +25,18 @@ public class Projectile extends Thread {
 	public static int SHOTS_FIRED = 0;	// total number of projectiles fired
 
 
-
-	public Projectile(double[] shooterPosition, Simulator sim) {
+//TODO: uc arg in requirements
+	public Projectile(double[] shooterPosition, Simulator sim, UserController uc) {
 
 		if (shooterPosition.length != 3)
 			throw new IllegalArgumentException("First argument must be array of length 3");
 
 		_sim = sim;
+		_uc = uc;
 
-    	_x = shooterPosition[0];
+		color = _uc.getUserVehicle().color; 		//TODO: req
+
+		_x = shooterPosition[0];
     	_y = shooterPosition[1];
     	_theta = shooterPosition[2];
 
@@ -55,6 +63,15 @@ public class Projectile extends Thread {
 		return position;
 	}
 
+
+	//TODO: add to  requirements
+	public synchronized double[] getDisplayData() {
+		double[] displayData = new double[3];
+		displayData[0] = _x;
+		displayData[1] = _y;
+		displayData[2] = color;
+		return displayData;
+	}
 
 	/* RUN METHOD */
 	public void run() {
