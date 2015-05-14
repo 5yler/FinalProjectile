@@ -46,8 +46,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   /* CUSTOM SETTINGS */
   public static final int DISPLAY_X = 800; // display window x pixels
-  public static final int DISPLAY_Y = 600; // display window x pixels
+  public static final int DISPLAY_Y = 600; // display window y pixels
   public static final Color DISPLAY_BACKGROUND_COLOR = Color.black; // display background color
+  public static final int LINE_Y_PIX = 12; // pixel height of text line
+  public static final int LINE_X_PIX_OFFSET = 10; // pixel offset along x from edge of screen
 
 
   public static final Color[] RED = { new Color(255,21,60), // red
@@ -739,13 +741,58 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 
     g.setColor(randomLightColor());
-    g.drawString("Display running in the 90's", 10, 12);
-    g.drawString("on " + myHostname, 10, 25);
+    g.drawString("Display running in the 90's", LINE_X_PIX_OFFSET, LINE_Y_PIX);
+    g.drawString("on " + myHostname, LINE_X_PIX_OFFSET, 2*LINE_Y_PIX);
     if (trace)
       drawHistories(g);
     drawVehicles(g);
     drawProjectiles(g);
+    drawScores(g);
   }
+
+  /**
+   * Draws projectiles.
+   * @param g
+   */
+  protected synchronized void drawScores(Graphics g) {
+    // set color to projectile color
+    for (int j = 0; j < numProjectiles; j++) {
+
+      // set color to user color with matching index in COLORS array
+      printmsg("pC[j] = "+pC[j]);
+      g.setColor(COLORS[pC[j]][0]);
+
+      // cast projectile positions to be integers
+      int x = (int) pX[j];
+      int y = (int) pY[j];
+
+      // correct for simulation y direction being different from display
+      y = Simulator.SIM_Y - y; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
+
+      // draw projectile as circle of radius 1
+      drawCircle(g, x, y, 1);
+
+      g.setColor(USER1_COLOR[0]);
+      g.drawString("User 1", LINE_X_PIX_OFFSET, 4 * LINE_Y_PIX);
+      g.setColor(USER1_COLOR[1]);
+      g.drawString("Shots: " + myHostname, LINE_X_PIX_OFFSET, 5*LINE_Y_PIX);
+      g.drawString("Hits: " + myHostname, LINE_X_PIX_OFFSET, 6*LINE_Y_PIX);
+      g.drawString("Accuracy: " + myHostname + "%", LINE_X_PIX_OFFSET, 7*LINE_Y_PIX);
+
+      if (FinalProjectile.multiplayer) {
+
+        g.setColor(USER2_COLOR[0]);
+        g.drawString("User 2", LINE_X_PIX_OFFSET, 9 * LINE_Y_PIX);
+        g.setColor(USER2_COLOR[1]);
+        g.drawString("Shots: " + myHostname, LINE_X_PIX_OFFSET, 10*LINE_Y_PIX);
+        g.drawString("Hits: " + myHostname, LINE_X_PIX_OFFSET, 11*LINE_Y_PIX);
+        g.drawString("Accuracy: " + myHostname + "%", LINE_X_PIX_OFFSET, 12*LINE_Y_PIX);
+      }
+
+    }
+  }
+
+
 
   protected void addClient(Socket client) {
     MessageListener l = new MessageListener(client, this);
