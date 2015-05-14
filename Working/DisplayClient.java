@@ -51,9 +51,10 @@ public class DisplayClient  {
   }
 
   //TODO: write requirements
-  public void update(int numVehicles, double gvX[], double gvY[], double gvTheta[], double gvC[], int numProjectiles, double pX[], double pY[], double pC[])
+  public void update(int userShots[], int userHits[], int numVehicles, double gvX[], double gvY[], double gvTheta[], double gvC[], int numProjectiles, double pX[], double pY[], double pC[])
   {
     StringBuffer message = new StringBuffer();
+    // append vehicle positions
     message.append("vehicles");
     message.append(" ");
     message.append(numVehicles);
@@ -62,6 +63,14 @@ public class DisplayClient  {
       message.append(format.format(gvX[i])+" "+format.format(gvY[i])+" "+
 		     format.format(gvTheta[i])+" "+format.format(gvC[i])+" ");
     }
+    // append user scores
+    message.append("score");
+    message.append(" ");
+    message.append(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " ");
+    if (FinalProjectile.debug_scores) {
+      System.out.println(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " DisplayClient.update()");
+    }
+    // append projectile positions
     message.append("projectiles");
     message.append(" ");
     message.append(numProjectiles);
@@ -70,6 +79,7 @@ public class DisplayClient  {
       message.append(format.format(pX[i])+" "+format.format(pY[i])+" "+format.format(pC[i])+" ");
       printmsg("pC[i] = " + pC[i]);
     }
+
     if (print)
       System.out.println("Sent "+message);
     output.println(message);

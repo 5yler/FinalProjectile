@@ -17,7 +17,7 @@ public class Projectile extends Thread {
 	public int ID; 		//
 
 	private Simulator _sim;
-	private UserController _uc;
+	public UserController _uc;
 
 	private long _startupTime;  // time when the VehicleController starts running
 

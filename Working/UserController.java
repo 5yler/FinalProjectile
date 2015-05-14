@@ -42,7 +42,6 @@ public class UserController extends VehicleController {
         boolean isShooting = _ds.getProjectileGenerated(UserID);
         if (isShooting) {
             _sim.generateProjectile(this);
-            shots++;
         }
 
         if (debug) {

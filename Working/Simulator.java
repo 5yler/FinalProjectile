@@ -47,6 +47,7 @@ public class Simulator extends Thread {
     private UserController _uc1;
     private UserController _uc2;
 
+
     private List<Projectile> _projectileList;  // list of projectiles inside Simulator
 
     private double _startupMS;  // time when the Simulator starts running
@@ -197,11 +198,18 @@ public class Simulator extends Thread {
 
         // check if REACTION_TIME has passed since last projectile being fired by user //TODO: req
         if (timeSinceLastProjectile > UserController.REACTION_TIME) {
-            System.out.println(timeSinceLastProjectile+"ms since last projectile fired by user "+(uc.UserID+1));
+            if (debug_projectiles) {
+                System.out.println(timeSinceLastProjectile + "ms since last projectile fired by user " + (uc.UserID + 1));
+            }
 
             Projectile p = new Projectile(uc.getUserVehicle().getPosition(), this, uc);
             _projectileList.add(p);
             p.start();
+
+            // increase counter for shots fired
+            uc.shots++;
+
+            // reset last projectile time
             _lastProjectileTime[uc.UserID] = System.nanoTime();
 
             if (debug_projectiles) {
@@ -298,13 +306,24 @@ public class Simulator extends Thread {
                 if (projectileShotVehicle(p.getPosition(), v.getPosition())) {
                     System.out.println("VEHICLE SHOT!");
                     if (v.color == FOLLOWING) {
+
+                        // remove follower if shot
                         _vehicleList.remove(v);
+
+                        // increment hit counter
+                        p._uc.hits++;
                         System.out.println("VEHICLE SHOT AGAIN! GAME OVER, BUDDY!");
 
 //                        _projectileList.remove(p);
                     }
                     if (v.color == LEADING) {
+
+                        // switch leadingcontroller to followingcontroller
                         switchVehicleControllers(v.controller);
+
+                        // increment hit counter
+                        p._uc.hits++;
+
                         System.out.println("Switched controllers!");
 //                        _projectileList.remove(p);
                     }
@@ -413,6 +432,8 @@ public class Simulator extends Thread {
         double[] pY;
         double[] pC; // color array
 
+
+
         // set startup time
         _startupTime = System.nanoTime();
 
@@ -481,9 +502,15 @@ public class Simulator extends Thread {
 
                 updateTime = System.nanoTime();
 
+                int[] userShots = {_uc1.shots, _uc2.shots};
+                int[] userHits = {_uc1.hits, _uc2.hits};
+
                 // update display client with vehicle positions
                 // update display client with projectile positions
-                _dc.update(_vehicleList.size(), gvX, gvY, gvTheta, gvC, _projectileList.size(), pX, pY, pC);
+                if (FinalProjectile.debug_scores) {
+                    System.out.println(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " Simulator.run()");
+                }
+                _dc.update(userShots, userHits, gvC.length, gvX, gvY, gvTheta, gvC, pC.length, pX, pY, pC);
 
                 // Check if projectile is near GroundVehicle and switch controller if so
                 synchronized (this) {
@@ -506,116 +533,4 @@ public class Simulator extends Thread {
 
     } // end run()
 
-
-/* MAIN METHOD */
-    /*
-	public static void main(String[] args) {
-
-        String host;
-        int nVehicles = 0;
-
-        // check if two command line arguments are present
-        if (args.length == 2) {
-            try {
-                // try to parse the first argument as as integer
-                if (Integer.parseInt(args[0]) == 0) {
-                    System.err.println("Number of vehicles must be greater than zero.");
-                    System.exit(-1);
-                } else {
-                    nVehicles = Integer.parseInt(args[0]);
-                }
-            } catch (NumberFormatException e) {
-                System.err.println("First argument must be an integer.");
-                System.exit(-1);
-            }
-        } else { // if there are not two arguments
-            System.err.println("Expected format: $ java Simulator <number of vehicles> <IP of running DisplayServer>");
-            System.exit(-1);
-        }
-
-
-        // get IP address from second command line argument
-        host = args[1];
-
-        // create DisplayClient
-        DisplayClient dc = new DisplayClient(host);
-
-        // create new Simulator
-        Simulator sim = new Simulator(dc);
-
-        if (lead) { // have vehicles follow LeadingController
-
-            GroundVehicle lv = new GroundVehicle(randomStartingPosition(), randomDoubleInRange(0, 10), randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-            LeadingController lc = new LeadingController(sim, lv);
-            sim.addVehicle(lv);
-            lv.start();
-            lc.start();
-            // create n ground vehicles at random positions and velocities
-            for (int i = 1; i < nVehicles; i++) {
-
-                GroundVehicle gv = new GroundVehicle(randomStartingPosition(), randomDoubleInRange(0, 10), randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-                VehicleController vc = new FollowingController(sim, gv, lv);
-                lc.addFollower(gv);
-                sim.addVehicle(gv);
-                gv.start();
-                vc.start();
-            }
-
-        } else if (lead3) { // have three LeadingControllers
-
-            GroundVehicle lv    = new GroundVehicle(randomStartingPosition(), randomDoubleInRange(0, 10), randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-            GroundVehicle lv2   = new GroundVehicle(randomStartingPosition(), randomDoubleInRange(0, 10), randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-            GroundVehicle lv3   = new GroundVehicle(randomStartingPosition(), randomDoubleInRange(0, 10), randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-            LeadingController lc    = new LeadingController(sim, lv);
-            LeadingController lc2   = new LeadingController(sim, lv2);
-            LeadingController lc3   = new LeadingController(sim, lv3);
-            sim.addVehicle(lv);
-            sim.addVehicle(lv2);
-            sim.addVehicle(lv3);
-            lv.start();
-            lv2.start();
-            lv3.start();
-            lc.start();
-            lc2.start();
-            lc3.start();
-            lc.addFollower(lv2);
-            lc.addFollower(lv3);
-            lc2.addFollower(lv);
-            lc2.addFollower(lv3);
-            lc3.addFollower(lv);
-            lc3.addFollower(lv2);
-
-        } else if (circ) { // one CircleController
-
-            GroundVehicle lv = new GroundVehicle(randomStartingPosition(), randomDoubleInRange(0, 10), randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-            CircleController cc = new CircleController(sim, lv);
-            sim.addVehicle(lv);
-            lv.start();
-            cc.start();
-
-        } else { // have vehicles follow RandomController
-
-            // create n ground vehicles at random positions and velocities
-            for (int i = 0; i < nVehicles; i++) {
-                GroundVehicle gv = new GroundVehicle(randomStartingPosition(), randomDoubleInRange(0,10), randomDoubleInRange(-Math.PI/4,Math.PI/4));
-                VehicleController vc;
-                if (i == 0) {
-                    // the first vehicle should use a RandomController
-                    vc = new RandomController(sim, gv);
-                } else {
-                    // the other vehicles should use FollowingController to follow the first vehicle
-                    GroundVehicle target = sim.getVehicle(0);
-                    vc = new FollowingController(sim, gv, target);
-                }
-                sim.addVehicle(gv);
-                gv.start();
-                vc.start();
-            }
-        }
-
-        // run simulator
-        sim.run();
-		 
-	}
-	*/
 }

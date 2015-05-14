@@ -14,7 +14,7 @@ import java.util.*;
 public class DisplayServer extends JPanel implements KeyListener {
 
 
-  private double SPEED_INCREMENT = 0.5;
+  private double SPEED_INCREMENT = 1; //TODO: mod req?
   private double[] userSpeed = {5, 5}; //TODO: req
   private double[] userOmega = {0, 0}; //TODO: req
   private boolean[] projectileGenerated = {false, false}; //TODO: req
@@ -35,6 +35,12 @@ public class DisplayServer extends JPanel implements KeyListener {
   protected int numProjectiles = 0;
   protected int pC[]; // projectile color indexes in COLORS array
 
+  // scores
+  protected int shots1, hits1; // user 1
+  protected int shots2, hits2; // user 2
+  protected NumberFormat scoreFormat = new DecimalFormat("###.#");
+
+
 
   protected int maxNumVehicles = 20;
   protected int shapeX[], shapeY[];
@@ -50,6 +56,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final Color DISPLAY_BACKGROUND_COLOR = Color.black; // display background color
   public static final int LINE_Y_PIX = 12; // pixel height of text line
   public static final int LINE_X_PIX_OFFSET = 10; // pixel offset along x from edge of screen
+  public static final int LINE_Y_PIX_OFFSET = 3; // pixel offset along x from edge of screen
 
 
   public static final Color[] RED = { new Color(255,21,60), // red
@@ -188,7 +195,7 @@ public class DisplayServer extends JPanel implements KeyListener {
               outerif:
               if (tok.equals("vehicles")) {
                 tok = st.nextToken();
-                if (tok.equals("projectiles")) {
+                if (tok.equals("score")) {
                   break outerif;
                 }
                 if (my_display.numVehicles != Integer.parseInt(tok)) {
@@ -201,7 +208,7 @@ public class DisplayServer extends JPanel implements KeyListener {
                 }
                 outerloop:
                 for (int i = 0; i < my_display.numVehicles; i++) {
-                  if (tok.equals("projectiles")) {
+                  if (tok.equals("score")) {
                     break outerloop;
                   }
                   tok = st.nextToken();
@@ -229,24 +236,42 @@ public class DisplayServer extends JPanel implements KeyListener {
                     histories[i].trueHistoryLength++;
                   } // end if (trace)
                 } // end for (int i = 0; i < my_display.numVehicles; i++)
-              } // end if (tok.equals("vehicles"))
+              }
+               // end for (int i = 0; i < my_display.numProjectiles; i++)
+              tok = st.nextToken();
+              if (tok.equals("score")) {
+                tok = st.nextToken();
+                my_display.shots1 = Integer.parseInt(tok);
+                tok = st.nextToken();
+                my_display.shots2 = Integer.parseInt(tok);
+                tok = st.nextToken();
+                my_display.hits1 = Integer.parseInt(tok);
+                tok = st.nextToken();
+                my_display.hits2 = Integer.parseInt(tok);
+              }
+
+             // end if (tok.equals("vehicles"))
 //              if (tok.equals("projectiles")) {
               tok = st.nextToken();
-              tok = st.nextToken();
-              if (my_display.numProjectiles != Integer.parseInt(tok)) {
-                my_display.numProjectiles = Integer.parseInt(tok);
-                my_display.pX = new double[my_display.numProjectiles];
-                my_display.pY = new double[my_display.numProjectiles];
-                my_display.pC = new int[my_display.numProjectiles];
+              if (tok.equals("projectiles")) {
+                tok = st.nextToken();
+                if (my_display.numProjectiles != Integer.parseInt(tok)) {
+                  my_display.numProjectiles = Integer.parseInt(tok);
+                  my_display.pX = new double[my_display.numProjectiles];
+                  my_display.pY = new double[my_display.numProjectiles];
+                  my_display.pC = new int[my_display.numProjectiles];
+                }
+                projectileif:
+                for (int i = 0; i < my_display.numProjectiles; i++) {
+                  tok = st.nextToken();
+                  my_display.pX[i] = Double.parseDouble(tok);
+                  tok = st.nextToken();
+                  my_display.pY[i] = Double.parseDouble(tok);
+                  tok = st.nextToken();
+                  my_display.pC[i] = (int) Double.parseDouble(tok);
+
+                }
               }
-              for (int i = 0; i < my_display.numProjectiles; i++) {
-                tok = st.nextToken();
-                my_display.pX[i] = Double.parseDouble(tok);
-                tok = st.nextToken();
-                my_display.pY[i] = Double.parseDouble(tok);
-                tok = st.nextToken();
-                my_display.pC[i] = (int) Double.parseDouble(tok);
-              } // end for (int i = 0; i < my_display.numProjectiles; i++)
 //              } // end if (tok.equals("vehicles"))
             } // End synchronized (my_display)
           }
@@ -568,7 +593,7 @@ public class DisplayServer extends JPanel implements KeyListener {
    *
    * @return random grey RGB color
    */
-  public static Color randomGreyColor() {
+  public static Color randomCircleColor() {
     int r = rand.nextInt(50);
     int g = rand.nextInt(50);
     int b = rand.nextInt(50);
@@ -734,15 +759,13 @@ public class DisplayServer extends JPanel implements KeyListener {
 
     // draw circles
     for (int i = 0; i < NUM_CIRCLES; i++) {
-      g.setColor(randomGreyColor());
+      g.setColor(randomCircleColor());
       drawRandomCircle(g);
     }
-
-
-
+    
     g.setColor(randomLightColor());
-    g.drawString("Display running in the 90's", LINE_X_PIX_OFFSET, LINE_Y_PIX);
-    g.drawString("on " + myHostname, LINE_X_PIX_OFFSET, 2*LINE_Y_PIX);
+    g.drawString("Display running in the 90's", LINE_X_PIX_OFFSET, LINE_Y_PIX+LINE_Y_PIX_OFFSET);
+    g.drawString("on " + myHostname, LINE_X_PIX_OFFSET, 2*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
     if (trace)
       drawHistories(g);
     drawVehicles(g);
@@ -759,21 +782,36 @@ public class DisplayServer extends JPanel implements KeyListener {
       g.setColor(USER1_COLOR[0]);
       g.drawString("User 1", LINE_X_PIX_OFFSET, 4 * LINE_Y_PIX);
       g.setColor(USER1_COLOR[1]);
-      g.drawString("Shots: " + myHostname, LINE_X_PIX_OFFSET, 5*LINE_Y_PIX);
-      g.drawString("Hits: " + myHostname, LINE_X_PIX_OFFSET, 6*LINE_Y_PIX);
-      g.drawString("Accuracy: " + myHostname + "%", LINE_X_PIX_OFFSET, 7*LINE_Y_PIX);
+      g.drawString("Shots: " + shots1, LINE_X_PIX_OFFSET, 5 * LINE_Y_PIX+LINE_Y_PIX_OFFSET);
+      g.drawString("Hits: " + hits1, LINE_X_PIX_OFFSET, 6*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
+      String accuracy1;
+      if (shots1==0) {
+        accuracy1 = "NaN";
+      } else {
+        double acc1 = 100.0 * hits1 / shots1;
+        accuracy1 = scoreFormat.format(acc1);
+      }
+      g.drawString("Accuracy: " + accuracy1 + "%", LINE_X_PIX_OFFSET, 7*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
 
       if (FinalProjectile.multiplayer) {
 
         g.setColor(USER2_COLOR[0]);
-        g.drawString("User 2", LINE_X_PIX_OFFSET, 9 * LINE_Y_PIX);
+        g.drawString("User 2", LINE_X_PIX_OFFSET, 9 * LINE_Y_PIX+LINE_Y_PIX_OFFSET);
         g.setColor(USER2_COLOR[1]);
-        g.drawString("Shots: " + myHostname, LINE_X_PIX_OFFSET, 10*LINE_Y_PIX);
-        g.drawString("Hits: " + myHostname, LINE_X_PIX_OFFSET, 11*LINE_Y_PIX);
-        g.drawString("Accuracy: " + myHostname + "%", LINE_X_PIX_OFFSET, 12*LINE_Y_PIX);
+        g.drawString("Shots: " + shots2, LINE_X_PIX_OFFSET, 10*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
+        g.drawString("Hits: " + hits2, LINE_X_PIX_OFFSET, 11*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
+        String accuracy2;
+        if (shots2==0) {
+          accuracy2 = "NaN";
+        } else {
+          double acc2 = 100.0 * hits2 / shots2;
+          accuracy2 = scoreFormat.format(acc2);
+        }
+        g.drawString("Accuracy: " + accuracy2 + "%", LINE_X_PIX_OFFSET, 12*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
       }
-
-    
+    if (FinalProjectile.debug_scores) {
+      System.out.println(shots1 + " " + shots2 + " " + hits1 + " " + hits2 + " DisplayServer.drawScores()");
+    }
   }
 
 
