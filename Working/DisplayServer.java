@@ -79,6 +79,8 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final Color[] LEADING_COLOR = BLUE; // blue // leading vehicle color
   public static final Color[] FOLLOWING_COLOR = WHITE; // orangedisplay background color
 
+  public static final Color[] USER_SCORES ={ new Color(145,31,20), // red
+          new Color(150,75,35)}; // red
 
   //TODO: req
   public static final Color[][] COLORS = new Color[][] {
@@ -784,8 +786,11 @@ public class DisplayServer extends JPanel implements KeyListener {
   protected synchronized void drawScores(Graphics g) {
 
       g.setColor(USER1_COLOR[0]);
-      g.drawString("User 1", LINE_X_PIX_OFFSET, 4 * LINE_Y_PIX);
-      g.setColor(USER1_COLOR[1]);
+//    g.setFont(new Font("default", Font.BOLD, 14));
+    g.drawString("User 1", LINE_X_PIX_OFFSET, 4 * LINE_Y_PIX);
+//    g.setFont(new Font("default", Font.PLAIN, 14));
+
+    g.setColor(USER_SCORES[0]);
       g.drawString("Shots: " + shots1, LINE_X_PIX_OFFSET, 5 * LINE_Y_PIX+LINE_Y_PIX_OFFSET);
       g.drawString("Hits: " + hits1, LINE_X_PIX_OFFSET, 6*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
       String accuracy1;
@@ -800,8 +805,10 @@ public class DisplayServer extends JPanel implements KeyListener {
       if (FinalProjectile.multiplayer) {
 
         g.setColor(USER2_COLOR[0]);
-        g.drawString("User 2", LINE_X_PIX_OFFSET, 9 * LINE_Y_PIX+LINE_Y_PIX_OFFSET);
-        g.setColor(USER2_COLOR[1]);
+        g.setFont(new Font("default", Font.BOLD, 14));
+        g.drawString("User 2", LINE_X_PIX_OFFSET, 9 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+        g.setColor(USER_SCORES[1]);
+        g.setFont(new Font("default", Font.PLAIN, 14));
         g.drawString("Shots: " + shots2, LINE_X_PIX_OFFSET, 10*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
         g.drawString("Hits: " + hits2, LINE_X_PIX_OFFSET, 11*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
         String accuracy2;

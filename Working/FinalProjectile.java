@@ -24,11 +24,15 @@ public class FinalProjectile {
     public static final int GAME_TIME = 200; // [s] time the game runs for //TODO: req
     //TODO: make it stop when all non-user vehicles disappear
 
+    public static int NUM_VEHICLES;
+
     /* MAIN METHOD */
     public static void main(String[] args) {
 
+        NUM_VEHICLES = 10;
+
         //TODO:req
-        if (args.length == 1) { // if two command line arguments are present
+        if (args.length >= 1) { // if two command line arguments are present
             if (args[0].equals("1")) {
                 multiplayer = false;
                 System.out.println("Single-player mode enabled.");
@@ -36,12 +40,31 @@ public class FinalProjectile {
                 multiplayer = true;
                 System.out.println("Multi-player mode enabled.");
             } else { // if the second argument is wrong
-                System.err.println("Command line argument must be number of players.");
+                System.err.println("First command line argument must be number of players.");
                 System.err.println("To select single-player mode:");
                 System.err.println("$ java FinalProjectile 1");
                 System.err.println("To select multi-player mode:");
                 System.err.println("$ java FinalProjectile 2");
                 System.exit(-1);
+            }
+            if (args.length == 2) {
+                try {
+                    // try to parse the first argument as as integer
+                    if (Integer.parseInt(args[1]) == 0) {
+                        System.err.println("Number of vehicles must be greater than zero.");
+                        System.exit(-1);
+                    } else {
+                        NUM_VEHICLES = Integer.parseInt(args[1]);
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("First argument must be an integer.");
+                    System.exit(-1);
+                }
+            } else if (args.length > 2) {
+                System.err.println("Number of command line arguments must be less than or equal to 2.");
+                System.err.println("Example usage:");
+                System.err.println("$ java FinalProjectile <num players> <num non-player vehicles>");
+
             }
         } else {
             multiplayer = false;
@@ -85,74 +108,40 @@ public class FinalProjectile {
             UserController uc1 = new UserController(sim, uv1, ds);
             sim.addUserController(uc1);
 
-
-
-
-            //TODO: make all of this some sort of nice for loop in Simulator?
-            if (lead3) {
-                GroundVehicle lv = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-                GroundVehicle lv2 = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-                GroundVehicle lv3 = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-                LeadingController lc = new LeadingController(sim, lv);
-                LeadingController lc2 = new LeadingController(sim, lv2);
-                LeadingController lc3 = new LeadingController(sim, lv3);
-
-                sim.addVehicle(lv);
-                sim.addVehicle(lv2);
-                sim.addVehicle(lv3);
-                sim.addLeadingController(lc);
-                sim.addLeadingController(lc2);
-                sim.addLeadingController(lc3);
-
-//                lc.addFollower(uv1);
-//                lc.addFollower(lv2);
-//                lc.addFollower(lv3);
-//                lc2.addFollower(uv1);
-//                lc2.addFollower(lv);
-//                lc2.addFollower(lv3);
-//                lc3.addFollower(uv1);
-//                lc3.addFollower(lv);
-//                lc3.addFollower(lv2);
-                lv.start();
-                lv2.start();
-                lv3.start();
-                lc.start();
-                lc2.start();
-                lc3.start();
-
-
-                if(debug_follower) {
-                    GroundVehicle fv = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
-                    FollowingController fc = new FollowingController(sim, fv, uv1);
-                    sim.addFollowingController(fc);
-                    sim.addVehicle(fv);
-                    fv.start();
-                    fc.start();
-                }
-
-                if (multiplayer) {
-
-                    GroundVehicle uv2 = new GroundVehicle(pos2, 1, 0);
-                    sim.addVehicle(uv2);
-                    UserController uc2 = new UserController(sim, uv2, ds);
-                    sim.addUserController(uc2);
-
-//                    lc.addFollower(uv2);
-//                    lc2.addFollower(uv2);
-//                    lc3.addFollower(uv2);
-
-                    uv2.start();
-                    uc2.start();
-                }
-
+            // create non-user vehicles
+            for (int i = 1; i < NUM_VEHICLES; i++) {
+                GroundVehicle gv = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
+                VehicleController vc = new LeadingController(sim, gv);
+                sim.addVehicle(gv);
+                gv.start();
+                vc.start();
             }
 
+            if(debug_follower) {
+                GroundVehicle fv = new GroundVehicle(sim.randomStartingPosition(), sim.randomDoubleInRange(0, 10), sim.randomDoubleInRange(-Math.PI / 4, Math.PI / 4));
+                FollowingController fc = new FollowingController(sim, fv, uv1);
+                sim.addFollowingController(fc);
+                sim.addVehicle(fv);
+                fv.start();
+                fc.start();
+            }
 
 
             uv1.start();
             uc1.start();
-            sim.start();
 
+            if (multiplayer) {
+
+                GroundVehicle uv2 = new GroundVehicle(pos2, 1, 0);
+                sim.addVehicle(uv2);
+                UserController uc2 = new UserController(sim, uv2, ds);
+                sim.addUserController(uc2);
+
+                uv2.start();
+                uc2.start();
+            }
+
+            sim.start();
 
             do {
                 Socket client = s.accept();
