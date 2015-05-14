@@ -1,3 +1,10 @@
+/**
+ * DisplayServer
+ * 16.35 FinalProjectile Game Final Project
+ * @author  16.35 Staff
+ * @author  Syler Wagner        <syler@mit.edu>
+ **/
+
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
@@ -12,7 +19,6 @@ import java.text.*;
 import java.util.*;
 
 public class DisplayServer extends JPanel implements KeyListener {
-
 
   private double SPEED_INCREMENT = 1; //TODO: mod req?
   private double[] userSpeed = {5, 5}; //TODO: req

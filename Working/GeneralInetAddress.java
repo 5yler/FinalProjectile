@@ -1,12 +1,17 @@
+/**
+ * GeneralInetAddress
+ * 16.35 FinalProjectile Game Final Project
+ * @author  16.35 Staff
+ *
+ * This code is adapted from the solution to Bug 
+ * report 4665037 on java.sun.com, at 
+ * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4665037
+ **/
+
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
-
-/* This code is adapted from the solution to Bug report 
-   4665037 on java.sun.com, at 
-   http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4665037
-*/
 
 public class GeneralInetAddress {
 	

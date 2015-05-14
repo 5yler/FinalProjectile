@@ -1,15 +1,12 @@
-// Syler's test pad
-
+/**
+ * Syler's Testing Scratchpad
+ * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
+ **/
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-/**
- * Scratchpad
- * 16.35 Assignment #4 Pre-Deliverable
- * @author Syler Wagner [syler@mit.edu]
- **/
 
 public class Scratch {
 

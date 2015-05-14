@@ -1,12 +1,13 @@
+/**
+ * FinalProjectile
+ * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
+ **/
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-/**
- * FinalProjectile
- * 16.35 Assignment #4 Pre-Deliverable
- * @author Syler Wagner [syler@mit.edu]
- **/
 
 public class FinalProjectile {
 
@@ -21,7 +22,8 @@ public class FinalProjectile {
     public static final boolean debug_display_msgs  = false;    // set to true for projectile/vehicle display msg debug
 
     public static final int GAME_TIME = 200; // [s] time the game runs for //TODO: req
-
+    //TODO: make it stop when all non-user vehicles disappear
+    
     /* MAIN METHOD */
     public static void main(String[] args) {
 

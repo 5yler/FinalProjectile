@@ -1,4 +1,8 @@
-
+/**
+ * UserController
+ * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
+ **/
 
 public class UserController extends VehicleController {
 

@@ -1,14 +1,14 @@
 /**
  * Simulator
- * 16.35 Assignment #4 Pre-Deliverable
- * @author Syler Wagner [syler@mit.edu]
+ * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
  **/
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 
 public class Simulator extends Thread {
 

@@ -1,7 +1,8 @@
 /**
  * FollowingController
- * 16.35 Assignment #3 Final Deliverable
- * @author Syler Wagner [syler@mit.edu]
+ * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
  **/
 
 import java.text.DecimalFormat;
@@ -11,9 +12,6 @@ public class FollowingController extends VehicleController {
     private GroundVehicle _prey;
     private int _lastCheckedSec;    // last checked time (sec)
     private int _lastCheckedMSec;   // last checked time (msec)
-
-
-//    private final double dt; // timestep increment for controls [sec]
 
     private double maxTransSpeed = 10;
     private double minTransSpeed = 5;

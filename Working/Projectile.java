@@ -1,3 +1,8 @@
+/**
+ * Projectile
+ * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
+ **/
 
 public class Projectile extends Thread {
 	//class for projectiles

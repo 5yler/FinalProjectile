@@ -1,7 +1,8 @@
 /**
  * VehicleController
- * 16.35 Assignment #4 Pre-Deliverable
- * @author Syler Wagner [syler@mit.edu]
+ * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
  **/
 
 

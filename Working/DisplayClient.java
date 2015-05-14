@@ -1,3 +1,10 @@
+/**
+ * DisplayClient
+ * 16.35 FinalProjectile Game Final Project
+ * @author  16.35 Staff
+ * @author  Syler Wagner        <syler@mit.edu>
+ **/
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;

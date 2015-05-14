@@ -1,7 +1,7 @@
 /**
  * LeadingController
- * 16.35 Assignment #3 Final Deliverable
- * @author Syler Wagner [syler@mit.edu]
+ * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
  **/
 
 import java.text.DecimalFormat;
@@ -220,21 +220,4 @@ public class LeadingController extends VehicleController {
         return nextControl;
 
     }
-
-//
-//    /**
-//     *
-//     * @param follower GroundVehicle that is following LeadingController
-//     */
-//    public synchronized void addFollower(GroundVehicle follower) {
-//        // add vehicle ID to list
-//        _followerIndexList.add(follower.getNumID());
-//        Collections.sort(_followerIndexList);
-//    }
-
-
-
 }
-
-
-
