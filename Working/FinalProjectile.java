@@ -23,7 +23,7 @@ public class FinalProjectile {
 
     public static final int GAME_TIME = 200; // [s] time the game runs for //TODO: req
     //TODO: make it stop when all non-user vehicles disappear
-    
+
     /* MAIN METHOD */
     public static void main(String[] args) {
 

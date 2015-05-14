@@ -502,9 +502,17 @@ public class Simulator extends Thread {
 
                 updateTime = System.nanoTime();
 
-                int[] userShots = {_uc1.shots, _uc2.shots};
-                int[] userHits = {_uc1.hits, _uc2.hits};
+                int[] userShots = {0, 0};
+                int[] userHits = {0, 0};
 
+                userShots[0] = _uc1.shots;
+                userHits[0] = _uc1.hits;
+
+                if (FinalProjectile.multiplayer) {
+                    userShots[1] = _uc2.shots;
+                    userHits[1] = _uc2.hits;
+                }
+              
                 // update display client with vehicle positions
                 // update display client with projectile positions
                 if (FinalProjectile.debug_scores) {
