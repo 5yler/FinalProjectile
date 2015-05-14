@@ -8,11 +8,9 @@
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
 import java.io.*;
 import java.net.*;
 import java.text.*;
@@ -57,8 +55,8 @@ public class DisplayServer extends JPanel implements KeyListener {
   protected Color[] pathColors;
 
   /* CUSTOM SETTINGS */
-  public static final int DISPLAY_X = 800; // display window x pixels
-  public static final int DISPLAY_Y = 600; // display window y pixels
+  public static final int DISPLAY_X = 1250; // display window x pixels
+  public static final int DISPLAY_Y = 700; // display window y pixels
   public static final Color DISPLAY_BACKGROUND_COLOR = Color.black; // display background color
   public static final int LINE_Y_PIX = 12; // pixel height of text line
   public static final int LINE_X_PIX_OFFSET = 10; // pixel offset along x from edge of screen
