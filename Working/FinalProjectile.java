@@ -19,6 +19,7 @@ public class FinalProjectile {
     public static final boolean debug_keys          = false;    // set to true for FC debug
     public static final boolean debug_display_msgs  = false;    // set to true for FC debug
 
+    public static final int GAME_TIME = 100; // [s] time the game runs for //TODO: req
 
     /* MAIN METHOD */
     public static void main(String[] args) {

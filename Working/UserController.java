@@ -3,7 +3,9 @@
 public class UserController extends VehicleController {
 
     private DisplayServer _ds;
-//    private ControlPanel cp;
+
+    public static final int REACTION_TIME = 500; // [ms] timeout between successive projectiles firing //TODO: req
+
     //TODO: add to requirements
     protected static int userControllerCount = 0;	// number of VehicleControllers in existence
     public final int UserID;

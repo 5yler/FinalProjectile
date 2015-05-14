@@ -19,8 +19,10 @@ public class Simulator extends Thread {
     public static final int FOLLOWING = 4;
 
 
+    public static final int SIM_TIME = FinalProjectile.GAME_TIME; // [s] time the game runs for //TODO: req
 
     private long _startupTime;  // time when the VehicleController starts running
+    private long[] _lastProjectileTime = new long[2]; // time when last projectile was fired for each usercontroller //TODO: req
 
     private static DisplayClient _dc;
 
@@ -190,12 +192,21 @@ public class Simulator extends Thread {
      * TODO: req changed
      */
     public void generateProjectile(UserController uc) {
-        Projectile p = new Projectile(uc.getUserVehicle().getPosition(), this, uc);
-        _projectileList.add(p);
-        p.start();
 
-        if (debug_projectiles) {
-            System.out.println("Projectile "+_projectileList.size()+" generated!");
+        long timeSinceLastProjectile = (System.nanoTime() - _lastProjectileTime[uc.UserID]) / 1000000; // [ms]
+
+        // check if REACTION_TIME has passed since last projectile being fired by user //TODO: req
+        if (timeSinceLastProjectile > UserController.REACTION_TIME) {
+            System.out.println(timeSinceLastProjectile+"ms since last projectile fired by user "+(uc.UserID+1));
+
+            Projectile p = new Projectile(uc.getUserVehicle().getPosition(), this, uc);
+            _projectileList.add(p);
+            p.start();
+            _lastProjectileTime[uc.UserID] = System.nanoTime();
+
+            if (debug_projectiles) {
+                System.out.println("Projectile " + _projectileList.size() + " generated!");
+            }
         }
     }
 
@@ -402,11 +413,16 @@ public class Simulator extends Thread {
         double[] pY;
         double[] pC; // color array
 
+        // set startup time
         _startupTime = System.nanoTime();
+
+        // initialize current time, last update time, and last projectile time
+        _lastProjectileTime[0] = _startupTime;
+        _lastProjectileTime[1] = _startupTime;
         long currentTime = System.nanoTime();
         long updateTime = System.nanoTime();
 
-        while ((currentTime - _startupTime) < 200*1e9) { // while time less than 100s
+        while ((currentTime - _startupTime) < SIM_TIME*1e9) { // while time less than 100s
 
             currentTime = System.nanoTime();
 
