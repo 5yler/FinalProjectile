@@ -30,21 +30,22 @@ public class DisplayServer extends JPanel implements KeyListener {
   private static final long serialVersionUID = 1l;
 
   // ground vehicles
-  protected double gvX [], gvY[], gvTheta[];
+  protected double gvX[], gvY[], gvTheta[];
   protected int numVehicles = 0;
   protected int gvC[]; // vehicle color indexes in COLORS array
 
   // projectiles
-  protected double pX [], pY[];
+  protected double pX[], pY[];
   protected int numProjectiles = 0;
   protected int pC[]; // projectile color indexes in COLORS array
 
   // scores
-  protected int shots1, hits1; // user 1
-  protected int shots2, hits2; // user 2
+  protected int shots1, hits1, kills1; // user 1
+  protected int shots2, hits2, kills2; // user 2
   protected NumberFormat scoreFormat = new DecimalFormat("###.#");
 
-
+  // keyboard help
+  private boolean help = true;
 
   protected int maxNumVehicles = 20;
   protected int shapeX[], shapeY[];
@@ -63,14 +64,14 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final int LINE_Y_PIX_OFFSET = 3; // pixel offset along x from edge of screen
 
 
-  public static final Color[] RED = { new Color(255,21,60), // red
-                                      new Color(55+20,20,20)}; // red
-  public static final Color[] BLUE = {new Color(69,127,255),new Color(35,40,85)};
-  public static final Color[] ORANGE = {new Color(232,117,31),new Color(75,45,40)};
-  public static final Color[] YELLOW = {new Color(255,209,21),new Color(65,60,0)};
-  public static final Color[] PURPLE = {new Color(160,67,232),new Color(50,0,50)};
-//  public static final Color[] WHITE = {new Color(215,215,215),new Color(55,55,55)};
-  public static final Color[] WHITE = {new Color(49,57,135),new Color(20,25,45)};
+  public static final Color[] RED = {new Color(255, 21, 60), // red
+          new Color(55 + 20, 20, 20)}; // red
+  public static final Color[] BLUE = {new Color(69, 127, 255), new Color(35, 40, 85)};
+  public static final Color[] ORANGE = {new Color(232, 117, 31), new Color(75, 45, 40)};
+  public static final Color[] YELLOW = {new Color(255, 209, 21), new Color(65, 60, 0)};
+  public static final Color[] PURPLE = {new Color(160, 67, 232), new Color(50, 0, 50)};
+  //  public static final Color[] WHITE = {new Color(215,215,215),new Color(55,55,55)};
+  public static final Color[] WHITE = {new Color(49, 57, 135), new Color(20, 25, 45)};
 
 
   public static final Color[] PROJECTILE_COLOR = WHITE; // projectile color //TODO: remove from req
@@ -79,20 +80,17 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final Color[] LEADING_COLOR = BLUE; // blue // leading vehicle color
   public static final Color[] FOLLOWING_COLOR = WHITE; // orangedisplay background color
 
-  public static final Color[] USER_SCORES ={ new Color(145,31,20), // red
-          new Color(150,75,35)}; // red
+  public static final Color[] USER_SCORES = {new Color(145, 31, 20), // red
+          new Color(150, 75, 35)}; // red
 
   //TODO: req
-  public static final Color[][] COLORS = new Color[][] {
+  public static final Color[][] COLORS = new Color[][]{
           PROJECTILE_COLOR, // 0
           USER1_COLOR,      // 1
           USER2_COLOR,      // 2
           LEADING_COLOR,    // 3
           FOLLOWING_COLOR,  // 4
   };
-
-
-
 
 
   public static final int SLEEP_TIME = 0; // delay between timesteps when drawing vehicle trajectories
@@ -128,18 +126,19 @@ public class DisplayServer extends JPanel implements KeyListener {
       loopHistory = 0;
       trueHistoryLength = 0;
     }
-    public double [] myX;
-    public double [] myY;
+
+    public double[] myX;
+    public double[] myY;
     int myNumPoints;
     int trueHistoryLength;
     int loopHistory;
   }
 
-  History [] histories;
+  History[] histories;
   boolean trace = false;
 
   public synchronized void clear() {
-    if (histories !=null){
+    if (histories != null) {
       for (int i = 0; i < histories.length; i++) {
         histories[i].myNumPoints = 0;
         histories[i].loopHistory = 0;
@@ -157,24 +156,25 @@ public class DisplayServer extends JPanel implements KeyListener {
   public class MessageListener extends Thread {
     public BufferedReader my_client;
     public DisplayServer my_display;
+
     public MessageListener(Socket client, DisplayServer display) {
       my_display = display;
       try {
         //System.out.println("Default size: " + client.getReceiveBufferSize());
         my_client = new BufferedReader
                 (new InputStreamReader(client.getInputStream()));
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         System.err.println("Very weird IOException in creating the BufferedReader");
         System.err.println(e);
         System.exit(-1);
       }
     }
+
     public void run() {
       try {
         while (true) {
           String message = my_client.readLine();
-          if (message == null){
+          if (message == null) {
             System.out.println("EOF reached!");
             return; //EOF reached
           }
@@ -184,8 +184,7 @@ public class DisplayServer extends JPanel implements KeyListener {
           String tok = st.nextToken();
           if (tok.equals("clear")) {
             my_display.clear();
-          }
-          else if (tok.equals("traceon")) {
+          } else if (tok.equals("traceon")) {
             synchronized (my_display) {
               my_display.trace = true;
             }
@@ -193,7 +192,7 @@ public class DisplayServer extends JPanel implements KeyListener {
             synchronized (my_display) {
               my_display.trace = false;
             }
-          } else if (tok.equals("close")){
+          } else if (tok.equals("close")) {
             return;
           } else {
             synchronized (my_display) {
@@ -243,7 +242,7 @@ public class DisplayServer extends JPanel implements KeyListener {
                   } // end if (trace)
                 } // end for (int i = 0; i < my_display.numVehicles; i++)
               }
-               // end for (int i = 0; i < my_display.numProjectiles; i++)
+              // end for (int i = 0; i < my_display.numProjectiles; i++)
               tok = st.nextToken();
               if (tok.equals("score")) {
                 tok = st.nextToken();
@@ -254,9 +253,13 @@ public class DisplayServer extends JPanel implements KeyListener {
                 my_display.hits1 = Integer.parseInt(tok);
                 tok = st.nextToken();
                 my_display.hits2 = Integer.parseInt(tok);
+                tok = st.nextToken();
+                my_display.kills1 = Integer.parseInt(tok);
+                tok = st.nextToken();
+                my_display.kills2 = Integer.parseInt(tok);
               }
 
-             // end if (tok.equals("vehicles"))
+              // end if (tok.equals("vehicles"))
 //              if (tok.equals("projectiles")) {
               tok = st.nextToken();
               if (tok.equals("projectiles")) {
@@ -288,14 +291,13 @@ public class DisplayServer extends JPanel implements KeyListener {
             e.printStackTrace();
           }
         }
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
       }
       return;
     }
   }
 
-  public DisplayServer (String hostname) {
+  public DisplayServer(String hostname) {
     myHostname = hostname;
     shapeX = new int[9];
     shapeY = new int[9];
@@ -304,15 +306,24 @@ public class DisplayServer extends JPanel implements KeyListener {
     // If you wanted to draw a more realistic UAV, you would modify this
     // polygon. 
 
-    shapeX[0] = 10;  shapeY[0] = 0;
-    shapeX[1] = 0;   shapeY[1] = -5;
-    shapeX[2] = 0;   shapeY[2] = -2;
-    shapeX[3] = -8;  shapeY[3] = -2;
-    shapeX[4] = -10; shapeY[4] = -4;
-    shapeX[5] = -10; shapeY[5] = 4;
-    shapeX[6] = -8;  shapeY[6] = 2;
-    shapeX[7] = 0;   shapeY[7] = 2;
-    shapeX[8] = 0;   shapeY[8] = 5;
+    shapeX[0] = 10;
+    shapeY[0] = 0;
+    shapeX[1] = 0;
+    shapeY[1] = -5;
+    shapeX[2] = 0;
+    shapeY[2] = -2;
+    shapeX[3] = -8;
+    shapeY[3] = -2;
+    shapeX[4] = -10;
+    shapeY[4] = -4;
+    shapeX[5] = -10;
+    shapeY[5] = 4;
+    shapeX[6] = -8;
+    shapeY[6] = 2;
+    shapeX[7] = 0;
+    shapeY[7] = 2;
+    shapeX[8] = 0;
+    shapeY[8] = 5;
 
     // generate array of random colors for up to 20 different vehicles
     vehicleColors = new Color[maxNumVehicles];
@@ -320,16 +331,16 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 
     // preset colors
-    vehicleColors[0] = new Color(255,21,60); // red
-    pathColors[0] = new Color(55+20,20,20); // red
-    vehicleColors[1] = new Color(69,127,255); // blue
-    pathColors[1] = new Color(35,40,85);
-    vehicleColors[2] = new Color(232,117,31); // orange
-    pathColors[2] = new Color(75,45,40);
-    vehicleColors[3] = new Color(255,209,21); // yellow
-    pathColors[3] = new Color(65,60,0);
-    vehicleColors[4] = new Color(160,67,232); // purple
-    pathColors[4] = new Color(50,0,50);
+    vehicleColors[0] = new Color(255, 21, 60); // red
+    pathColors[0] = new Color(55 + 20, 20, 20); // red
+    vehicleColors[1] = new Color(69, 127, 255); // blue
+    pathColors[1] = new Color(35, 40, 85);
+    vehicleColors[2] = new Color(232, 117, 31); // orange
+    pathColors[2] = new Color(75, 45, 40);
+    vehicleColors[3] = new Color(255, 209, 21); // yellow
+    pathColors[3] = new Color(65, 60, 0);
+    vehicleColors[4] = new Color(160, 67, 232); // purple
+    pathColors[4] = new Color(50, 0, 50);
 
 
     SwingUtilities.invokeLater(new Runnable() {
@@ -339,8 +350,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     });
   }
 
-  public void startGraphics()
-  {
+  public void startGraphics() {
     JFrame.setDefaultLookAndFeelDecorated(true);
 
     frame = new JFrame("I'm Feeling Lucky!");
@@ -379,7 +389,6 @@ public class DisplayServer extends JPanel implements KeyListener {
   }
 
   /**
-   *
    * @param e
    */
   public void keyPressed(KeyEvent e) {
@@ -406,7 +415,7 @@ public class DisplayServer extends JPanel implements KeyListener {
       }
       // generate projectiles
       if (code == KeyEvent.VK_SPACE) {
-        toggleProjectile(true,0);
+        toggleProjectile(true, 0);
       }
       // USER 2
       // forward velocity control
@@ -429,12 +438,17 @@ public class DisplayServer extends JPanel implements KeyListener {
       }
       // generate projectiles
       if (code == KeyEvent.VK_SHIFT) {
-        toggleProjectile(true,1);
+        toggleProjectile(true, 1);
+      }
+      if (code == KeyEvent.VK_H) {
+        help = !help;
       }
     }
   }
 
-  /** Handle the key-released event from the text field. */
+  /**
+   * Handle the key-released event from the text field.
+   */
   public void keyReleased(KeyEvent e) {
     int code = e.getKeyCode();
     // USER 1
@@ -447,7 +461,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     }
     // stop generating projectile
     if (code == KeyEvent.VK_SPACE) {
-      toggleProjectile(false,0);
+      toggleProjectile(false, 0);
     }
     // USER 2
     // reset rotational velocity
@@ -459,7 +473,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     }
     // stop generating projectile
     if (code == KeyEvent.VK_SHIFT) {
-      toggleProjectile(false,1);
+      toggleProjectile(false, 1);
     }
   }
 
@@ -493,11 +507,9 @@ public class DisplayServer extends JPanel implements KeyListener {
   }
 
 
-
-
   public double getUserSpeed(int UserID) {
     if (print) {
-      System.out.println("getUserSpeed() = " + userSpeed+" getUserOmega() = " + userOmega);
+      System.out.println("getUserSpeed() = " + userSpeed + " getUserOmega() = " + userOmega);
     }
     return userSpeed[UserID];
   }
@@ -514,10 +526,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   /**
    * Listens to key press events and modifies settings accordingly.
+   *
    * @param e
    */
-  public void keyTyped(KeyEvent e)
-  {
+  public void keyTyped(KeyEvent e) {
     switch (e.getKeyChar()) {
       case 'Q':
       case 'q':
@@ -557,15 +569,14 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 
   /**
-   *
    * @return array with random RGB color pair (dark color and light color)
    */
   public Color[] randomColorPair() {
     int r = rand.nextInt(155); // 255 will result in colors that can't be detected on a white background
     int g = rand.nextInt(155);
     int b = rand.nextInt(155);
-    Color darkColor = new Color(r,g,b);
-    Color lightColor = new Color(r+100,g+100,b+100);
+    Color darkColor = new Color(r, g, b);
+    Color lightColor = new Color(r + 100, g + 100, b + 100);
     Color[] colorPair = new Color[2];
     colorPair[0] = darkColor;
     colorPair[1] = lightColor;
@@ -573,18 +584,16 @@ public class DisplayServer extends JPanel implements KeyListener {
   }
 
   /**
-   *
    * @return random dark RGB color
    */
   public static Color randomDarkColor() {
     int r = rand.nextInt(155); // 255 will result in colors that can't be detected on a white background
     int g = rand.nextInt(155);
     int b = rand.nextInt(155);
-    return new Color(r,g,b);
+    return new Color(r, g, b);
   }
 
   /**
-   *
    * @return random light RGB color
    */
   public static Color randomLightColor() {
@@ -596,7 +605,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 
 
   /**
-   *
    * @return random grey RGB color
    */
   public static Color randomCircleColor() {
@@ -641,11 +649,11 @@ public class DisplayServer extends JPanel implements KeyListener {
         // We scale the x and y by 5, since the bounds on X and Y are 100x100
         // but our windows is 500x500.
 
-        double x = gvX[j]*5;
-        double y = gvY[j]*5;
+        double x = gvX[j] * 5;
+        double y = gvY[j] * 5;
         double th = gvTheta[j];
-        drawX[i] = (int)(x+Math.cos(th)*shapeX[i]+Math.sin(th)*shapeY[i]);
-        drawY[i] = (int)(y+Math.sin( th)*shapeX[i]-Math.cos(th)*shapeY[i]);
+        drawX[i] = (int) (x + Math.cos(th) * shapeX[i] + Math.sin(th) * shapeY[i]);
+        drawY[i] = (int) (y + Math.sin(th) * shapeX[i] - Math.cos(th) * shapeY[i]);
         drawY[i] = DISPLAY_Y - drawY[i]; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
       }
       g.drawPolygon(drawX, drawY, 9);
@@ -655,6 +663,7 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   /**
    * Draws projectiles.
+   *
    * @param g
    */
   protected synchronized void drawProjectiles(Graphics g) {
@@ -662,7 +671,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     for (int j = 0; j < numProjectiles; j++) {
 
       // set color to user color with matching index in COLORS array
-      printmsg("pC[j] = "+pC[j]);
+      printmsg("pC[j] = " + pC[j]);
       g.setColor(COLORS[pC[j]][0]);
 
       // cast projectile positions to be integers
@@ -696,24 +705,24 @@ public class DisplayServer extends JPanel implements KeyListener {
       g.setColor(COLORS[gvC[j]][1]);
 
 
-      int drawX[]; int drawY[];
-      if (histories[j].loopHistory == 0){
+      int drawX[];
+      int drawY[];
+      if (histories[j].loopHistory == 0) {
         drawX = new int[histories[j].myNumPoints];
         drawY = new int[histories[j].myNumPoints];
-      }
-      else{
+      } else {
 
         drawX = new int[histories[j].myX.length];
         drawY = new int[histories[j].myY.length];
       }
-      for (int i = 0; i < drawX.length;i++){
+      for (int i = 0; i < drawX.length; i++) {
         // We scale the x and y by 5, since the bounds on X and Y are 100x100
         // but our windows is 500x500.
 
-        double x = histories[j].myX[i]*5;
-        double y = histories[j].myY[i]*5;
-        drawX[i] = (int)(x);
-        drawY[i] = DISPLAY_Y- (int)y; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
+        double x = histories[j].myX[i] * 5;
+        double y = histories[j].myY[i] * 5;
+        drawX[i] = (int) (x);
+        drawY[i] = DISPLAY_Y - (int) y; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
       }
       g.drawPolygon(drawX, drawY, drawX.length);
     }
@@ -721,30 +730,32 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   /**
    * Draws circle based on x, y, and radius given in simulation coordinate system.
-   * @param g   graphics object
-   * @param Xc  x location of circle center
-   * @param Yc  y location of circle center
-   * @param R   circle radius
+   *
+   * @param g  graphics object
+   * @param Xc x location of circle center
+   * @param Yc y location of circle center
+   * @param R  circle radius
    */
   public static void drawCircle(Graphics g, int Xc, int Yc, int R) {
 
-    int diameter = 2*R;
+    int diameter = 2 * R;
 
     // shift x and y by circle radius to center it
-    g.fillOval((Xc-R)*5, (Yc-R)*5, 2*R, 2*R);
+    g.fillOval((Xc - R) * 5, (Yc - R) * 5, 2 * R, 2 * R);
 
   }
 
 
   /**
    * Draws random circle in simulation.
-   * @param g   graphics object
+   *
+   * @param g graphics object
    */
   public static void drawRandomCircle(Graphics g) {
 
 
-    int diameter = (int) Simulator.randomDoubleInRange(0,Math.min(Simulator.SIM_X,Simulator.SIM_Y));
-    int R = diameter/2;
+    int diameter = (int) Simulator.randomDoubleInRange(0, Math.min(Simulator.SIM_X, Simulator.SIM_Y));
+    int R = diameter / 2;
     int Xc = (int) Simulator.randomDoubleInRange(0, Simulator.SIM_X);
     int Yc = (int) Simulator.randomDoubleInRange(0, Simulator.SIM_Y);
 
@@ -768,62 +779,105 @@ public class DisplayServer extends JPanel implements KeyListener {
       g.setColor(randomCircleColor());
       drawRandomCircle(g);
     }
-    
+
     g.setColor(randomLightColor());
-    g.drawString("Display running in the 90's", LINE_X_PIX_OFFSET, LINE_Y_PIX+LINE_Y_PIX_OFFSET);
-    g.drawString("on " + myHostname, LINE_X_PIX_OFFSET, 2*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
+    g.drawString("Display running in the 90's", LINE_X_PIX_OFFSET, LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+    g.drawString("on " + myHostname, LINE_X_PIX_OFFSET, 2 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
     if (trace)
       drawHistories(g);
     drawVehicles(g);
     drawProjectiles(g);
     drawScores(g);
+    drawHelp(g);
   }
 
   /**
    * Draws projectiles.
+   *
    * @param g
    */
   protected synchronized void drawScores(Graphics g) {
 
-      g.setColor(USER1_COLOR[0]);
+    g.setColor(USER1_COLOR[0]);
 //    g.setFont(new Font("default", Font.BOLD, 14));
+    g.setFont(new Font("default", Font.BOLD, 14));
     g.drawString("User 1", LINE_X_PIX_OFFSET, 4 * LINE_Y_PIX);
 //    g.setFont(new Font("default", Font.PLAIN, 14));
+    g.setFont(new Font("default", Font.PLAIN, 14));
 
     g.setColor(USER_SCORES[0]);
-      g.drawString("Shots: " + shots1, LINE_X_PIX_OFFSET, 5 * LINE_Y_PIX+LINE_Y_PIX_OFFSET);
-      g.drawString("Hits: " + hits1, LINE_X_PIX_OFFSET, 6*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
-      String accuracy1;
-      if (shots1==0) {
-        accuracy1 = "NaN";
+    g.drawString("Shots: " + shots1, LINE_X_PIX_OFFSET, 5 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+    g.drawString("Hits: " + hits1, LINE_X_PIX_OFFSET, 6 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+    g.drawString("Kills: " + kills1, LINE_X_PIX_OFFSET, 7 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+    String accuracy1;
+    if (shots1 == 0) {
+      accuracy1 = "NaN";
+    } else {
+      double acc1 = 100.0 * hits1 / shots1;
+      accuracy1 = scoreFormat.format(acc1);
+    }
+    g.drawString("Accuracy: " + accuracy1 + "%", LINE_X_PIX_OFFSET, 8 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+
+    if (FinalProjectile.multiplayer) {
+
+      g.setColor(USER2_COLOR[0]);
+      g.setFont(new Font("default", Font.BOLD, 14));
+      g.drawString("User 2", LINE_X_PIX_OFFSET, 10 * LINE_Y_PIX);
+      g.setColor(USER_SCORES[1]);
+      g.setFont(new Font("default", Font.PLAIN, 14));
+      g.drawString("Shots: " + shots2, LINE_X_PIX_OFFSET, 11 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("Hits: " + hits2, LINE_X_PIX_OFFSET, 12 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("Kills: " + kills2, LINE_X_PIX_OFFSET, 13 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      String accuracy2;
+      if (shots2 == 0) {
+        accuracy2 = "NaN";
       } else {
-        double acc1 = 100.0 * hits1 / shots1;
-        accuracy1 = scoreFormat.format(acc1);
+        double acc2 = 100.0 * hits2 / shots2;
+        accuracy2 = scoreFormat.format(acc2);
       }
-      g.drawString("Accuracy: " + accuracy1 + "%", LINE_X_PIX_OFFSET, 7*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
-
-      if (FinalProjectile.multiplayer) {
-
-        g.setColor(USER2_COLOR[0]);
-        g.setFont(new Font("default", Font.BOLD, 14));
-        g.drawString("User 2", LINE_X_PIX_OFFSET, 9 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
-        g.setColor(USER_SCORES[1]);
-        g.setFont(new Font("default", Font.PLAIN, 14));
-        g.drawString("Shots: " + shots2, LINE_X_PIX_OFFSET, 10*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
-        g.drawString("Hits: " + hits2, LINE_X_PIX_OFFSET, 11*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
-        String accuracy2;
-        if (shots2==0) {
-          accuracy2 = "NaN";
-        } else {
-          double acc2 = 100.0 * hits2 / shots2;
-          accuracy2 = scoreFormat.format(acc2);
-        }
-        g.drawString("Accuracy: " + accuracy2 + "%", LINE_X_PIX_OFFSET, 12*LINE_Y_PIX+LINE_Y_PIX_OFFSET);
-      }
+      g.drawString("Accuracy: " + accuracy2 + "%", LINE_X_PIX_OFFSET, 14 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+    }
     if (FinalProjectile.debug_scores) {
       System.out.println(shots1 + " " + shots2 + " " + hits1 + " " + hits2 + " DisplayServer.drawScores()");
     }
   }
+
+
+  /**
+   * Draws control key help text.
+   *
+   * @param g
+   */
+  protected synchronized void drawHelp(Graphics g) {
+    if (help) {
+      g.setFont(new Font("default", Font.BOLD, 14));
+      g.setColor(randomLightColor());
+//      g.drawString("User 1 controls: move with [^]UP [v]DOWN [<]LEFT [>]RIGHT keys, shoot with [.]SPACE", LINE_X_PIX_OFFSET, LINE_Y_PIX_OFFSET);
+      g.drawString("User 1 Controls", LINE_X_PIX_OFFSET + 110, 4 * LINE_Y_PIX);
+      g.setFont(new Font("monospaced", Font.PLAIN, 12));
+      g.drawString("[^] speed up", LINE_X_PIX_OFFSET + 110, 5 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("[v] slow down", LINE_X_PIX_OFFSET+110, 6 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("[<] turn left", LINE_X_PIX_OFFSET+110, 7 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("[>] turn right", LINE_X_PIX_OFFSET+110, 8 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("[SPACE] shoot", LINE_X_PIX_OFFSET+230, 5 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("[H] toggle help menu", LINE_X_PIX_OFFSET+230, 4 * LINE_Y_PIX);
+
+
+      if (FinalProjectile.multiplayer) {
+        g.setFont(new Font("default", Font.BOLD, 14));
+        g.drawString("User 2 Controls", LINE_X_PIX_OFFSET + 110, 10 * LINE_Y_PIX);
+        g.setFont(new Font("monospaced", Font.PLAIN, 12));
+        g.drawString("[W] speed up", LINE_X_PIX_OFFSET+110, 11 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+        g.drawString("[S] slow down", LINE_X_PIX_OFFSET+110, 12 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+        g.drawString("[A] turn left", LINE_X_PIX_OFFSET+110, 13 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+        g.drawString("[D] turn right", LINE_X_PIX_OFFSET+110, 14 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+        g.drawString("[SHIFT] shoot", LINE_X_PIX_OFFSET+230, 11 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+
+      }
+    }
+  }
+
+
 
 
 

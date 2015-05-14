@@ -71,9 +71,9 @@ public class FinalProjectile {
             System.out.println("Single player mode enabled.");
         }
 
-            System.out.println("User 1 controls: move with [^]UP [v]DOWN [<]LEFT [>]RIGHT keys, shoot with [.]SPACE");
+//            System.out.println("User 1 controls: move with [^]UP [v]DOWN [<]LEFT [>]RIGHT keys, shoot with [.]SPACE");
         if (multiplayer) {
-            System.out.println("User 2 controls: move with [^]W  [v]S    [<]A    [>]D     keys, shoot with [.]SHIFT");
+//            System.out.println("User 2 controls: move with [^]W  [v]S    [<]A    [>]D     keys, shoot with [.]SHIFT");
         }
 
         // sleep for two seconds so user can read controls

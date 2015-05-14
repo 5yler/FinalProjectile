@@ -5,6 +5,8 @@
  * @author  Caitlin Wheatley    <caitkw@mit.edu>
  **/
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -67,6 +69,9 @@ public class Simulator extends Thread {
 
     private static final boolean debug_projectiles   = FinalProjectile.debug_projectiles;     // projectile debug statements
 
+
+
+    protected NumberFormat scoreFormat = new DecimalFormat("###.#");
 
     /* CONSTRUCTORS */
     public Simulator() {
@@ -313,8 +318,9 @@ public class Simulator extends Thread {
                         // increment user hit counter
                         p._uc.hits++;
 
-                        // increment kill counter
-                        UserController.kills++;
+                        // increment kill counters
+                        p._uc.kills++;
+                        UserController.TOTAL_KILLS++;
 
                         System.out.println("VEHICLE SHOT AGAIN! GAME OVER, BUDDY!");
 
@@ -436,6 +442,10 @@ public class Simulator extends Thread {
         double[] pY;
         double[] pC; // color array
 
+//TODO: req
+        int[] userShots = {0, 0};
+        int[] userHits  = {0, 0};
+        int[] userKills = {0, 0};
 
 
         // set startup time
@@ -507,15 +517,15 @@ public class Simulator extends Thread {
 
                 updateTime = System.nanoTime();
 
-                int[] userShots = {0, 0};
-                int[] userHits = {0, 0};
 
-                userShots[0] = _uc1.shots;
-                userHits[0] = _uc1.hits;
+                userShots[0]    = _uc1.shots;
+                userHits[0]     = _uc1.hits;
+                userKills[0]    = _uc1.kills;
 
                 if (FinalProjectile.multiplayer) {
-                    userShots[1] = _uc2.shots;
-                    userHits[1] = _uc2.hits;
+                    userShots[1]    = _uc2.shots;
+                    userHits[1]     = _uc2.hits;
+                    userKills[1]    = _uc2.kills;
                 }
               
                 // update display client with vehicle positions
@@ -523,7 +533,7 @@ public class Simulator extends Thread {
                 if (FinalProjectile.debug_scores) {
                     System.out.println(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " Simulator.run()");
                 }
-                _dc.update(userShots, userHits, gvC.length, gvX, gvY, gvTheta, gvC, pC.length, pX, pY, pC);
+                _dc.update(userShots, userHits, userKills, gvC.length, gvX, gvY, gvTheta, gvC, pC.length, pX, pY, pC);
 
                 // Check if projectile is near GroundVehicle and switch controller if so
                 synchronized (this) {
@@ -532,7 +542,7 @@ public class Simulator extends Thread {
 
                 }	// end synchronized (this)
 
-                if (UserController.kills == FinalProjectile.NUM_VEHICLES) {
+                if (UserController.TOTAL_KILLS == FinalProjectile.NUM_VEHICLES) {
                     break playing;
                 }
 
@@ -543,6 +553,26 @@ public class Simulator extends Thread {
         // clear display of previous trajectories
 
         System.out.println("SHOTS FIRED: " + Projectile.SHOTS_FIRED);
+
+        System.out.println("USER 1 -------------------------------------");
+        System.out.println("Shots: "+_uc1.shots);
+        System.out.println("Hits: "+_uc1.hits);
+        System.out.println("Kills: " +_uc1.kills);
+        double acc1 = 100.0*_uc1.hits/+_uc1.shots;
+        String accuracy1 = scoreFormat.format(acc1);
+        System.out.println("Accuracy: " + accuracy1 + "%");
+
+        if (FinalProjectile.multiplayer) {
+
+            System.out.println("USER 2 -------------------------------------");
+            System.out.println("Shots: " + _uc2.shots);
+            System.out.println("Hits: " + _uc2.hits);
+            System.out.println("Kills: " + _uc2.kills);
+            double acc2 = 100.0 * _uc1.hits / +_uc2.shots;
+            String accuracy2 = scoreFormat.format(acc2);
+            System.out.println("Accuracy: " + accuracy2 + "%");
+
+        }
 
 
         try {

@@ -58,7 +58,7 @@ public class DisplayClient  {
   }
 
   //TODO: write requirements
-  public void update(int userShots[], int userHits[], int numVehicles, double gvX[], double gvY[], double gvTheta[], double gvC[], int numProjectiles, double pX[], double pY[], double pC[])
+  public void update(int userShots[], int userHits[], int userKills[], int numVehicles, double gvX[], double gvY[], double gvTheta[], double gvC[], int numProjectiles, double pX[], double pY[], double pC[])
   {
     StringBuffer message = new StringBuffer();
     // append vehicle positions
@@ -73,7 +73,7 @@ public class DisplayClient  {
     // append user scores
     message.append("score");
     message.append(" ");
-    message.append(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " ");
+    message.append(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " " + userKills[0] + " " + userKills[1] + " ");
     if (FinalProjectile.debug_scores) {
       System.out.println(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " DisplayClient.update()");
     }
