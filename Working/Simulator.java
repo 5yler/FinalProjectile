@@ -310,8 +310,12 @@ public class Simulator extends Thread {
                         // remove follower if shot
                         _vehicleList.remove(v);
 
-                        // increment hit counter
+                        // increment user hit counter
                         p._uc.hits++;
+
+                        // increment kill counter
+                        UserController.kills++;
+
                         System.out.println("VEHICLE SHOT AGAIN! GAME OVER, BUDDY!");
 
 //                        _projectileList.remove(p);
@@ -443,6 +447,7 @@ public class Simulator extends Thread {
         long currentTime = System.nanoTime();
         long updateTime = System.nanoTime();
 
+        playing:
         while ((currentTime - _startupTime) < SIM_TIME*1e9) { // while time less than 100s
 
             currentTime = System.nanoTime();
@@ -527,13 +532,24 @@ public class Simulator extends Thread {
 
                 }	// end synchronized (this)
 
+                if (UserController.kills == FinalProjectile.NUM_VEHICLES) {
+                    break playing;
+                }
 
 
             } // end if (100ms since last update)
         } // end while (time < 100s)
 
-        _dc.traceOff();
+        // clear display of previous trajectories
+
         System.out.println("SHOTS FIRED: " + Projectile.SHOTS_FIRED);
+
+
+        try {
+            Thread.sleep(10*100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // kill application after time is over
         System.exit(0);

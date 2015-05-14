@@ -17,6 +17,8 @@ public class UserController extends VehicleController {
     //TODO: req
     public int shots = 0;
     public int hits = 0;
+    public static int kills = 0;	// total number of kills by all users
+
 
     private final boolean debug = false; // set to true for debug statements
 
