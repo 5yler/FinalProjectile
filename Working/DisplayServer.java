@@ -755,22 +755,6 @@ public class DisplayServer extends JPanel implements KeyListener {
    * @param g
    */
   protected synchronized void drawScores(Graphics g) {
-    // set color to projectile color
-    for (int j = 0; j < numProjectiles; j++) {
-
-      // set color to user color with matching index in COLORS array
-      printmsg("pC[j] = "+pC[j]);
-      g.setColor(COLORS[pC[j]][0]);
-
-      // cast projectile positions to be integers
-      int x = (int) pX[j];
-      int y = (int) pY[j];
-
-      // correct for simulation y direction being different from display
-      y = Simulator.SIM_Y - y; /** MODDED TO ACCOUNT FOR VARIABLE DISPLAY SIZE **/
-
-      // draw projectile as circle of radius 1
-      drawCircle(g, x, y, 1);
 
       g.setColor(USER1_COLOR[0]);
       g.drawString("User 1", LINE_X_PIX_OFFSET, 4 * LINE_Y_PIX);
@@ -789,7 +773,7 @@ public class DisplayServer extends JPanel implements KeyListener {
         g.drawString("Accuracy: " + myHostname + "%", LINE_X_PIX_OFFSET, 12*LINE_Y_PIX);
       }
 
-    }
+    
   }
 
 
