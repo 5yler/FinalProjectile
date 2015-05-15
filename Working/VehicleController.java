@@ -11,8 +11,7 @@ public class VehicleController extends Thread {
     protected Simulator _sim;         // simulator object
     protected GroundVehicle _v;     // specific GroundVehicle being controlled
 
-    private long _startupTime;  // time when the VehicleController starts running
-    public static final int MS_INCREMENT = FinalProjectile.CONTROLLER_MS;
+    public static final int UPDATE_MS = FinalProjectile.CONTROLLER_MS;
 
     public final double _dt;    // timestep increment for advancing GroundVehicles
 
@@ -47,12 +46,19 @@ public class VehicleController extends Thread {
 
 /* CONSTRUCTOR */
     public VehicleController(Simulator sim, GroundVehicle v) {
+        if (sim == null) {
+            throw new IllegalArgumentException("Simulator must not be null");
+        }
+        if (v == null) {
+            throw new IllegalArgumentException("GroundVehicle must not be null");
+        }
+
         _sim = sim;
         _v = v;
-        _v.controller = this;
+        _v._vc = this;
 
 //        _dt = _v.VEHICLE_SEC_INCREMENT+_v.VEHICLE_MSEC_INCREMENT/1e3;
-        _dt = MS_INCREMENT;
+        _dt = UPDATE_MS;
 
         _ID = controllerCount;
         controllerCount++;
@@ -297,18 +303,18 @@ public class VehicleController extends Thread {
      * simulator will do.
      */
     public void run() {
-    	
-        _startupTime = System.nanoTime();
+
+        long startupTime = System.nanoTime();
         long currentTime = System.nanoTime();
         long updateTime = System.nanoTime();
 
-        while ((currentTime - _startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
+        while ((currentTime - startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
 
             currentTime = System.nanoTime();
 
-            if ((currentTime - updateTime) >= MS_INCREMENT *1e6) { // update once every increment
+            if ((currentTime - updateTime) >= UPDATE_MS *1e6) { // update once every increment
 
-                long controlTime = currentTime - _startupTime;
+                long controlTime = currentTime - startupTime;
                 int controlSec = (int) (controlTime/1e9);
                 int controlMSec = (int) ((controlTime-controlSec*1e9)/1e6);
 

@@ -9,17 +9,15 @@ public class Projectile extends Thread {
 	//start at user vehicle angel/position and travel in a straight line
 	//disappear when hit radius around target or go off screen
 
-	//TODO: change speed in requirements
 	public static final double PROJECTILE_SPEED = 6*GroundVehicle.MAX_VEL;
-	public static final double HIT_DISTANCE = 3;
+	public static final double HIT_DISTANCE = 4;
 
 
     private double _x, _y, _theta;
     private double _dx, _dy;
 
-	//TODO: add to requirements doc
-	public int color;	// index of vehicle color in DisplayServer.COLORS array
-	public int ID; 		// UserController ID //TODO: req
+	public int _color;	// index of vehicle color in DisplayServer.COLORS array
+	public int ID; 		// UserController ID
 
 	private Simulator _sim;
 	public UserController _uc;
@@ -28,20 +26,24 @@ public class Projectile extends Thread {
 
 	public static final int UPDATE_MS = FinalProjectile.PROJECTILE_MS;
 
-	//TODO: add to requirement
 	public static int SHOTS_FIRED = 0;	// total number of projectiles fired
 
 
-//TODO: uc arg in requirements
 	public Projectile(double[] shooterPosition, Simulator sim, UserController uc) {
-
-		if (shooterPosition.length != 3)
+		if (shooterPosition.length != 3) {
 			throw new IllegalArgumentException("First argument must be array of length 3");
+		}
+		if (sim == null) {
+			throw new IllegalArgumentException("Simulator must not be null");
+		}
+		if (uc == null) {
+			throw new IllegalArgumentException("UserController must not be null");
+		}
 
 		_sim = sim;
 		_uc = uc;
 
-		color = _uc.getUserVehicle().color; 		//TODO: req
+		_color = _uc.getUserVehicle()._color;
 		ID = _uc.UserID;
 
 		_x = shooterPosition[0];
@@ -51,7 +53,7 @@ public class Projectile extends Thread {
     	_dx = PROJECTILE_SPEED * Math.cos(_theta);
 		_dy = PROJECTILE_SPEED * Math.sin(_theta);
 
-		SHOTS_FIRED++; //TODO: req
+		SHOTS_FIRED++;
     }
 
 	public synchronized void shoot(int sec, int msec) {
@@ -62,7 +64,6 @@ public class Projectile extends Thread {
 	    _y = _y + _dy * t;
     }
 
-	//TODO: requirements changed
 	public synchronized double[] getPosition() {
 		double[] position = new double[3];
 		position[0] = _x;
@@ -72,23 +73,22 @@ public class Projectile extends Thread {
 	}
 
 
-	//TODO: add to  requirements
 	public synchronized double[] getDisplayData() {
 		double[] displayData = new double[3];
 		displayData[0] = _x;
 		displayData[1] = _y;
-		displayData[2] = color;
+		displayData[2] = _color;
 		return displayData;
 	}
 
 	/* RUN METHOD */
 	public void run() {
 
-		_startupTime = Simulator.STARTUP_TIME;
+		long startupTime = Simulator.STARTUP_TIME;
 		long currentTime = System.nanoTime();
 		long updateTime = System.nanoTime();
 
-		while ((currentTime - _startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
+		while ((currentTime - startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
 
 			synchronized (_sim) { /* Conditional critical region */
 

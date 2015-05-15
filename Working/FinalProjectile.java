@@ -12,7 +12,7 @@ import java.net.Socket;
 public class FinalProjectile {
 
     private static final boolean lead3  = true;    // set to true for multiple LeadingController test
-    public static boolean multiplayer  = true;    // set to true for FC debug //TODO:req
+    public static boolean MULTIPLAYER;    // multiplaye mode
 
     // debug print statement toggle
     public static final boolean debug_follower      = true;    // set to true for FC debug
@@ -42,10 +42,10 @@ public class FinalProjectile {
         //TODO:req
         if (args.length >= 1) { // if two command line arguments are present
             if (args[0].equals("1")) {
-                multiplayer = false;
+                MULTIPLAYER = false;
                 System.out.println("Single-player mode enabled.");
             } else if (args[0].equals("2")) {
-                multiplayer = true;
+                MULTIPLAYER = true;
                 System.out.println("Multi-player mode enabled.");
             } else { // if the second argument is wrong
                 System.err.println("First command line argument must be number of players.");
@@ -75,12 +75,12 @@ public class FinalProjectile {
 
             }
         } else {
-            multiplayer = false;
+            MULTIPLAYER = false;
             System.out.println("Single player mode enabled.");
         }
 
 //            System.out.println("User 1 controls: move with [^]UP [v]DOWN [<]LEFT [>]RIGHT keys, shoot with [.]SPACE");
-        if (multiplayer) {
+        if (MULTIPLAYER) {
 //            System.out.println("User 2 controls: move with [^]W  [v]S    [<]A    [>]D     keys, shoot with [.]SHIFT");
         }
 
@@ -138,7 +138,7 @@ public class FinalProjectile {
             uv1.start();
             uc1.start();
 
-            if (multiplayer) {
+            if (MULTIPLAYER) {
 
                 GroundVehicle uv2 = new GroundVehicle(pos2, 1, 0);
                 sim.addVehicle(uv2);

@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Simulator extends Thread {
 
-    public static final int MS_INCREMENT = FinalProjectile.SIMULATOR_MS; // TODO:req
+    public static final int UPDATE_MS = FinalProjectile.SIMULATOR_MS; // TODO:req
     public static final int USER1 = 1;
     public static final int USER2 = 2;
     public static final int LEADING = 3;
@@ -153,7 +153,7 @@ public class Simulator extends Thread {
 
     /**
      * Associates a UserController with the Simulator
-     * //TODO: req modified for multiplayer
+     * //TODO: req modified for MULTIPLAYER
      * @param uc
      */
     public synchronized void addUserController(UserController uc) {
@@ -301,7 +301,7 @@ public class Simulator extends Thread {
         for (GroundVehicle v : _vehicleList) {
             for (Projectile p : _projectileList) {
                 if (projectileShotVehicle(p.getPosition(), v.getPosition())) {
-                    if (v.color == FOLLOWING) {
+                    if (v._color == FOLLOWING) {
 
                         // remove follower if shot
                         _vehicleList.remove(v);
@@ -317,10 +317,10 @@ public class Simulator extends Thread {
 
 //                        _projectileList.remove(p);
                     }
-                    if (v.color == LEADING) {
+                    if (v._color == LEADING) {
 
                         // switch leadingcontroller to followingcontroller
-                        switchVehicleControllers(v.controller);
+                        switchVehicleControllers(v._vc);
 
                         // increment hit counter
                         p._uc.hits++;
@@ -454,7 +454,7 @@ public class Simulator extends Thread {
 
             currentTime = System.nanoTime();
 
-            if ((currentTime - updateTime) >= MS_INCREMENT *1e6) { // update once every increment
+            if ((currentTime - updateTime) >= UPDATE_MS *1e6) { // update once every increment
 
                 synchronized (this) {
 
@@ -514,7 +514,7 @@ public class Simulator extends Thread {
                 userHits[0]     = _uc1.hits;
                 userKills[0]    = _uc1.kills;
 
-                if (FinalProjectile.multiplayer) {
+                if (FinalProjectile.MULTIPLAYER) {
                     userShots[1]    = _uc2.shots;
                     userHits[1]     = _uc2.hits;
                     userKills[1]    = _uc2.kills;
@@ -553,7 +553,7 @@ public class Simulator extends Thread {
         System.out.println("Kills: " +_uc1.kills);
         System.out.println("Accuracy: " + accuracy(_uc1.hits,_uc1.shots));
 
-        if (FinalProjectile.multiplayer) {
+        if (FinalProjectile.MULTIPLAYER) {
 
             System.out.println("USER 2 -------------------------------------");
             System.out.println("Shots: " + _uc2.shots);

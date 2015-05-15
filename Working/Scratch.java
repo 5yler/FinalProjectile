@@ -120,7 +120,7 @@ public class Scratch {
             }
 //
 //
-//            if (multiplayer) {
+//            if (MULTIPLAYER) {
 //
 //                GroundVehicle uv2 = new GroundVehicle(pos2, 1, 0);
 //                sim.addVehicle(uv2);

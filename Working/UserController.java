@@ -31,7 +31,7 @@ public class UserController extends VehicleController {
         //TODO: req update for below
         UserID = userControllerCount;
         userControllerCount++;
-        _v.color = userControllerCount;
+        _v._color = userControllerCount;
     }
 
 //    public void addDisplayServer(DisplayServer ds) {
@@ -42,7 +42,7 @@ public class UserController extends VehicleController {
         return _v;
     }
 
-    //TODO: req modified for multiplayer
+    //TODO: req modified for MULTIPLAYER
     public Control getControl(int sec, int msec) {
         double _nextSpeed = _ds.getUserSpeed(UserID);
         double _nextOmega = _ds.getUserOmega(UserID);

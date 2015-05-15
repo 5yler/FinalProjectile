@@ -31,7 +31,7 @@ public class FollowingController extends VehicleController {
         super(sim, v);
         _prey = prey;
         //TODO: req
-        _v.color = Simulator.FOLLOWING;
+        _v._color = Simulator.FOLLOWING;
     }
 
     /**

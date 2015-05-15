@@ -9,23 +9,18 @@ import java.util.Random;
 
 public class GroundVehicle extends Thread {
 
-	private double _x, _y, _theta;    	/* shared resources */
-	private double _dx, _dy, _dtheta; 	/* shared resources */
-
-	public VehicleController controller;
-
-	//TODO: add to requirements doc
-	public int color;	// index of vehicle color in DisplayServer.COLORS array
-
 	public static final double MIN_VEL = 1;
 	public static final double MAX_VEL = 20;
 	public static final double MAX_OMEGA = Math.PI/2;
 
-	private Simulator _sim;		// Simulator associated with GroundVehicle
+	public static final int UPDATE_MS = FinalProjectile.VEHICLE_MS;
 
-	private long _startupTime;	// time when the GroundVehicle starts running
+	private Simulator _sim;			// Simulator associated with GroundVehicle
+	public VehicleController _vc;	// controller
 
-	public static final int MS_INCREMENT = FinalProjectile.VEHICLE_MS;
+	private double _x, _y, _theta;    	/* shared resources */
+	private double _dx, _dy, _dtheta; 	/* shared resources */
+	public int _color;	// index of vehicle color in DisplayServer.COLORS array
 
 	protected final String _ID;	// unique string identifier
 	private final int _numID; 	// unique numeric identifier for ordering all GroundVehicles
@@ -108,13 +103,12 @@ public class GroundVehicle extends Thread {
 		return position;
 	}
 
-	//TODO: requirements changed
 	public synchronized double[] getDisplayData() {
 		double[] displayData = new double[4];
 		displayData[0] = _x;
 		displayData[1] = _y;
 		displayData[2] = _theta;
-		displayData[3] = color;
+		displayData[3] = _color;
 		return displayData;
 	}
 
@@ -327,11 +321,11 @@ public class GroundVehicle extends Thread {
 /* RUN METHOD */
 	public void run() {
 
-		_startupTime = System.nanoTime();
+		long startupTime = System.nanoTime();
 		long currentTime = System.nanoTime();
 		long updateTime = System.nanoTime();
 
-		while ((currentTime - _startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
+		while ((currentTime - startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
 
 			synchronized (_sim) { /* Conditional critical region */
 
@@ -348,7 +342,7 @@ public class GroundVehicle extends Thread {
 
 			currentTime = System.nanoTime();
 
-			if ((currentTime - updateTime) >= MS_INCREMENT *1e6) { // update once every increment
+			if ((currentTime - updateTime) >= UPDATE_MS *1e6) { // update once every increment
 
 				long advanceTime = currentTime - updateTime;
 				int advanceSec = (int) (advanceTime/1e9);
@@ -362,37 +356,5 @@ public class GroundVehicle extends Thread {
 		} // end while (time < FinalProjectile.GAME_TIME)
 
 	} // end run()
-
-/* run() method using System.currentTimeMillis() instead of System.nanoTime()
-
-	public void run() {
-
-		_startupTime = System.currentTimeMillis();
-		currentTime = System.currentTimeMillis();
-		updateTime = System.currentTimeMillis();
-
-		while ((currentTime - _startupTime) < 100e3) { // while time less than 100s
-			synchronized (_sim) { // Conditional critical region //
-				try {
-					// wait for simulator to update
-					_sim.wait();
-				} catch (InterruptedException e) {
-					System.err.printf("Interrupted Exception");
-					e.printStackTrace();
-				}
-			}
-			currentTime = System.currentTimeMillis();
-			if ((currentTime - updateTime) >= 100) { // update once every 100ms
-				long advanceTime = currentTime - updateTime;
-				int advanceSec = (int) (advanceTime/1e3);
-				int advanceMSec = (int) (advanceTime-advanceSec*1e3);
-				advance(advanceSec, advanceMSec);
-
-				// reset last update time
-				updateTime = System.currentTimeMillis();
-			}
-		}
-	}
-*/
 
 }

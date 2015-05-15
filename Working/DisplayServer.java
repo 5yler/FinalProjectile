@@ -818,7 +818,7 @@ public class DisplayServer extends JPanel implements KeyListener {
     }
     g.drawString("Accuracy: " + accuracy1 + "%", LINE_X_PIX_OFFSET, 8 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
 
-    if (FinalProjectile.multiplayer) {
+    if (FinalProjectile.MULTIPLAYER) {
 
       g.setColor(USER2_COLOR[0]);
       g.setFont(new Font("default", Font.BOLD, 14));
@@ -863,7 +863,7 @@ public class DisplayServer extends JPanel implements KeyListener {
       g.drawString("[H] toggle help menu", LINE_X_PIX_OFFSET+230, 4 * LINE_Y_PIX);
 
 
-      if (FinalProjectile.multiplayer) {
+      if (FinalProjectile.MULTIPLAYER) {
         g.setFont(new Font("default", Font.BOLD, 14));
         g.drawString("User 2 Controls", LINE_X_PIX_OFFSET + 110, 10 * LINE_Y_PIX);
         g.setFont(new Font("monospaced", Font.PLAIN, 12));

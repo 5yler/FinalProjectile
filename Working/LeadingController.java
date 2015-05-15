@@ -5,8 +5,6 @@
  **/
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * VehicleController subclass called LeadingController that generates
@@ -37,7 +35,7 @@ public class LeadingController extends VehicleController {
         super(sim, v);
 //        _followerIndexList = new ArrayList<Integer>();
         //TODO: req update for below
-        _v.color = Simulator.LEADING;
+        _v._color = Simulator.LEADING;
     }
 
 
