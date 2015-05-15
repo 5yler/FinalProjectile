@@ -10,7 +10,7 @@ public class Projectile extends Thread {
 	//disappear when hit radius around target or go off screen
 
 	public static final double PROJECTILE_SPEED = 6*GroundVehicle.MAX_VEL;
-	public static final double HIT_DISTANCE = 4;
+	public static final double HIT_DISTANCE = 3;
 
 
     private double _x, _y, _theta;

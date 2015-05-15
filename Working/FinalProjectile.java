@@ -26,7 +26,7 @@ public class FinalProjectile {
     public static final int SIMULATOR_MS = 50;  //TODO: req
     public static final int VEHICLE_MS = 50;  //TODO: req
     public static final int CONTROLLER_MS = 100;  //TODO: req
-    public static final int PROJECTILE_MS = 100;  //TODO: req
+    public static final int PROJECTILE_MS = 20;  //TODO: req
 
     // colors
     public static final int USER1_COLOR = 1;

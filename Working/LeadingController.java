@@ -170,13 +170,9 @@ public class LeadingController extends VehicleController {
             double Y = DY + (vVel[1] - followerVel[1]) * _dt;
 
             // define next angle between vehicles
-            double nextPhi = Math.atan(Y / X);
-            if (X < 0) {
-                nextPhi += Math.PI;
-            }
+            double nextPhi = Math.atan2(Y,X);
 
             // make rotational vel of control proportional to future angle between vehicles
-            nextPhi = normalizeAngle(nextPhi);
             omega = normalizeAngle(nextPhi - vPose[2]);
             s = LEADING_MAX_VEL;
 

@@ -9,13 +9,12 @@ import java.text.DecimalFormat;
 
 public class FollowingController extends VehicleController {
 
-    private GroundVehicle _prey;
-    private int _lastCheckedSec;    // last checked time (sec)
-    private int _lastCheckedMSec;   // last checked time (msec)
+    public static final double FOLLOWING_MAX_VEL = 0.5*GroundVehicle.MAX_VEL;
+    public static final double FOLLOWING_MIN_VEL = 5*GroundVehicle.MIN_VEL;
+    public static final double FOLLOWING_DISTANCE = 0.5;
 
-    private double maxTransSpeed = 10;
-    private double minTransSpeed = 5;
-    private double targetFollowingDistance = 0.5;
+    private GroundVehicle _prey;
+
 
     private final boolean print = true;   // set to true for print statements
     private final boolean debug = true;   // set to true for debug statements
@@ -45,9 +44,7 @@ public class FollowingController extends VehicleController {
     public Control getControl(int sec, int msec) {
 
         double s, omega;
-        double[] vVel;// = {0, 0, 0};
         double[] vPose;// = {0, 0, 0};
-        double vSpeed;// = 0;
 
         double[] preyVel;// = {0, 0, 0};
         double[] preyPose;// = {0, 0, 0};
@@ -60,36 +57,28 @@ public class FollowingController extends VehicleController {
 
         // position of follower vehicle
         vPose = _v.getPosition();
-        vVel = _v.getVelocity();
 
         // define difference in x, y, and theta between vehicles
         double DX = preyPose[0] - vPose[0];
         double DY = preyPose[1] - vPose[1];
 
-        // define next difference in x, y
-        double X = DX+(preyVel[0] - vVel[0])*_dt;
-        double Y = DY+(preyVel[1] - vVel[1])*_dt;
-
         // linear distance between vehicles
-      //  double preyDistance = Math.sqrt(Math.pow(DX,2) + Math.pow(DY,2)); // d = (x^2 + y^2)^(1/2)
         double preyDistance = Simulator.distance(preyPose,vPose); // d = (x^2 + y^2)^(1/2)
 
-
         // define next angle between vehicles
-        double nextPhi = getAngle(DX,DY);
-        
+        double nextPhi = Math.atan2(DY,DX);
+
         // if vehicles are in the same place
          if (DX == 0 && DY == 0) {
              // slow down and stop turning
-             s = minTransSpeed;
+             s = FOLLOWING_MIN_VEL;
              omega = 0;
          } else {
              // make rotational vel of control proportional to future angle between vehicles
-             nextPhi = normalizeAngle(nextPhi);
              omega = normalizeAngle(nextPhi - vPose[2]);
 
-             if (preyDistance > targetFollowingDistance) {
-                 s = maxTransSpeed;
+             if (preyDistance > FOLLOWING_DISTANCE) {
+                 s = FOLLOWING_MAX_VEL;
              } else {
                  s = preySpeed;
              }
