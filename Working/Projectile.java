@@ -82,7 +82,7 @@ public class Projectile extends Thread {
 	/* RUN METHOD */
 	public void run() {
 
-		long startupTime = Simulator.STARTUP_TIME;
+		long startupTime = _sim.STARTUP_TIME;
 		long currentTime = System.nanoTime();
 		long updateTime = System.nanoTime();
 

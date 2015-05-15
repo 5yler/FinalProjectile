@@ -14,6 +14,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Simulator extends Thread {
 
+    // set maximum simulation size based on DisplayServer window dimensions
+    public static final int SIM_X = DisplayServer.DISPLAY_X/5;
+    public static final int SIM_Y = DisplayServer.DISPLAY_Y/5;
+
     public static final int UPDATE_MS = FinalProjectile.SIMULATOR_MS;
 
     // colors // TODO:req
@@ -22,37 +26,30 @@ public class Simulator extends Thread {
     public static final int LEADING_COLOR = 3;
     public static final int FOLLOWING_COLOR = 4;
 
-    public static long STARTUP_TIME;  // time when the simulator starts running
-    private long[] _lastProjectileTime = new long[2]; // time when last projectile was fired for each usercontroller //TODO: req
+
+
+
+    public long STARTUP_TIME;  // time when the simulator starts running
+    private long[] _lastProjectileTime = new long[2]; // TODO:req// time when last projectile was fired for each usercontroller
 
     private static DisplayClient _dc;
 
-    // set maximum simulation size based on DisplayServer window dimensions
-    public static final int SIM_X = DisplayServer.DISPLAY_X/5;
-    public static final int SIM_Y = DisplayServer.DISPLAY_Y/5;
 
 
 
-    // number of GroundVehicles waiting for controls
-    protected int _vehicleControlQueue = 0; /* shared resource */
 
-    // number of GroundVehicles waiting to advance state
-    protected int _vehicleAdvanceQueue = 0; /* shared resource */
 
-    // ID of VehicleController whose turn it is to update
-    protected int _turnID = 0;  /* shared resource */
 
     public List<GroundVehicle> _vehicleList;  // list of GroundVehicles inside Simulator
+    public List<Projectile> _projectileList;  // list of projectiles inside Simulator
 
     // user controllers //TODO: req
     private UserController _uc1;
     private UserController _uc2;
 
 
-    private List<Projectile> _projectileList;  // list of projectiles inside Simulator
 
-    private double _startupMS;  // time when the Simulator starts running
-    
+
     private ArrayList<FollowingController> _followerList;  // list of FollowingControllers inside Simulator
     private ArrayList<LeadingController> _leaderList;  // list of LeadingControllers inside Simulator
 
@@ -125,13 +122,7 @@ public class Simulator extends Thread {
         return _vehicleList.get(index);
     }
 
-    /**
-     * Returns number of queued GroundVehicles waiting for controls.
-     * @return value of _vehicleControlQueue
-     */
-    public synchronized int getControlQueueSize() {
-        return _vehicleControlQueue;
-    }
+
 
     public DisplayClient getDisplayClient() {
         return _dc;
@@ -148,9 +139,6 @@ public class Simulator extends Thread {
 
         // associate this simulator with the groundVehicle
         gv.setSimulator(this);
-
-        // increase counter of vehicles waiting for controls
-        _vehicleControlQueue++;
     }
 
     /**
@@ -218,13 +206,7 @@ public class Simulator extends Thread {
     }
 
 
-    public synchronized double getCurrentMSec() {
-        return ((System.nanoTime()/1e6) - _startupMS);
-    }
 
-    public synchronized double getStartupMSec() {
-        return _startupMS;
-    }
 
     /**
      * Switches GroundVehicle from a Leading to a FollowingController
