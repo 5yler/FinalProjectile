@@ -12,7 +12,7 @@ public class VehicleController extends Thread {
     protected GroundVehicle _v;     // specific GroundVehicle being controlled
 
     private long _startupTime;  // time when the VehicleController starts running
-    public static final int VC_MS_INCREMENT = 100; // should be 100 for assignment 4
+    public static final int MS_INCREMENT = FinalProjectile.CONTROLLER_MS;
 
     public final double _dt;    // timestep increment for advancing GroundVehicles
 
@@ -52,7 +52,7 @@ public class VehicleController extends Thread {
         _v.controller = this;
 
 //        _dt = _v.VEHICLE_SEC_INCREMENT+_v.VEHICLE_MSEC_INCREMENT/1e3;
-        _dt = VC_MS_INCREMENT;
+        _dt = MS_INCREMENT;
 
         _ID = controllerCount;
         controllerCount++;
@@ -302,11 +302,11 @@ public class VehicleController extends Thread {
         long currentTime = System.nanoTime();
         long updateTime = System.nanoTime();
 
-        while ((currentTime - _startupTime) < 100*1e9) { // while time less than 100s
+        while ((currentTime - _startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
 
             currentTime = System.nanoTime();
 
-            if ((currentTime - updateTime) >= VC_MS_INCREMENT *1e6) { // update once every 100ms
+            if ((currentTime - updateTime) >= MS_INCREMENT *1e6) { // update once every increment
 
                 long controlTime = currentTime - _startupTime;
                 int controlSec = (int) (controlTime/1e9);
@@ -322,8 +322,8 @@ public class VehicleController extends Thread {
                 // reset last update time
                 updateTime = System.nanoTime();
 
-            } // end if (100ms since last update)
-        } // end while (time < 100s)
+            } // end if (UPDATE_MS since last update)
+        } // end while (time < FinalProjectile.GAME_TIME)
 
     } // end run()
 

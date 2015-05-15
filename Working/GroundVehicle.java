@@ -25,7 +25,7 @@ public class GroundVehicle extends Thread {
 
 	private long _startupTime;	// time when the GroundVehicle starts running
 
-	public static final int GV_MS_INCREMENT = 100; // should be 100 for assignment 4
+	public static final int MS_INCREMENT = FinalProjectile.VEHICLE_MS;
 
 	protected final String _ID;	// unique string identifier
 	private final int _numID; 	// unique numeric identifier for ordering all GroundVehicles
@@ -331,7 +331,7 @@ public class GroundVehicle extends Thread {
 		long currentTime = System.nanoTime();
 		long updateTime = System.nanoTime();
 
-		while ((currentTime - _startupTime) < 100*1e9) { // while time less than 100s
+		while ((currentTime - _startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
 
 			synchronized (_sim) { /* Conditional critical region */
 
@@ -348,18 +348,19 @@ public class GroundVehicle extends Thread {
 
 			currentTime = System.nanoTime();
 
-			if ((currentTime - updateTime) >= GV_MS_INCREMENT *1e6) { // update once every 100ms
+			if ((currentTime - updateTime) >= MS_INCREMENT *1e6) { // update once every increment
 
 				long advanceTime = currentTime - updateTime;
 				int advanceSec = (int) (advanceTime/1e9);
 				int advanceMSec = (int) ((advanceTime-advanceSec*1e9)/1e6);
-				advance(advanceSec, advanceMSec);
+				updateState(advanceSec, advanceMSec);
 
 				// reset last update time
 				updateTime = System.nanoTime();
 
-			} // end if (100ms since last update)
-		} // end while (time < 100s)
+			} // end if (UPDATE_MS since last update)
+		} // end while (time < FinalProjectile.GAME_TIME)
+
 	} // end run()
 
 /* run() method using System.currentTimeMillis() instead of System.nanoTime()

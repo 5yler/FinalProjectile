@@ -19,14 +19,14 @@ public class Projectile extends Thread {
 
 	//TODO: add to requirements doc
 	public int color;	// index of vehicle color in DisplayServer.COLORS array
-	public int ID; 		//
+	public int ID; 		// UserController ID //TODO: req
 
 	private Simulator _sim;
 	public UserController _uc;
 
-	private long _startupTime;  // time when the VehicleController starts running
+	private long _startupTime;  // time when the projectile starts running
 
-	public static final int COMPLETELY_ARBITRARY_MS_INCREMENT = 50; // should be 100 for assignment 4
+	public static final int UPDATE_MS = FinalProjectile.PROJECTILE_MS;
 
 	//TODO: add to requirement
 	public static int SHOTS_FIRED = 0;	// total number of projectiles fired
@@ -84,11 +84,11 @@ public class Projectile extends Thread {
 	/* RUN METHOD */
 	public void run() {
 
-		_startupTime = System.nanoTime();
+		_startupTime = Simulator.STARTUP_TIME;
 		long currentTime = System.nanoTime();
 		long updateTime = System.nanoTime();
 
-		while ((currentTime - _startupTime) < 100*1e9) { // while time less than 100s
+		while ((currentTime - _startupTime) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
 
 			synchronized (_sim) { /* Conditional critical region */
 
@@ -105,7 +105,7 @@ public class Projectile extends Thread {
 
 			currentTime = System.nanoTime();
 
-			if ((currentTime - updateTime) >= COMPLETELY_ARBITRARY_MS_INCREMENT*1e6) { // update once every 100ms
+			if ((currentTime - updateTime) >= UPDATE_MS *1e6) { // update once every increment
 
 				long advanceTime = currentTime - updateTime;
 				int advanceSec = (int) (advanceTime/1e9);
@@ -115,8 +115,9 @@ public class Projectile extends Thread {
 				// reset last update time
 				updateTime = System.nanoTime();
 
-			} // end if (100ms since last update)
-		} // end while (time < 100s)
+			} // end if (UPDATE_MS since last update)
+		} // end while (time < FinalProjectile.GAME_TIME)
+
 	} // end run()
 
 }

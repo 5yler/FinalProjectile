@@ -14,16 +14,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Simulator extends Thread {
 
-    public static final int SIM_MS_INCREMENT = 50; // should be 100 for assignment 4
+    public static final int MS_INCREMENT = FinalProjectile.SIMULATOR_MS; // TODO:req
     public static final int USER1 = 1;
     public static final int USER2 = 2;
     public static final int LEADING = 3;
     public static final int FOLLOWING = 4;
 
-
-    public static final int SIM_TIME = FinalProjectile.GAME_TIME; // [s] time the game runs for //TODO: req
-
-    private long _startupTime;  // time when the VehicleController starts running
+    public static long STARTUP_TIME;  // time when the simulator starts running
     private long[] _lastProjectileTime = new long[2]; // time when last projectile was fired for each usercontroller //TODO: req
 
     private static DisplayClient _dc;
@@ -71,17 +68,12 @@ public class Simulator extends Thread {
 
 
 
-    protected NumberFormat scoreFormat = new DecimalFormat("###.#");
+    public static NumberFormat scoreFormat = new DecimalFormat("###.#");
 
-    /* CONSTRUCTORS */
-    public Simulator() {
-        //TODO: req copyonwrite arrays
-        _vehicleList = new CopyOnWriteArrayList<GroundVehicle>();
-        _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
-        _dc = null;
-    }
 
     public Simulator(DisplayClient dc) {
+        //TODO: req copyonwrite arrays
+
         _vehicleList = new CopyOnWriteArrayList<GroundVehicle>();
         _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
         _dc = dc;
@@ -309,7 +301,6 @@ public class Simulator extends Thread {
         for (GroundVehicle v : _vehicleList) {
             for (Projectile p : _projectileList) {
                 if (projectileShotVehicle(p.getPosition(), v.getPosition())) {
-                    System.out.println("VEHICLE SHOT!");
                     if (v.color == FOLLOWING) {
 
                         // remove follower if shot
@@ -335,6 +326,8 @@ public class Simulator extends Thread {
                         p._uc.hits++;
 
                         System.out.println("Switched controllers!");
+                        System.out.println("VEHICLE SHOT!");
+
 //                        _projectileList.remove(p);
                     }
                 }
@@ -447,22 +440,21 @@ public class Simulator extends Thread {
         int[] userHits  = {0, 0};
         int[] userKills = {0, 0};
 
-
         // set startup time
-        _startupTime = System.nanoTime();
+        STARTUP_TIME = System.nanoTime();
 
         // initialize current time, last update time, and last projectile time
-        _lastProjectileTime[0] = _startupTime;
-        _lastProjectileTime[1] = _startupTime;
+        _lastProjectileTime[0] = STARTUP_TIME;
+        _lastProjectileTime[1] = STARTUP_TIME;
         long currentTime = System.nanoTime();
         long updateTime = System.nanoTime();
 
         playing:
-        while ((currentTime - _startupTime) < SIM_TIME*1e9) { // while time less than 100s
+        while ((currentTime - STARTUP_TIME) < FinalProjectile.GAME_TIME*1e9) { // while time less than game time
 
             currentTime = System.nanoTime();
 
-            if ((currentTime - updateTime) >= SIM_MS_INCREMENT*1e6) { // update once every 100ms
+            if ((currentTime - updateTime) >= MS_INCREMENT *1e6) { // update once every increment
 
                 synchronized (this) {
 
@@ -547,8 +539,9 @@ public class Simulator extends Thread {
                 }
 
 
-            } // end if (100ms since last update)
-        } // end while (time < 100s)
+            } // end if (UPDATE_MS since last update)
+        } // end while (time < FinalProjectile.GAME_TIME)
+
 
         // clear display of previous trajectories
 
@@ -558,9 +551,7 @@ public class Simulator extends Thread {
         System.out.println("Shots: "+_uc1.shots);
         System.out.println("Hits: "+_uc1.hits);
         System.out.println("Kills: " +_uc1.kills);
-        double acc1 = 100.0*_uc1.hits/+_uc1.shots;
-        String accuracy1 = scoreFormat.format(acc1);
-        System.out.println("Accuracy: " + accuracy1 + "%");
+        System.out.println("Accuracy: " + accuracy(_uc1.hits,_uc1.shots));
 
         if (FinalProjectile.multiplayer) {
 
@@ -568,9 +559,7 @@ public class Simulator extends Thread {
             System.out.println("Shots: " + _uc2.shots);
             System.out.println("Hits: " + _uc2.hits);
             System.out.println("Kills: " + _uc2.kills);
-            double acc2 = 100.0 * _uc1.hits / +_uc2.shots;
-            String accuracy2 = scoreFormat.format(acc2);
-            System.out.println("Accuracy: " + accuracy2 + "%");
+            System.out.println("Accuracy: " + accuracy(_uc2.hits,_uc2.shots));
 
         }
 
@@ -586,5 +575,14 @@ public class Simulator extends Thread {
 
 
     } // end run()
+
+    public static String accuracy(int hits, int shots) {
+        if (shots == 0) {
+            return "NaN%";
+        } else {
+            double acc1 = 100.0 * hits / shots;
+            return scoreFormat.format(acc1)+"%";
+        }
+    }
 
 }

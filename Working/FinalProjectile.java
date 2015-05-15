@@ -21,6 +21,14 @@ public class FinalProjectile {
     public static final boolean debug_scores        = false;    // set to true for score display message debug
     public static final boolean debug_display_msgs  = false;    // set to true for projectile/vehicle display msg debug
 
+
+    // [ms] time between successive updates for various threads
+    public static final int SIMULATOR_MS = 50;  //TODO: req
+    public static final int VEHICLE_MS = 50;  //TODO: req
+    public static final int CONTROLLER_MS = 100;  //TODO: req
+    public static final int PROJECTILE_MS = 100;  //TODO: req
+
+
     public static final int GAME_TIME = 200; // [s] time the game runs for //TODO: req
     //TODO: make it stop when all non-user vehicles disappear
 
