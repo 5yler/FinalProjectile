@@ -22,10 +22,12 @@ public class GroundVehicle extends Thread {
 	private double _dx, _dy, _dtheta; 	/* shared resources */
 	public int _color;	// index of vehicle color in DisplayServer.COLORS array
 
-	protected final String _ID;	// unique string identifier
-	private final int _numID; 	// unique numeric identifier for ordering all GroundVehicles
+
 
 	static int vehicleCount = 0;	// number of GroundVehicles in existence
+
+	protected final String _ID;	// unique string identifier
+	private final int _numID; 	// unique numeric identifier for ordering all GroundVehicles
 
 	private final boolean print = true;	// set to true for print statements
 	private final boolean debug =false;         // set to true for debug statements
@@ -33,10 +35,10 @@ public class GroundVehicle extends Thread {
 /* CONSTRUCTORS */
 	public GroundVehicle (double pose[], double s, double omega) {
 		if (pose.length != 3)
-			throw new IllegalArgumentException("First argument must be array of length 3");      
-		
-		_x = pose[0]; 
-		_y = pose[1]; 
+			throw new IllegalArgumentException("First argument must be array of length 3");
+
+		_x = pose[0];
+		_y = pose[1];
 		_theta = pose[2];
 
 		_dx = s * Math.cos(_theta);
@@ -51,29 +53,6 @@ public class GroundVehicle extends Thread {
 		vehicleCount += 1;
 		_numID = vehicleCount;
 
-	}
-
-    public GroundVehicle (double pose[], double dx, double dy, double dtheta) {
-        if (pose.length != 3)
-            throw new IllegalArgumentException("First argument must be array of length 3");
-
-        _x = pose[0];
-        _y = pose[1];
-        _theta = pose[2];
-
-        _dx = dx;
-        _dy = dy;
-        _dtheta = dtheta;
-
-        clampPosition();
-        clampVelocity();
-
-		// create random alphanumeric ID for vehicle
-		_ID = randomString(2);
-		vehicleCount += 1;
-		_numID = vehicleCount;
-
-		// set max simulation size
 	}
 
 /* STATIC METHODS */

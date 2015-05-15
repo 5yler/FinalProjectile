@@ -34,9 +34,6 @@ public class VehicleController extends Thread {
     private double edgeTravelDuration;
 
     private double timeOfManoeuverStart;
-    
-    // checks if the controller has a ground vehicle
-    private boolean hasGroundVehicle = true;
 
     protected final int _ID; 	// unique numeric identifier for ordering all VehicleControllers
     protected static int controllerCount = 0;	// number of VehicleControllers in existence
@@ -121,13 +118,7 @@ public class VehicleController extends Thread {
 
     public void removeGroundVehicle() {
         _v = null;
-        hasGroundVehicle = false;
     }
-    
-    public boolean hasVehicle(){
-    	return hasGroundVehicle;
-    }
-
 
     /**
      *
@@ -318,11 +309,11 @@ public class VehicleController extends Thread {
                 int controlSec = (int) (controlTime/1e9);
                 int controlMSec = (int) ((controlTime-controlSec*1e9)/1e6);
 
-                if (hasGroundVehicle){
-                // get next control
-                Control c = getControl(controlSec, controlMSec);
-                // apply control to GroundVehicle
-                _v.controlVehicle(c);
+                if (_v != null){
+                    // get next control
+                    Control c = getControl(controlSec, controlMSec);
+                    // apply control to GroundVehicle
+                    _v.controlVehicle(c);
                 }
 //
                 // reset last update time

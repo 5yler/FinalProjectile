@@ -29,9 +29,11 @@ public class FollowingController extends VehicleController {
      */
     public FollowingController(Simulator sim, GroundVehicle v, GroundVehicle prey) {
         super(sim, v);
+        if (prey == null) {
+            throw new IllegalArgumentException("Prey GroundVehicle must not be null");
+        }
         _prey = prey;
-        //TODO: req
-        _v._color = Simulator.FOLLOWING;
+        _v._color = Simulator.FOLLOWING_COLOR;
     }
 
     /**

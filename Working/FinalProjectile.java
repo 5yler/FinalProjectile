@@ -28,6 +28,11 @@ public class FinalProjectile {
     public static final int CONTROLLER_MS = 100;  //TODO: req
     public static final int PROJECTILE_MS = 100;  //TODO: req
 
+    // colors
+    public static final int USER1_COLOR = 1;
+    public static final int USER2_COLOR = 2;
+    public static final int LEADING_COLOR = 3;
+    public static final int FOLLOWING_COLOR = 4;
 
     public static final int GAME_TIME = 200; // [s] time the game runs for //TODO: req
     //TODO: make it stop when all non-user vehicles disappear

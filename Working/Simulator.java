@@ -14,11 +14,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Simulator extends Thread {
 
-    public static final int UPDATE_MS = FinalProjectile.SIMULATOR_MS; // TODO:req
-    public static final int USER1 = 1;
-    public static final int USER2 = 2;
-    public static final int LEADING = 3;
-    public static final int FOLLOWING = 4;
+    public static final int UPDATE_MS = FinalProjectile.SIMULATOR_MS;
+
+    // colors // TODO:req
+    public static final int USER1_COLOR = 1;
+    public static final int USER2_COLOR = 2;
+    public static final int LEADING_COLOR = 3;
+    public static final int FOLLOWING_COLOR = 4;
 
     public static long STARTUP_TIME;  // time when the simulator starts running
     private long[] _lastProjectileTime = new long[2]; // time when last projectile was fired for each usercontroller //TODO: req
@@ -301,7 +303,7 @@ public class Simulator extends Thread {
         for (GroundVehicle v : _vehicleList) {
             for (Projectile p : _projectileList) {
                 if (projectileShotVehicle(p.getPosition(), v.getPosition())) {
-                    if (v._color == FOLLOWING) {
+                    if (v._color == FOLLOWING_COLOR) {
 
                         // remove follower if shot
                         _vehicleList.remove(v);
@@ -317,7 +319,7 @@ public class Simulator extends Thread {
 
 //                        _projectileList.remove(p);
                     }
-                    if (v._color == LEADING) {
+                    if (v._color == LEADING_COLOR) {
 
                         // switch leadingcontroller to followingcontroller
                         switchVehicleControllers(v._vc);

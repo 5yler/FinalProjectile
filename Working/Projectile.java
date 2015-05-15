@@ -22,8 +22,6 @@ public class Projectile extends Thread {
 	private Simulator _sim;
 	public UserController _uc;
 
-	private long _startupTime;  // time when the projectile starts running
-
 	public static final int UPDATE_MS = FinalProjectile.PROJECTILE_MS;
 
 	public static int SHOTS_FIRED = 0;	// total number of projectiles fired

@@ -35,7 +35,7 @@ public class LeadingController extends VehicleController {
         super(sim, v);
 //        _followerIndexList = new ArrayList<Integer>();
         //TODO: req update for below
-        _v._color = Simulator.LEADING;
+        _v._color = Simulator.LEADING_COLOR;
     }
 
 
