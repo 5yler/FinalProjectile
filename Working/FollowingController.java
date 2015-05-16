@@ -5,21 +5,14 @@
  * @author  Caitlin Wheatley    <caitkw@mit.edu>
  **/
 
-import java.text.DecimalFormat;
-
 public class FollowingController extends VehicleController {
 
     public static final double FOLLOWING_MAX_VEL = 0.5*GroundVehicle.MAX_VEL;
     public static final double FOLLOWING_MIN_VEL = 5*GroundVehicle.MIN_VEL;
-    public static final double FOLLOWING_DISTANCE = 0.5;
+
+    public static final double FOLLOWING_DISTANCE = 0.5; // threshold distance for following
 
     private GroundVehicle _prey;
-
-
-    private final boolean print = true;   // set to true for print statements
-    private final boolean debug = true;   // set to true for debug statements
-
-    private final DecimalFormat df = new DecimalFormat("+#.0;-0");
 
     /**
      * @param sim simulator object

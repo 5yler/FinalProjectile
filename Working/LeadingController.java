@@ -4,28 +4,15 @@
  * @author  Syler Wagner        <syler@mit.edu>
  **/
 
-import java.text.DecimalFormat;
-
 /**
  * VehicleController subclass called LeadingController that generates
  * controls to move away from all the other GroundVehicle objects.
  */
 public class LeadingController extends VehicleController {
 
-    //TODO: remove followerList?
-//    private ArrayList<GroundVehicle> _followerList;  // list of GroundVehicles following LeadingController
-//    private ArrayList<Integer> _followerIndexList;  // list of indexes of GroundVehicles following LeadingController
-
-
-    private double LEADING_MAX_VEL = GroundVehicle.MAX_VEL;
-    private double LEADING_MIN_VEL = 5;
-    double DANGER_ZONE = 20; // size of boundary that is judged too close to wall
-
-
-    private final boolean print = true;   // set to true for print statements
-    private final DecimalFormat df = new DecimalFormat("+#.0;-0");
-
-    private final boolean debug = false;   // set to true for debug statements
+    public static final double LEADING_MIN_VEL = 5 * GroundVehicle.MIN_VEL;
+    public static final double LEADING_MAX_VEL = GroundVehicle.MAX_VEL;
+    public static final double DANGER_ZONE = 20; // size of boundary that is judged too close to wall
 
     /**
      * @param sim simulator object
@@ -33,11 +20,8 @@ public class LeadingController extends VehicleController {
      */
     public LeadingController(Simulator sim, GroundVehicle v) {
         super(sim, v);
-//        _followerIndexList = new ArrayList<Integer>();
-        //TODO: req update for below
         _v._color = Simulator.LEADING_COLOR;
     }
-
 
     /**
      * @return closest GroundVehicle from the list of GroundVehicles
@@ -45,68 +29,39 @@ public class LeadingController extends VehicleController {
      */
     private GroundVehicle getClosestFollower() {
 
-
-        /* TODO: delete this if we don't need to store location of each follower
-
-        double[] distances = new double[_followerList.size()];
-
-        for (int i = 0; i < _followerList.size(); i++) {     // iterate over list of i vehicles
-            GroundVehicle follower = _followerList.get(i);    // get vehicle at index i
-
-            // get position of folower
-            double[] followerPosition = follower.getPosition();      // get [x, y, theta] of vehicle
-            double followerX = followerPosition[0];
-            double followerY = followerPosition[1];
-
-            // calculate linear distance of follower
-            distances[i] = Math.sqrt(followerX*followerX + followerY*followerY);
-        }
-
-        */
-
         // position of leader vehicle
-        double[] vPose;
-        double[] vVel;
-        double vSpeed;
-
-        // position of leader vehicle
-        vPose = _v.getPosition();
-        vVel = _v.getVelocity();
-        vSpeed = Math.sqrt(Math.pow(vVel[0], 2) + Math.pow(vVel[1], 2));
+        double[] vPosition = _v.getPosition();
 
         // set placeholder value for shortest distance to be the maximum possible
         // distance between two vehicles
         double shortestDistance = Math.sqrt(Simulator.SIM_X *Simulator.SIM_X + Simulator.SIM_Y *Simulator.SIM_Y);
 
         // make variable to store index of closest follower
-        GroundVehicle closest = null;
+    GroundVehicle closestVehicle = null;
 
-        for (GroundVehicle follower : _sim._vehicleList) {    // iterate over list of i vehicles
+        for (GroundVehicle otherVehicle : _sim._vehicleList) {    // iterate over Simulator vehicle list
+            if (otherVehicle != _v) { // only iterate over vehicles not associated with this controller
 
-            if (follower != _v) {
                 // get position of follower
-                double[] followerPosition = follower.getPosition(); // [x, y, theta] of vehicle
-                double followerX = followerPosition[0];
-                double followerY = followerPosition[1];
+                double[] otherVehiclePosition = otherVehicle.getPosition(); // [x, y, theta] of vehicle
+                double otherX = otherVehiclePosition[0];
+                double otherY = otherVehiclePosition[1];
 
                 // define difference in x, y between vehicles
-                double DX = followerX - vPose[0];
-                double DY = followerY - vPose[1];
+                double DX = otherX - vPosition[0];
+                double DY = otherY - vPosition[1];
 
                 // calculate linear distance of follower
-                double followerDistance = Math.sqrt(DX * DX + DY * DY);
+                double otherVehicleDistance = Math.sqrt(DX * DX + DY * DY);
 
-                if (followerDistance < shortestDistance) {
+                if (otherVehicleDistance < shortestDistance) {
                     // update distance to closest follower
-                    closest = follower;
+                    closestVehicle = otherVehicle;
                 }
             }
-
         }
 
-        // retrieve nearest vehicle
-//        int closest = _followerIndexList.get(closestIndex)-1;
-        return closest;
+        return closestVehicle;
     }
 
     /**
@@ -159,7 +114,6 @@ public class LeadingController extends VehicleController {
             // position and velocity of closest follower
             double[] followerPose = follower.getPosition();
             double[] followerVel = follower.getVelocity();
-            double followerSpeed = Math.sqrt(Math.pow(followerVel[0], 2) + Math.pow(followerVel[1], 2));
 
             // define difference in x, y, and theta between vehicles
             double DX = vPose[0] - followerPose[0];
@@ -212,6 +166,5 @@ public class LeadingController extends VehicleController {
         }
 
         return nextControl;
-
     }
 }

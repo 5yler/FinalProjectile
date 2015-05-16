@@ -42,7 +42,7 @@ public class Projectile extends Thread {
 		_uc = uc;
 
 		_color = _uc.getUserVehicle()._color;
-		ID = _uc.UserID;
+		ID = _uc._userID;
 
 		_x = shooterPosition[0];
     	_y = shooterPosition[1];

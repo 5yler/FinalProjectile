@@ -181,12 +181,12 @@ public class Simulator extends Thread {
      */
     public void generateProjectile(UserController uc) {
 
-        long timeSinceLastProjectile = (System.nanoTime() - _lastProjectileTime[uc.UserID]) / 1000000; // [ms]
+        long timeSinceLastProjectile = (System.nanoTime() - _lastProjectileTime[uc._userID]) / 1000000; // [ms]
 
         // check if REACTION_TIME has passed since last projectile being fired by user //TODO: req
         if (timeSinceLastProjectile > UserController.REACTION_TIME) {
             if (debug_projectiles) {
-                System.out.println(timeSinceLastProjectile + "ms since last projectile fired by user " + (uc.UserID + 1));
+                System.out.println(timeSinceLastProjectile + "ms since last projectile fired by user " + (uc._userID + 1));
             }
 
             Projectile p = new Projectile(uc.getUserVehicle().getPosition(), this, uc);
@@ -194,10 +194,10 @@ public class Simulator extends Thread {
             p.start();
 
             // increase counter for shots fired
-            uc.shots++;
+            uc._shots++;
 
             // reset last projectile time
-            _lastProjectileTime[uc.UserID] = System.nanoTime();
+            _lastProjectileTime[uc._userID] = System.nanoTime();
 
             if (debug_projectiles) {
                 System.out.println("Projectile " + _projectileList.size() + " generated!");
@@ -291,10 +291,10 @@ public class Simulator extends Thread {
                         _vehicleList.remove(v);
 
                         // increment user hit counter
-                        p._uc.hits++;
+                        p._uc._hits++;
 
                         // increment kill counters
-                        p._uc.kills++;
+                        p._uc._kills++;
                         UserController.TOTAL_KILLS++;
 
                         System.out.println("VEHICLE SHOT AGAIN! GAME OVER, BUDDY!");
@@ -307,7 +307,7 @@ public class Simulator extends Thread {
                         switchVehicleControllers(v._vc);
 
                         // increment hit counter
-                        p._uc.hits++;
+                        p._uc._hits++;
 
                         System.out.println("Switched controllers!");
                         System.out.println("VEHICLE SHOT!");
@@ -494,14 +494,14 @@ public class Simulator extends Thread {
                 updateTime = System.nanoTime();
 
 
-                userShots[0]    = _uc1.shots;
-                userHits[0]     = _uc1.hits;
-                userKills[0]    = _uc1.kills;
+                userShots[0]    = _uc1._shots;
+                userHits[0]     = _uc1._hits;
+                userKills[0]    = _uc1._kills;
 
                 if (FinalProjectile.MULTIPLAYER) {
-                    userShots[1]    = _uc2.shots;
-                    userHits[1]     = _uc2.hits;
-                    userKills[1]    = _uc2.kills;
+                    userShots[1]    = _uc2._shots;
+                    userHits[1]     = _uc2._hits;
+                    userKills[1]    = _uc2._kills;
                 }
               
                 // update display client with vehicle positions
@@ -532,18 +532,18 @@ public class Simulator extends Thread {
         System.out.println("SHOTS FIRED: " + Projectile.SHOTS_FIRED);
 
         System.out.println("USER 1 -------------------------------------");
-        System.out.println("Shots: "+_uc1.shots);
-        System.out.println("Hits: "+_uc1.hits);
-        System.out.println("Kills: " +_uc1.kills);
-        System.out.println("Accuracy: " + accuracy(_uc1.hits,_uc1.shots));
+        System.out.println("Shots: "+_uc1._shots);
+        System.out.println("Hits: "+_uc1._hits);
+        System.out.println("Kills: " +_uc1._kills);
+        System.out.println("Accuracy: " + accuracy(_uc1._hits,_uc1._shots));
 
         if (FinalProjectile.MULTIPLAYER) {
 
             System.out.println("USER 2 -------------------------------------");
-            System.out.println("Shots: " + _uc2.shots);
-            System.out.println("Hits: " + _uc2.hits);
-            System.out.println("Kills: " + _uc2.kills);
-            System.out.println("Accuracy: " + accuracy(_uc2.hits,_uc2.shots));
+            System.out.println("Shots: " + _uc2._shots);
+            System.out.println("Hits: " + _uc2._hits);
+            System.out.println("Kills: " + _uc2._kills);
+            System.out.println("Accuracy: " + accuracy(_uc2._hits,_uc2._shots));
 
         }
 
