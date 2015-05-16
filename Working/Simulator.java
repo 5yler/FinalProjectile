@@ -49,11 +49,6 @@ public class Simulator extends Thread {
 
 
 
-
-    private ArrayList<FollowingController> _followerList;  // list of FollowingControllers inside Simulator
-    private ArrayList<LeadingController> _leaderList;  // list of LeadingControllers inside Simulator
-
-
 /* SETTINGS */
 
     private final boolean print = false;         // set to true for print statements
@@ -76,8 +71,6 @@ public class Simulator extends Thread {
         _vehicleList = new CopyOnWriteArrayList<GroundVehicle>();
         _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
         _dc = dc;
-        _followerList = new ArrayList<FollowingController>();
-        _leaderList = new ArrayList<LeadingController>();
 
     }
 
@@ -127,6 +120,15 @@ public class Simulator extends Thread {
     public DisplayClient getDisplayClient() {
         return _dc;
     }
+    
+    public UserController getUserController(int index) {
+    	if (index == 1){
+    		return uc1;
+    	}
+    	else if (index == 2){
+    		return uc2;
+    	}
+    }
 
 /* OTHER METHODS */
     /**
@@ -154,23 +156,6 @@ public class Simulator extends Thread {
         } else {
             throw new IllegalStateException("Cannot add third UserController to simulation");
         }
-    }
-    
-    /**
-     * Adds a FollowingController to the list inside Simulator
-     * @param fc
-     */
-    public synchronized void addFollowingController(FollowingController fc){
-    	
-    	_followerList.add(fc);
-    }
-    
-    /**
-     * Adds a LeadingController to the list inside Simulator
-     * @param lc
-     */
-    public synchronized void addLeadingController(LeadingController lc){
-    	_leaderList.add(lc);
     }
 
 

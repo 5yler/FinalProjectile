@@ -38,6 +38,7 @@ public class UserController extends VehicleController {
     public GroundVehicle getUserVehicle() {
         return _v;
     }
+    
 
     public Control getControl(int sec, int msec) {
 

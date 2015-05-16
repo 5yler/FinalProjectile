@@ -269,6 +269,20 @@ public class VehicleController extends Thread {
         return theta;
     }
 
+
+    /**
+     * Calculates angle from an X and Y using arctan function
+     * @param X
+     * @param Y
+     * @return angle in radians
+     */
+    public static double getAngle(double X, double Y) {
+        double nextAngle = Math.atan(Y/X);
+        if (X < 0)
+            nextAngle += Math.PI;
+        return nextAngle;
+    }
+
 /* RUN METHOD */
     /**
      * The run method should be able to get the state of the

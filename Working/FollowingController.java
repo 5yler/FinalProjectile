@@ -27,6 +27,10 @@ public class FollowingController extends VehicleController {
         _prey = prey;
         _v._color = Simulator.FOLLOWING_COLOR;
     }
+    
+    public GroundVehicle getPrey(){
+    	return _prey;
+    }
 
     /**
      * The getControl method takes as an argument a time value in seconds
