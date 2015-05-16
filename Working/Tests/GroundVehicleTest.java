@@ -6,12 +6,7 @@
 
 import org.junit.*;
 import org.junit.runner.JUnitCore;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GroundVehicleTest {
 
@@ -666,7 +661,7 @@ public class GroundVehicleTest {
 
 
     public static void main(String[] args){
-        JUnitCore.main(TestGroundVehicle.class.getName());
+        JUnitCore.main(GroundVehicleTest.class.getName());
     }
 
 } 

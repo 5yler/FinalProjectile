@@ -55,6 +55,29 @@ public class GroundVehicle extends Thread {
 
 	}
 
+	public GroundVehicle (double pose[], double dx, double dy, double dtheta) {
+		if (pose.length != 3)
+			throw new IllegalArgumentException("First argument must be array of length 3");
+
+		_x = pose[0];
+		_y = pose[1];
+		_theta = pose[2];
+
+		_dx = dx;
+		_dy = dy;
+		_dtheta = dtheta;
+
+		clampPosition();
+		clampVelocity();
+
+		// create random alphanumeric ID for vehicle
+		_ID = randomString(2);
+		vehicleCount += 1;
+		_numID = vehicleCount;
+
+		// set max simulation size
+	}
+
 /* STATIC METHODS */
 	/**
 	 * Generates a random double sampled from a Gaussian distribution with specified
@@ -333,7 +356,6 @@ public class GroundVehicle extends Thread {
 
 			} // end if (UPDATE_MS since last update)
 		} // end while (time < FinalProjectile.GAME_TIME)
-
 	} // end run()
 
 }
