@@ -248,10 +248,18 @@ public class SimulatorTest {
     /**
      * Method: removeOffscreenProjectile()
      */
+    @Test
+    public void testRemoveOffscreenProjectile(){
+    	
+    }
     
     /**
      * Method: projectileShotVehicle()
      */
+    @Test
+    public void testProjectileShotVehicle(){
+    	
+    }
     
     /**
      * Method: changeShotVehicle()

@@ -28,9 +28,16 @@ public class FollowingControllerTest {
 	 * Method: getControl()
 	 */
 	@Test
-	public void testGetControl(){
-		
-	}
+    public void testGetControl() throws Exception {
+		double[] startPosition = {50, 30, 0};
+        double[] startPosition2 = {30, 10, 0};
+        GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        GroundVehicle gv2 = new GroundVehicle(startPosition2, 5.0, Math.PI / 4);
+        Simulator sim = new Simulator();
+
+        FollowingController fc = new FollowingController(sim, gv, gv2);;
+
+        assertNotNull(fc.getControl(0, 100));
 	
     public static void main(String[] args) {
         JUnitCore.main(FollowingControllerTest.class.getName());
