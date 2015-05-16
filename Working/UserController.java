@@ -18,6 +18,7 @@ public class UserController extends VehicleController {
     public static int TOTAL_KILLS = 0;	// total number of kills by all users
 
     protected static int userControllerCount = 0;	// number of VehicleControllers in existence
+
     public final int _userID;    // unique UserController ID
 
     private final boolean debug = FinalProjectile.debug_user; // set to true for debug statements
@@ -62,8 +63,16 @@ public class UserController extends VehicleController {
         return _v;
     }
 
+    public static int getUserControllerCount() {
+        return userControllerCount;
+    }
+
     public DisplayServer getDisplayServer() {
         return _ds;
+    }
+
+    public int getUserID() {
+        return _userID;
     }
 
     public Control getControl(int sec, int msec) {

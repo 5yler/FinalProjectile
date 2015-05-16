@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class UserControllerTest {
 
     /**
-     * Method: UserController(Simulator sim, GroundVehicle v)
+     * Constructor: UserController(Simulator sim, GroundVehicle v)
      *
      * Constructs a UserController object and tests if the
      * associated Simulator and GroundVehicle references
@@ -32,16 +32,47 @@ public class UserControllerTest {
         assertEquals(gv, uc.getUserVehicle());
 	}
 
+    /**
+     * Constructor: UserController(Simulator sim, GroundVehicle v)
+     *
+     * Constructs two UserController objects and tests if
+     * they are assigned unique integer user IDs in increasing value
+     */
+    @Test
+    public void testUserID() {
+        double[] startPosition = {50, 30, 0};
+        GroundVehicle gv1 = new GroundVehicle(startPosition, 0, 0);
+        GroundVehicle gv2 = new GroundVehicle(startPosition, 0, 0);
+        Simulator sim = new Simulator();
+
+        int expectedID1 = UserController.getUserControllerCount();
+        int expectedID2 = expectedID1 + 1;
+
+        System.out.println("expectedID1: " + expectedID1);
+        System.out.println("expectedID2: " + expectedID2);
+
+        UserController uc1 = new UserController(sim, gv1);
+
+        System.out.println("uc1.getUserID(): " + uc1.getUserID());
+        assertEquals(expectedID1, uc1.getUserID());
+
+        UserController uc2 = new UserController(sim, gv2);
+        System.out.println("uc2.getUserID(): " + uc2.getUserID());
+
+        assertEquals(expectedID2, uc2.getUserID());
+    }
+
+
 
     /**
-     * Method: UserController(Simulator sim, GroundVehicle v, DisplayServer ds)
+     * Constructor: UserController(Simulator sim, GroundVehicle v, DisplayServer ds)
      *
      * Constructs a UserController object and tests if the
      * associated Simulator, GroundVehicle and DisplayServer
      * references are initialized properly.
      */
     @Test
-    public void constructor2() {
+    public void testConstructor2() {
 
         try {
             ServerSocket s = new ServerSocket(5065);
@@ -100,7 +131,7 @@ public class UserControllerTest {
             UserController uc = new UserController(sim, gv, ds);
 
             Control userControl = uc.getControl(1, 0);
-            System.out.println("userSpeed: " + userControl.getSpeed());
+
             assertNotNull(userControl);
 
             // test if control omega is 0
