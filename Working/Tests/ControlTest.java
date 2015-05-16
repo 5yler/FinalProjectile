@@ -3,10 +3,12 @@
  * 16.35 FinalProjectile Game Final Project
  **/
 
+import org.junit.runner.JUnitCore;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class ControlTest {
+
 	  @Test(expected=IllegalArgumentException.class)
 	    public void makeLowS(){
 	    //Put an invalid low s value in. Should throw an exception
@@ -36,12 +38,12 @@ public class ControlTest {
 	    double s = 7.5d;
 	    double omega = .3d;
 	    Control test = new Control(s, omega);
-	    Assert.assertEquals(omega, test.getRotVel(), 1e-6);
-	    Assert.assertEquals(s, test.getSpeed(), 1e-6);
+	    assertEquals(omega, test.getRotVel(), 1e-6);
+	    assertEquals(s, test.getSpeed(), 1e-6);
 	  }
 	  
 	  public static void main(String[] args){
-	    JUnitCore.main(TestControl.class.getName());
+	    JUnitCore.main(ControlTest.class.getName());
 	  }
 
 }
