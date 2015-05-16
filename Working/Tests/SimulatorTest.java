@@ -65,7 +65,10 @@ public class SimulatorTest {
             assertEquals(0, sim.STARTUP_TIME);
 
 
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            System.err.println("IOException in SimulatorTest!");
+            e.printStackTrace();
+        }
     }
 
 
