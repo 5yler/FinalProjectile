@@ -480,13 +480,28 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   //TODO: requirements need to be completely rewritten for added user and how this is handled
 
+  //TODO: req
   public void increaseSpeed(int UserID) {
+
+    // increment user speed
     userSpeed[UserID] += SPEED_INCREMENT;
+
+    if (userSpeed[UserID] > GroundVehicle.MAX_VEL) {
+      // clamp if speed too high
+      userSpeed[UserID] = GroundVehicle.MAX_VEL;
+    }
   }
 
-
+  //TODO: req
   public void decreaseSpeed(int UserID) {
+
+    // decrease user speed
     userSpeed[UserID] -= SPEED_INCREMENT;
+
+    if (userSpeed[UserID] < GroundVehicle.MIN_VEL) {
+      // clamp if speed too low
+      userSpeed[UserID] = GroundVehicle.MIN_VEL;
+    }
   }
 
   public void turnLeft(int UserID) {

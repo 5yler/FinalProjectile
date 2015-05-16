@@ -16,6 +16,7 @@ public class FinalProjectile {
 
     // debug print statement toggle
     public static final boolean debug_follower      = true;    // set to true for FC debug
+    public static final boolean debug_user          = true;    // set to true for FC debug
     public static final boolean debug_projectiles   = false;    // set to true for projectile debug
     public static final boolean debug_keys          = false;    // set to true for key event debug
     public static final boolean debug_scores        = false;    // set to true for score display message debug

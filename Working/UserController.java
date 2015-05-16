@@ -20,7 +20,7 @@ public class UserController extends VehicleController {
     protected static int userControllerCount = 0;	// number of VehicleControllers in existence
     public final int _userID;    // unique UserController ID
 
-    private final boolean debug = false; // set to true for debug statements
+    private final boolean debug = FinalProjectile.debug_user; // set to true for debug statements
 
     public UserController(Simulator sim, GroundVehicle v, DisplayServer ds){
 	super(sim, v);
@@ -35,24 +35,29 @@ public class UserController extends VehicleController {
         _v._color = userControllerCount;
     }
 
-
-
     public GroundVehicle getUserVehicle() {
         return _v;
     }
 
-    //TODO: req modified for MULTIPLAYER
     public Control getControl(int sec, int msec) {
-        double _nextSpeed = _ds.getUserSpeed(_userID);
-        double _nextOmega = _ds.getUserOmega(_userID);
+
+        // get next speed and omega values from display server
+        double nextSpeed = _ds.getUserSpeed(_userID);
+        double nextOmega = _ds.getUserOmega(_userID);
         boolean isShooting = _ds.getProjectileGenerated(_userID);
+
+        if (debug) {
+            System.out.println("UserController "+_userID+" s: "+nextSpeed+" omega: "+nextOmega);
+        }
+
+        // if user is shooting, generate projectile in Simulator
         if (isShooting) {
             _sim.generateProjectile(this);
         }
 
-        if (debug) {
-            System.out.println("s: "+_nextSpeed+" omega: "+_nextOmega);
-        }
-        return clampControl(_nextSpeed, _nextOmega);
+        // generate new control
+        Control nextControl = new Control(nextSpeed, nextOmega);
+
+        return nextControl;
     }
 }
