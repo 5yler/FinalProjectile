@@ -78,6 +78,14 @@ public class Projectile extends Thread {
 		displayData[2] = _color;
 		return displayData;
 	}
+	
+	public synchronized Simulator getSimulator(){
+		return _sim;
+	}
+	
+	public synchronized UserController getUserController(){
+		return _uc;
+	}
 
 	/* RUN METHOD */
 	public void run() {
