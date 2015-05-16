@@ -39,15 +39,8 @@ public class Simulator extends Thread {
     private UserController _uc1;
     private UserController _uc2;
 
-
-/* SETTINGS */
-
-    private final boolean print = false;         // set to true for print statements
+    protected static NumberFormat scoreFormat = new DecimalFormat("###.#");
     private final boolean debug = false;         // set to true for debug statements
-
-    private static final boolean debug_projectiles   = FinalProjectile.debug_projectiles;     // projectile debug statements
-
-    public static NumberFormat scoreFormat = new DecimalFormat("###.#");
 
 
     public Simulator(DisplayClient dc) {
@@ -101,6 +94,15 @@ public class Simulator extends Thread {
     public DisplayClient getDisplayClient() {
         return _dc;
     }
+    
+    public UserController getUserController(int index) {
+    	if (index == 1) {
+    		return _uc1;
+    	}
+    	else { // if (index == 2)
+    		return _uc2;
+    	}
+    }
 
 /* OTHER METHODS */
     /**
@@ -130,8 +132,12 @@ public class Simulator extends Thread {
         }
     }
 
-
-
+    /**
+     * Calculates linear distance between two positions
+     * @param obj1pos object 1 [x, y, theta]
+     * @param obj2pos object 2 [x, y, theta]
+     * @return linear distance between two object positions
+     */
     public static double distance(double[] obj1pos, double[] obj2pos) {
         if (obj1pos.length != 3) {
             throw new IllegalArgumentException("obj1pos must be of length 3");
@@ -193,9 +199,6 @@ public class Simulator extends Thread {
 
         // check if REACTION_TIME has passed since last projectile being fired by user //TODO: req
         if (timeSinceLastProjectile > UserController.REACTION_TIME) {
-            if (debug_projectiles) {
-                System.out.println(timeSinceLastProjectile + "ms since last projectile fired by user " + (uc._userID + 1));
-            }
 
             Projectile p = new Projectile(uc.getUserVehicle().getPosition(), this, uc);
             _projectileList.add(p);
@@ -207,13 +210,48 @@ public class Simulator extends Thread {
             // reset last projectile time
             _lastProjectileTime[uc._userID] = System.nanoTime();
 
-            if (debug_projectiles) {
-                System.out.println("Projectile " + _projectileList.size() + " generated!");
-            }
         }
     }
 
 
+    boolean projectileOffScreen(double[] projectilePos) {
+        if (projectilePos.length != 3) {
+            throw new IllegalArgumentException("obj1pos must be of length 3");
+        }
+        boolean isOffScreen = false;
+
+        double x = projectilePos[0];
+        double y = projectilePos[1];
+
+        // check projectiles x-limits
+        if (x > SIM_X || x < 0) {
+            isOffScreen = true;
+        }
+        // check projectiles y-limits
+        if (y > SIM_Y || y < 0) {
+            isOffScreen = true;
+        }
+        return isOffScreen;
+
+    }
+
+
+    /**
+     * Removes Projectiles that went offscreen from Projectile list.
+     */
+    public void removeOffscreenProjectiles() {
+
+        for (Projectile p : _projectileList) {
+            double[] position = p.getPosition();    // get [x, y, theta] of projectile
+            double x = position[0];
+            double y = position[1];
+
+            if (projectileOffScreen(position)) {    // check if projectile is offscreen
+                _projectileList.remove(p);          // remove offscreen projectile
+            }
+        }
+
+    }
 
     /**
      * //TODO: NEW REQUIREMENTS
@@ -306,17 +344,6 @@ public class Simulator extends Thread {
 
 
 
-
-    
-
-    
-    /**
-     * Calculates linear distance between two positions
-     * @param obj1pos object 1 [x, y, theta]
-     * @param obj2pos object 2 [x, y, theta]
-     * @return linear distance between two object positions
-     */
-
     /* RUN METHOD */
     public void run() {
 
@@ -395,9 +422,6 @@ public class Simulator extends Thread {
                         pY[i] = displayData[1];
                         pC[i] = displayData[2];
 
-                        if (debug_projectiles) {
-                            System.out.println("px " + displayData[0] + " py " + displayData[1]);
-                        }
                     } // end for (int i = 0; i < __projectileList.size(); i++)
 
                     removeOffscreenProjectiles();

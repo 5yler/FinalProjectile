@@ -9,8 +9,30 @@ import org.junit.Test;
 public class FollowingControllerTest {
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testContructor() {
+        double[] startPosition = {50, 30, 0};
+        double[] startPosition2 = {30, 10, 0};
+        GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        GroundVehicle gv2 = new GroundVehicle(startPosition2, 5.0, Math.PI / 4);
+        Simulator sim = new Simulator();
+
+        FollowingController fc = new VehicleController(sim, gv, gv2);
+
+        assertEquals(sim, fc.getSimulator());
+        assertEquals(gv, fc.getGroundVehicle());
+        assertEquals(gv2, fc.getPrey());
 	}
+	
+	/**
+	 * Method: getControl()
+	 */
+	@Test
+	public void testGetControl(){
+		
+	}
+	
+    public static void main(String[] args) {
+        JUnitCore.main(FollowingControllerTest.class.getName());
+    }
 
 }

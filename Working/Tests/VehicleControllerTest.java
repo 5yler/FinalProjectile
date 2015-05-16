@@ -237,15 +237,6 @@ public class VehicleControllerTest extends TestCase {
         assertTrue(edgeTravelDuration > 0);
         assertTrue(timeOfManoeuverStart < 0);
 
-        //TODO: possibly add tests for internal logic via:
-        // interiorAngle
-        // turningAngle
-        // minTurnRadius
-        // arcLength
-        // polyEdge
-        // edgeLength
-
-//        assert
 
     }
 
@@ -289,6 +280,6 @@ public class VehicleControllerTest extends TestCase {
     }
 
     public static void main(String[] args) {
-        JUnitCore.main(TestVehicleController.class.getName());
+        JUnitCore.main(VehicleControllerTest.class.getName());
     }
 }

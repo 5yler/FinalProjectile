@@ -271,6 +271,80 @@ public class SimulatorTest {
             assertTrue("Theta: "+startTheta,startTheta < maxTheta);
         }
     }
+    
+    /**
+     * Method: addUserController()
+     */
+    @Test
+    public void testAddUserController(){
+        Simulator sim = new Simulator();
+
+        double[] pos = { 0, 0, 0 };
+        GroundVehicle gv = new GroundVehicle(pos, 1, 0, 1);
+        
+        DisplayServer ds = new DisplayServer();
+        UserController uc = new UserController(sim, gv, ds);
+        
+        sim.addUserController(uc);
+        
+        assertEquals(uc, sim.getUserController(1)));
+
+    }
+    
+      
+    /**
+     * Method: switchVehicles()
+     */
+    
+    /**
+     * Method: checkWithinDistance()
+     */
+    @Test
+    public void testCheckWithinDistance(){
+    	double[] pos1 = {0,0,0};
+    	double[] pos2 = {0,2,0};
+    	
+    	boolean isWithinDistance = checkWithinDistance(pos1,pos2,3);
+    	
+    	assertEquals(isWithinDistance,true);
+    }
+    
+    /**
+     * Method: distance()
+     */
+    @Test
+    public void testDistance(){
+    	double[] pos1 = {0,0,0};
+    	double[] pos2 = {0,2,0};
+    	
+    	double dist = distance(pos1,pos2);
+    	
+    	assertEquals(dist,2,1E-6);
+    }
+    
+    /**
+     * Method: removeOffscreenProjectile()
+     */
+    
+    /**
+     * Method: projectileShotVehicle()
+     */
+    
+    /**
+     * Method: changeShotVehicle()
+     */
+    
+    /**
+     * Method: projectileOffscreen()
+     */
+    @Test
+    public void testProjectileOffscreen(){
+    	double[] projectilePos = {10000 10000 0};
+    	
+    	boolean isOffscreen = projectileOffScreen(projectilePos);
+    			
+    	assertEquals(isOffscreen, true);
+    }
 
     public static void main(String[] args){
 
