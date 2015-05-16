@@ -22,6 +22,12 @@ public class UserController extends VehicleController {
 
     private final boolean debug = FinalProjectile.debug_user; // set to true for debug statements
 
+    /**
+     * Constructor
+     * @param sim associated Simulator object
+     * @param v associated GroundVehicle object
+     * @param ds associated DisplayServer which handles keyboard inputs
+     */
     public UserController(Simulator sim, GroundVehicle v, DisplayServer ds){
 	super(sim, v);
         if (ds == null) {
@@ -34,6 +40,23 @@ public class UserController extends VehicleController {
         userControllerCount++;
         _v._color = userControllerCount;
     }
+
+    /**
+     * Constructor used for testing functionality without display
+     * @param sim associated Simulator object
+     * @param v associated GroundVehicle object
+     */
+    public UserController(Simulator sim, GroundVehicle v){
+        super(sim, v);
+
+        _ds = null;
+
+        _userID = userControllerCount;
+        userControllerCount++;
+        _v._color = userControllerCount;
+    }
+
+
 
     public GroundVehicle getUserVehicle() {
         return _v;
