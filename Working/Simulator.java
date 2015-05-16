@@ -519,6 +519,21 @@ public class Simulator extends Thread {
                 }	// end synchronized (this)
 
                 if (UserController.TOTAL_KILLS == FinalProjectile.NUM_VEHICLES) {
+
+                    // update score counts
+                    synchronized (this) {
+                        userShots[0] = _uc1._shots;
+                        userHits[0] = _uc1._hits;
+                        userKills[0] = _uc1._kills;
+
+                        if (FinalProjectile.MULTIPLAYER) {
+                            userShots[1] = _uc2._shots;
+                            userHits[1] = _uc2._hits;
+                            userKills[1] = _uc2._kills;
+                        }
+                        _dc.update(userShots, userHits, userKills, gvC.length, gvX, gvY, gvTheta, gvC, pC.length, pX, pY, pC);
+                        changeShotVehicles();
+                    }
                     break playing;
                 }
 
@@ -527,7 +542,7 @@ public class Simulator extends Thread {
         } // end while (time < FinalProjectile.GAME_TIME)
 
 
-        // clear display of previous trajectories
+        // send final scores
         _dc.over(userShots, userHits, userKills);
 
 

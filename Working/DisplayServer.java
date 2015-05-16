@@ -819,6 +819,63 @@ public class DisplayServer extends JPanel implements KeyListener {
    */
   protected synchronized void drawScores(Graphics g) {
 
+    if (!over) {
+      g.setColor(USER1_COLOR[0]);
+//    g.setFont(new Font("default", Font.BOLD, 14));
+      g.setFont(new Font("default", Font.BOLD, 14));
+      g.drawString("User 1", LINE_X_PIX_OFFSET, 4 * LINE_Y_PIX);
+//    g.setFont(new Font("default", Font.PLAIN, 14));
+      g.setFont(new Font("default", Font.PLAIN, 14));
+
+      g.setColor(USER_SCORES[0]);
+      g.drawString("Shots: " + shots1, LINE_X_PIX_OFFSET, 5 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("Hits: " + hits1, LINE_X_PIX_OFFSET, 6 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      g.drawString("Kills: " + kills1, LINE_X_PIX_OFFSET, 7 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      String accuracy1;
+      if (shots1 == 0) {
+        accuracy1 = "NaN";
+      } else {
+        double acc1 = 100.0 * hits1 / shots1;
+        accuracy1 = scoreFormat.format(acc1);
+      }
+      g.drawString("Accuracy: " + accuracy1 + "%", LINE_X_PIX_OFFSET, 8 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+
+      if (FinalProjectile.MULTIPLAYER) {
+
+        g.setColor(USER2_COLOR[0]);
+        g.setFont(new Font("default", Font.BOLD, 14));
+        g.drawString("User 2", LINE_X_PIX_OFFSET, 10 * LINE_Y_PIX);
+        g.setColor(USER_SCORES[1]);
+        g.setFont(new Font("default", Font.PLAIN, 14));
+        g.drawString("Shots: " + shots2, LINE_X_PIX_OFFSET, 11 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+        g.drawString("Hits: " + hits2, LINE_X_PIX_OFFSET, 12 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+        g.drawString("Kills: " + kills2, LINE_X_PIX_OFFSET, 13 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+        String accuracy2;
+        if (shots2 == 0) {
+          accuracy2 = "NaN";
+        } else {
+          double acc2 = 100.0 * hits2 / shots2;
+          accuracy2 = scoreFormat.format(acc2);
+        }
+        g.drawString("Accuracy: " + accuracy2 + "%", LINE_X_PIX_OFFSET, 14 * LINE_Y_PIX + LINE_Y_PIX_OFFSET);
+      }
+      if (FinalProjectile.debug_scores) {
+        System.out.println(shots1 + " " + shots2 + " " + hits1 + " " + hits2 + " DisplayServer.drawScores()");
+      }
+    }
+
+    if (over) {
+      gameOver(g);
+    }
+  }
+
+
+  protected synchronized void gameOver(Graphics g) {
+
+    g.setColor(randomLightColor());
+    g.setFont(new Font("default", Font.PLAIN, 200));
+    g.drawString("GAME OVER", LINE_X_PIX_OFFSET, DISPLAY_Y - LINE_Y_PIX_OFFSET);
+
     g.setColor(USER1_COLOR[0]);
 //    g.setFont(new Font("default", Font.BOLD, 14));
     g.setFont(new Font("default", Font.BOLD, 14));
@@ -861,19 +918,6 @@ public class DisplayServer extends JPanel implements KeyListener {
     if (FinalProjectile.debug_scores) {
       System.out.println(shots1 + " " + shots2 + " " + hits1 + " " + hits2 + " DisplayServer.drawScores()");
     }
-
-    if (over) {
-      gameOver(g);
-    }
-  }
-
-
-  protected synchronized void gameOver(Graphics g) {
-
-    g.setColor(randomLightColor());
-    g.setFont(new Font("default", Font.PLAIN, 200));
-    g.drawString("GAME OVER", LINE_X_PIX_OFFSET, DISPLAY_Y - LINE_Y_PIX_OFFSET);
-
   }
 
 
