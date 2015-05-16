@@ -429,7 +429,8 @@ public class GroundVehicleTest {
         newVel = gv.getVelocity();
         assertEquals(Math.PI / 8, newVel[2], 1e-6);
     }
-
+    
+   
     /**
      * Method: updateState(int sec, int msec)
      */
