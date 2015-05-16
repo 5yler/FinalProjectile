@@ -18,15 +18,13 @@ import java.util.*;
 
 public class DisplayServer extends JPanel implements KeyListener {
 
-  public boolean over = false;
+  public boolean OVER = false;
 
   private double SPEED_INCREMENT = 1; //TODO: mod req?
   private double[] userSpeed = {5, 5}; //TODO: req
   private double[] userOmega = {0, 0}; //TODO: req
   private boolean[] projectileGenerated = {false, false}; //TODO: req
   private static Random rand = new Random();
-
-  private Simulator _sim;
 
   private static int historySkip = 5;
   private static final long serialVersionUID = 1l;
@@ -47,7 +45,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   protected NumberFormat scoreFormat = new DecimalFormat("###.#");
 
   // keyboard help
-  private boolean help = true;
+  private boolean HELP = true;
 
   protected int maxNumVehicles = 20;
   protected int shapeX[], shapeY[];
@@ -200,7 +198,7 @@ public class DisplayServer extends JPanel implements KeyListener {
             synchronized (my_display) {
               //TODO: req
               if (tok.equals("over")) {
-                my_display.over = true;
+                my_display.OVER = true;
                 tok = st.nextToken();
               }
               outerif:
@@ -447,7 +445,7 @@ public class DisplayServer extends JPanel implements KeyListener {
         toggleProjectile(true, 1);
       }
       if (code == KeyEvent.VK_H) {
-        help = !help;
+        HELP = !HELP;
       }
     }
   }
@@ -486,7 +484,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   //TODO: requirements need to be completely rewritten for added user and how this is handled
 
-  //TODO: req
   public void increaseSpeed(int UserID) {
 
     // increment user speed
@@ -498,7 +495,6 @@ public class DisplayServer extends JPanel implements KeyListener {
     }
   }
 
-  //TODO: req
   public void decreaseSpeed(int UserID) {
 
     // decrease user speed
@@ -588,7 +584,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 //    }
   }
 
-
   /**
    * @return array with random RGB color pair (dark color and light color)
    */
@@ -624,7 +619,6 @@ public class DisplayServer extends JPanel implements KeyListener {
     return new Color(r, g, b);
   }
 
-
   /**
    * @return random grey RGB color
    */
@@ -634,7 +628,6 @@ public class DisplayServer extends JPanel implements KeyListener {
     int b = rand.nextInt(50);
     return new Color(r, g, b);
   }
-
 
   protected synchronized void drawVehicles(Graphics g) {
     g.setColor(Color.black);
@@ -681,7 +674,6 @@ public class DisplayServer extends JPanel implements KeyListener {
     }
   }
 
-
   /**
    * Draws projectiles.
    *
@@ -706,7 +698,6 @@ public class DisplayServer extends JPanel implements KeyListener {
       drawCircle(g, x, y, 1);
     }
   }
-
 
   protected synchronized void drawHistories(Graphics g) {
     g.setColor(Color.black);
@@ -766,7 +757,6 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   }
 
-
   /**
    * Draws random circle in simulation.
    *
@@ -819,12 +809,10 @@ public class DisplayServer extends JPanel implements KeyListener {
    */
   protected synchronized void drawScores(Graphics g) {
 
-    if (!over) {
+    if (!OVER) {
       g.setColor(USER1_COLOR[0]);
-//    g.setFont(new Font("default", Font.BOLD, 14));
       g.setFont(new Font("default", Font.BOLD, 14));
       g.drawString("User 1", LINE_X_PIX_OFFSET, 4 * LINE_Y_PIX);
-//    g.setFont(new Font("default", Font.PLAIN, 14));
       g.setFont(new Font("default", Font.PLAIN, 14));
 
       g.setColor(USER_SCORES[0]);
@@ -864,11 +852,10 @@ public class DisplayServer extends JPanel implements KeyListener {
       }
     }
 
-    if (over) {
+    if (OVER) {
       gameOver(g);
     }
   }
-
 
   protected synchronized void gameOver(Graphics g) {
 
@@ -920,14 +907,13 @@ public class DisplayServer extends JPanel implements KeyListener {
     }
   }
 
-
   /**
    * Draws control key help text.
    *
    * @param g
    */
   protected synchronized void drawHelp(Graphics g) {
-    if (help) {
+    if (HELP) {
       g.setFont(new Font("default", Font.BOLD, 14));
       g.setColor(randomLightColor());
 //      g.drawString("User 1 controls: move with [^]UP [v]DOWN [<]LEFT [>]RIGHT keys, shoot with [.]SPACE", LINE_X_PIX_OFFSET, LINE_Y_PIX_OFFSET);
@@ -954,10 +940,6 @@ public class DisplayServer extends JPanel implements KeyListener {
       }
     }
   }
-
-
-
-
 
   protected void addClient(Socket client) {
     MessageListener l = new MessageListener(client, this);
