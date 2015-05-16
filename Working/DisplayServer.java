@@ -21,7 +21,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   public boolean OVER = false;
 
   private double SPEED_INCREMENT = 1; //TODO: mod req?
-  private double[] userSpeed = {5, 5}; //TODO: req
+  private double[] userSpeed = {5*GroundVehicle.MIN_VEL, 5*GroundVehicle.MIN_VEL}; //TODO: req
   private double[] userOmega = {0, 0}; //TODO: req
   private boolean[] projectileGenerated = {false, false}; //TODO: req
   private static Random rand = new Random();
