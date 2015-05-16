@@ -18,6 +18,8 @@ import java.util.*;
 
 public class DisplayServer extends JPanel implements KeyListener {
 
+  public boolean over = false;
+
   private double SPEED_INCREMENT = 1; //TODO: mod req?
   private double[] userSpeed = {5, 5}; //TODO: req
   private double[] userOmega = {0, 0}; //TODO: req
@@ -197,6 +199,10 @@ public class DisplayServer extends JPanel implements KeyListener {
           } else {
             synchronized (my_display) {
               //TODO: req
+              if (tok.equals("over")) {
+                my_display.over = true;
+                tok = st.nextToken();
+              }
               outerif:
               if (tok.equals("vehicles")) {
                 tok = st.nextToken();
@@ -855,6 +861,19 @@ public class DisplayServer extends JPanel implements KeyListener {
     if (FinalProjectile.debug_scores) {
       System.out.println(shots1 + " " + shots2 + " " + hits1 + " " + hits2 + " DisplayServer.drawScores()");
     }
+
+    if (over) {
+      gameOver(g);
+    }
+  }
+
+
+  protected synchronized void gameOver(Graphics g) {
+
+    g.setColor(randomLightColor());
+    g.setFont(new Font("default", Font.PLAIN, 200));
+    g.drawString("GAME OVER", LINE_X_PIX_OFFSET, DISPLAY_Y - LINE_Y_PIX_OFFSET);
+
   }
 
 

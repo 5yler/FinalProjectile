@@ -93,6 +93,24 @@ public class DisplayClient  {
     output.flush();
   }
 
+  public void over(int userShots[], int userHits[], int userKills[])
+  {
+    StringBuffer message = new StringBuffer();
+    // append vehicle positions
+    message.append("over");
+    message.append(" ");
+    message.append("score");
+    message.append(" ");
+    message.append(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " " + userKills[0] + " " + userKills[1] + " ");
+    if (FinalProjectile.debug_scores) {
+      System.out.println(userShots[0] + " " + userShots[1] + " " + userHits[0] + " " + userHits[1] + " DisplayClient.update()");
+    }
+    if (print)
+      System.out.println("Sent "+message);
+    output.println(message);
+    output.flush();
+  }
+
   /*
   public static void main(String argv[]) throws IOException {
     if (argv.length == 0) {

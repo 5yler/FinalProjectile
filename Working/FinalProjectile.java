@@ -35,7 +35,8 @@ public class FinalProjectile {
     public static final int LEADING_COLOR = 3;
     public static final int FOLLOWING_COLOR = 4;
 
-    public static final int GAME_TIME = 200; // [s] time the game runs for //TODO: req
+    public static final int GAME_TIME = 200;        // [s] time the game runs for //TODO: req
+    public static final int GAME_OVER_TIMEOUT = 10;   // [s] time the display remains after game over  //TODO: req
     //TODO: make it stop when all non-user vehicles disappear
 
     public static int NUM_VEHICLES;

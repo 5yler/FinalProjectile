@@ -528,6 +528,8 @@ public class Simulator extends Thread {
 
 
         // clear display of previous trajectories
+        _dc.over(userShots, userHits, userKills);
+
 
         System.out.println("SHOTS FIRED: " + Projectile.SHOTS_FIRED);
 
@@ -549,7 +551,7 @@ public class Simulator extends Thread {
 
 
         try {
-            Thread.sleep(10*100);
+            Thread.sleep(FinalProjectile.GAME_OVER_TIMEOUT*1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
