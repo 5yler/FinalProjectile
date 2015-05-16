@@ -26,9 +26,15 @@ public class UserControllerTest {
 	 * Method: getControl()
 	 */
 	@Test
-	public void testGetControl() {
-		
-	}
+    public void testGetControl() throws Exception {
+		double[] startPosition = {50, 30, 0};
+        GroundVehicle gv = new GroundVehicle(startPosition, 0, 0);
+        Simulator sim = new Simulator();
+        DisplayServer ds = new DisplayServer();
+
+        UserController uc = new UserController(sim, gv, ds);
+
+        assertNotNull(uc.getControl(0, 100));
 	
     public static void main(String[] args) {
         JUnitCore.main(UserControllerTest.class.getName());
