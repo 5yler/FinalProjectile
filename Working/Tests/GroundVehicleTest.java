@@ -4,7 +4,7 @@
  * @author  Syler Wagner        <syler@mit.edu>
  **/
 
-import org.junit.*;
+import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import static org.junit.Assert.*;
 
@@ -190,7 +190,7 @@ public class GroundVehicleTest {
         newPose = gv.getPosition();
         assertEquals(pose[0], newPose[0], 1e-6);
 
-        pose[0] = 100;
+        pose[0] = Simulator.SIM_X;
         gv.setPosition(pose);
         newPose = gv.getPosition();
         assertEquals(pose[0], newPose[0], 1e-6);
@@ -200,7 +200,7 @@ public class GroundVehicleTest {
         newPose = gv.getPosition();
         assertEquals(pose[1], newPose[1], 1e-6);
 
-        pose[1] = 100;
+        pose[1] = Simulator.SIM_Y;
         gv.setPosition(pose);
         newPose = gv.getPosition();
         assertEquals(pose[1], newPose[1], 1e-6);
@@ -304,13 +304,13 @@ public class GroundVehicleTest {
         assertEquals(0, newPose[1], 1e-6);
         assertEquals(-Math.PI, newPose[2], 1e-6);
 
-        pose[0] = 101;
-        pose[1] = 101;
+        pose[0] = Simulator.SIM_X+1;
+        pose[1] = Simulator.SIM_Y+1;
         pose[2] = Math.PI;
         gv.setPosition(pose);
         newPose = gv.getPosition();
-        assertEquals(100, newPose[0], 1e-6);
-        assertEquals(100, newPose[1], 1e-6);
+        assertEquals(Simulator.SIM_X, newPose[0], 1e-6);
+        assertEquals(Simulator.SIM_Y, newPose[1], 1e-6);
         assertEquals(-Math.PI, newPose[2], 1e-6);
 
     }
@@ -335,22 +335,22 @@ public class GroundVehicleTest {
 
         double [] vel = gv.getVelocity();
         vel[0] = 0;
-        vel[1] = 1;
-        vel[2] = -Math.PI;
+        vel[1] = 0.5*GroundVehicle.MIN_VEL;
+        vel[2] = -GroundVehicle.MAX_OMEGA-1;
         gv.setVelocity(vel);
         double [] newVel = gv.getVelocity();
         assertEquals(0, newVel[0], 1e-6);
-        assertEquals(5, newVel[1], 1e-6);
-        assertEquals(-Math.PI / 4, newVel[2], 1e-6);
+        assertEquals(GroundVehicle.MIN_VEL, newVel[1], 1e-6);
+        assertEquals(-GroundVehicle.MAX_OMEGA, newVel[2], 1e-6);
 
         vel[0] = 0;
-        vel[1] = 20;
-        vel[2] = Math.PI;
+        vel[1] = GroundVehicle.MAX_VEL+1;
+        vel[2] = GroundVehicle.MAX_OMEGA+1;
         gv.setVelocity(vel);
         newVel = gv.getVelocity();
         assertEquals(0, newVel[0], 1e-6);
-        assertEquals(10, newVel[1], 1e-6);
-        assertEquals(Math.PI / 4, newVel[2], 1e-6);
+        assertEquals(GroundVehicle.MAX_VEL, newVel[1], 1e-6);
+        assertEquals(GroundVehicle.MAX_OMEGA, newVel[2], 1e-6);
     }
 
     /**
@@ -535,13 +535,12 @@ public class GroundVehicleTest {
         double s = 5;
 
         // define error tolerance for tests
-        double tolerance = 1e-3;
+        double tolerance = 5*1e-3;
         /* this must be higher than 1e-6 used in updateState() because
            the new equations of motion are non-deterministic and have both
            crossrange and downrange noise */
 
         // create ground vehicle
-
         GroundVehicle gv = new GroundVehicle(pose, s, dtheta);
 
         // straight-line motion along x
@@ -605,6 +604,7 @@ public class GroundVehicleTest {
         pose[0] = 0;
         pose[1] = 0;
         pose[2] = 0;
+
         // set vehicle moving at 5 m/s along PI/4
         vel[0] = Math.sqrt(12.5);
         vel[1] = Math.sqrt(12.5);
@@ -658,7 +658,6 @@ public class GroundVehicleTest {
         avgPose[2] = thetaSum/n;
         assertEquals(Math.PI / 8, avgPose[2], tolerance);
     }
-
 
     public static void main(String[] args){
         JUnitCore.main(GroundVehicleTest.class.getName());

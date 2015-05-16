@@ -3,8 +3,9 @@
  * 16.35 FinalProjectile Game Final Project
  **/
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import static org.junit.Assert.*;
 
 public class ProjectileTest {
 
@@ -97,7 +98,7 @@ public class ProjectileTest {
 
 	public static void main(String[] args){
 
-		JUnitCore.main(Projectile.class.getName());
+		JUnitCore.main(ProjectileTest.class.getName());
 	}
 
 }

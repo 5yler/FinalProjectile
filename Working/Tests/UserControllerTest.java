@@ -3,8 +3,9 @@
  * 16.35 FinalProjectile Game Final Project
  **/
 
-import static org.junit.Assert.fail;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import static org.junit.Assert.*;
 
 public class UserControllerTest {
 	

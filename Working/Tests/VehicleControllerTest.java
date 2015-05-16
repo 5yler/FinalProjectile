@@ -4,12 +4,12 @@
  * @author  Syler Wagner        <syler@mit.edu>
  **/
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
+import junit.framework.TestCase;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import static org.junit.Assert.assertEquals;
 
 public class VehicleControllerTest extends TestCase {
 
@@ -52,7 +52,7 @@ public class VehicleControllerTest extends TestCase {
             VehicleController vc;
             if (i == 0) {
                 // the first vehicle should use a RandomController
-                vc = new RandomController(sim, gv);
+                vc = new LeadingController(sim, gv);
             } else {
                 // the other vehicles should use FollowingController to follow the first vehicle
                 GroundVehicle target = sim.getVehicle(0);

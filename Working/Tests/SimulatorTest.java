@@ -6,11 +6,11 @@
 
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import static org.junit.Assert.*;
 
 public class SimulatorTest {
 

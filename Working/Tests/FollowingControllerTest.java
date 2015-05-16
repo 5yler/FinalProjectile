@@ -3,8 +3,9 @@
  * 16.35 FinalProjectile Game Final Project
  **/
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import static org.junit.Assert.*;
 
 public class FollowingControllerTest {
 
@@ -16,7 +17,7 @@ public class FollowingControllerTest {
         GroundVehicle gv2 = new GroundVehicle(startPosition2, 5.0, Math.PI / 4);
         Simulator sim = new Simulator();
 
-        FollowingController fc = new VehicleController(sim, gv, gv2);
+        FollowingController fc = new FollowingController(sim, gv, gv2);
 
         assertEquals(sim, fc.getSimulator());
         assertEquals(gv, fc.getGroundVehicle());
