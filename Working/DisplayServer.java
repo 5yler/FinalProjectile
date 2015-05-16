@@ -74,7 +74,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final Color[] WHITE = {new Color(49, 57, 135), new Color(20, 25, 45)};
 
 
-  public static final Color[] PROJECTILE_COLOR = WHITE; // projectile color //TODO: remove from req
+  public static final Color[] PROJECTILE_COLOR = WHITE; // projectile color
   public static final Color[] USER1_COLOR = RED; // red // user vehicle color
   public static final Color[] USER2_COLOR = ORANGE; // purple // user vehicle color
   public static final Color[] LEADING_COLOR = BLUE; // blue // leading vehicle color
@@ -83,7 +83,6 @@ public class DisplayServer extends JPanel implements KeyListener {
   public static final Color[] USER_SCORES = {new Color(145, 31, 20), // red
           new Color(150, 75, 35)}; // red
 
-  //TODO: req
   public static final Color[][] COLORS = new Color[][]{
           PROJECTILE_COLOR, // 0
           USER1_COLOR,      // 1

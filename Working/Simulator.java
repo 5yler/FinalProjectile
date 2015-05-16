@@ -30,7 +30,7 @@ public class Simulator extends Thread {
     public long STARTUP_TIME;  // time when the simulator starts running
     private long[] _lastProjectileTime = new long[2]; // time when last projectile was fired for each usercontroller
 
-    private static DisplayClient _dc;
+    private DisplayClient _dc = null;
 
     public List<GroundVehicle> _vehicleList;  // list of GroundVehicles inside Simulator
     public List<Projectile> _projectileList;  // list of projectiles inside Simulator
@@ -42,6 +42,12 @@ public class Simulator extends Thread {
     protected static NumberFormat scoreFormat = new DecimalFormat("###.#");
     private final boolean debug = false;         // set to true for debug statements
 
+/* CONSTRUCTORS */
+
+    public Simulator() {
+        _vehicleList = new CopyOnWriteArrayList<GroundVehicle>();
+        _projectileList = new CopyOnWriteArrayList<Projectile>(); // CopyOnWriteArrayList is a thread-safe variant of ArrayList
+    }
 
     public Simulator(DisplayClient dc) {
         _vehicleList = new CopyOnWriteArrayList<GroundVehicle>();
@@ -160,7 +166,7 @@ public class Simulator extends Thread {
      * @param thresholdDistance threshold distance for comparison
      * @return true if distance between objects is at or below the threshold distance
      */
-    public boolean checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance) {
+    public static boolean checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance) {
         if (obj1pos.length != 3) {
             throw new IllegalArgumentException("obj1pos must be of length 3");
         }
@@ -214,7 +220,7 @@ public class Simulator extends Thread {
     }
 
 
-    boolean projectileOffScreen(double[] projectilePos) {
+    public static boolean projectileOffScreen(double[] projectilePos) {
         if (projectilePos.length != 3) {
             throw new IllegalArgumentException("obj1pos must be of length 3");
         }
@@ -259,7 +265,7 @@ public class Simulator extends Thread {
      * @param projectilePos projectile [x, y, theta]
      * @param vPos vehicle [x, y, theta]
      */
-    public boolean projectileShotVehicle(double[] projectilePos, double[] vPos) {
+    public static boolean projectileShotVehicle(double[] projectilePos, double[] vPos) {
         if (projectilePos.length != 3) {
             throw new IllegalArgumentException("projectilePos must be of length 3");
         }
@@ -342,6 +348,15 @@ public class Simulator extends Thread {
 
     }
 
+
+    public static String accuracy(int hits, int shots) {
+        if (shots == 0) {
+            return "NaN%";
+        } else {
+            double acc1 = 100.0 * hits / shots;
+            return scoreFormat.format(acc1)+"%";
+        }
+    }
 
 
     /* RUN METHOD */
@@ -516,14 +531,5 @@ public class Simulator extends Thread {
 
 
     } // end run()
-
-    public static String accuracy(int hits, int shots) {
-        if (shots == 0) {
-            return "NaN%";
-        } else {
-            double acc1 = 100.0 * hits / shots;
-            return scoreFormat.format(acc1)+"%";
-        }
-    }
 
 }

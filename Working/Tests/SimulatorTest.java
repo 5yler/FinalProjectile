@@ -6,6 +6,10 @@
 
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import static org.junit.Assert.*;
 
 public class SimulatorTest {
@@ -15,39 +19,56 @@ public class SimulatorTest {
     /**
      * Method: Simulator()
      *
-     * Constructs a Simulator Object and tests if the values returned by the
-     * functions "getCurrentMSec()" and "getCurrentSec()" in the Simulator
-     * class are 0 before method "run()" is called and the value returned by
-     * "getDisplayClient()" is null.
+     * Constructs a Simulator Object and tests if the value of STARTUP_TIME
+     * in the Simulator class is 0 before method "run()" is called and the
+     * value returned by "getDisplayClient()" is null.
      */
     @Test
     public void constructor() {
 
         Simulator sim = new Simulator();
 
-        assertTrue(sim.getCurrentSec() == 0);
-        assertTrue(sim.getCurrentMSec() == 0);
+        // test DisplayClient reference
         assertNull(sim.getDisplayClient());
+
+        // test STARTUP_TIME value
+        assertEquals(0,sim.STARTUP_TIME);
     }
 
     /**
      * Method: Simulator(DisplayClient dc)
      *
-     * Constructs a Simulator Object and tests if the values returned by the
-     * functions "getCurrentMSec()" and "getCurrentSec()" in the Simulator
-     * class are 0 before method "run()" is called and the value returned by
-     * "getDisplayClient()" is not null.
+     * Constructs a Simulator Object and tests if the value of STARTUP_TIME
+     * in the Simulator class is 0 before method "run()" is called and the
+     * value returned by "getDisplayClient()" is not null.
      */
     @Test
     public void constructor2() {
 
-        DisplayClient dc = new DisplayClient("127.0.0.1");
-        Simulator sim = new Simulator(dc);
+        try {
+            ServerSocket s = new ServerSocket(5065);
+            s.setReuseAddress(true);
+            if (!s.isBound()) {System.exit(-1);}
+            String address = GeneralInetAddress.getLocalHost().getHostAddress();
 
-        assertTrue(sim.getCurrentSec() == 0);
-        assertTrue(sim.getCurrentMSec() == 0);
-        assertNotNull(sim.getDisplayClient());
+
+            // create local DisplayServer and DisplayClient
+            DisplayServer ds = new DisplayServer(address);
+            DisplayClient dc = new DisplayClient(address);
+            Simulator sim = new Simulator(dc);
+
+            // test DisplayClient reference
+            assertNotNull(sim.getDisplayClient());
+            assertEquals(dc, sim.getDisplayClient());
+
+            // test STARTUP_TIME value
+            assertEquals(0, sim.STARTUP_TIME);
+
+
+        } catch (IOException e) {}
     }
+
+
 
     /**
      *
@@ -61,9 +82,9 @@ public class SimulatorTest {
 
         Simulator sim = new Simulator();
 
-        double[] pos = { 0, 0, 0 };
-        GroundVehicle gv = new GroundVehicle(pos, 1, 0, 1);
-        GroundVehicle gv2 = new GroundVehicle(pos, 1, 1, 1);
+        double[] pos = { 0.0, 0.0, 0.0 };
+        GroundVehicle gv = new GroundVehicle(pos, 1.0, 0.0);
+        GroundVehicle gv2 = new GroundVehicle(pos, 1.0, 1.0);
 
         // add GroundVehicles
         sim.addVehicle(gv);
@@ -89,9 +110,9 @@ public class SimulatorTest {
 
         Simulator sim = new Simulator();
 
-        double[] pos = { 0, 0, 0 };
-        GroundVehicle gv = new GroundVehicle(pos, 1, 0, 1);
-        GroundVehicle gv2 = new GroundVehicle(pos, 1, 1, 1);
+        double[] pos = { 0.0, 0.0, 0.0 };
+        GroundVehicle gv = new GroundVehicle(pos, 1.0, 0.0);
+        GroundVehicle gv2 = new GroundVehicle(pos, 1.0, 1.0);
 
         // add GroundVehicles
         sim.addVehicle(gv);
@@ -102,43 +123,6 @@ public class SimulatorTest {
         assertEquals(gv2, sim.getVehicle(1));
     }
 
-    /**
-     *
-     * Method: getControlQueueSize()
-     *
-     * Constructs a Simulator Object and tests if the value returned by the
-     * function "getControlQueueSize()" in the Simulator class is 0 before method
-     * "run()" is called.
-     */
-    @Test
-    public void testStartingControlQueueSize() throws Exception {
-
-        Simulator sim = new Simulator();
-        assertEquals(0, sim.getControlQueueSize(), 1e-9);
-    }
-
-    /**
-     *
-     * Method: addVehicle(GroundVehicle gv)
-     *
-     * Constructs a Simulator Object and tests if the value returned by the
-     * function "getControlQueueSize()" increments appropriately when
-     * GroundVehicles are added to the simulator.
-     */
-    @Test
-    public void testAddVehicleIncrementsControlQueueSize() throws Exception {
-
-        Simulator sim = new Simulator();
-
-        double[] pos = { 0, 0, 0 };
-        GroundVehicle gv = new GroundVehicle(pos, 1, 0, 1);
-        GroundVehicle gv2 = new GroundVehicle(pos, 1, 1, 1);
-
-        sim.addVehicle(gv);
-        assertEquals(1, sim.getControlQueueSize(), 1e-9);
-        sim.addVehicle(gv2);
-        assertEquals(2, sim.getControlQueueSize(), 1e-9);
-    }
 
     /**
      *
@@ -152,12 +136,12 @@ public class SimulatorTest {
 
         Simulator sim = new Simulator();
 
-        double[] pos = { 0, 0, 0 };
+        double[] pos = { 0.0, 0.0, 0.0 };
 
         // add GroundVehicles
         int nVehicles = 5;
         for (int i = 0; i <= nVehicles; i++) {
-            GroundVehicle gv = new GroundVehicle(pos, 1, 0, 1);
+            GroundVehicle gv = new GroundVehicle(pos, 1.0, 0.0);
             sim.addVehicle(gv);
 
             // check if the number IDs of the vehicles correspond
@@ -166,77 +150,6 @@ public class SimulatorTest {
         }
     }
 
-    /**
-     *
-     * Method: getCurrentSec()
-     *
-     * Constructs a Simulator Object and tests if the value returned by the
-     * function "getCurrentSec()" in the Simulator class is 0 before method
-     * "run()" is called.
-     */
-    @Test
-    public void testGetCurrentSec() throws Exception {
-
-        Simulator sim = new Simulator();
-        assertEquals(0, sim.getCurrentSec(), 1e-9);
-    }
-
-    /**
-     *
-     * Method: getCurrentMSec()
-     *
-     * Constructs a Simulator Object and tests if the value returned by the
-     * function "getCurrentMSec()" in the Simulator class is 0 before method
-     * "run()" is called.
-     */
-    @Test
-    public void testGetCurrentMSec() throws Exception {
-
-        Simulator sim = new Simulator();
-        assertEquals(0, sim.getCurrentMSec(), 1e-9);
-    }
-
-    /**
-     *
-     * Method: advanceClock()
-     *
-     * Tests if the "advanceClock()" updates the simulator clock increasing it
-     * by SIMULATOR_MSEC_INCREMENT milliseconds.
-     */
-    @Test
-    public void testAdvanceClock() throws Exception {
-
-        Simulator sim = new Simulator();
-        sim.advanceClock();
-
-        // test if clock is increased by appropriate increment when clock is advanced
-        double actualTime = sim.getCurrentSec() + sim.getCurrentMSec()/1e3;
-        double expectedTime = Simulator.SIMULATOR_MSEC_INCREMENT/1e3;
-        assertEquals(expectedTime, actualTime, 1e-9);
-    }
-
-    /**
-     *
-     * Method: advanceClock()
-     *
-     * Test if variable sec is increased by 1 and msec = 0 when calling
-     * "increaseTime()" makes the variable sec = 1
-     */
-    @Test
-    public void testAdvanceClockFullSecond() throws Exception {
-
-        Simulator sim = new Simulator();
-
-        // define how many times clock needs to be advanced
-        int nIncrements = 1000/Simulator.SIMULATOR_MSEC_INCREMENT;
-
-        for (int i = 0; i < nIncrements; i++) {
-            sim.advanceClock();
-        }
-
-        assertTrue(sim.getCurrentSec() == 1);
-        assertTrue(sim.getCurrentMSec() == 0);
-    }
 
     /**
      *
@@ -280,14 +193,14 @@ public class SimulatorTest {
         Simulator sim = new Simulator();
 
         double[] pos = { 0, 0, 0 };
-        GroundVehicle gv = new GroundVehicle(pos, 1, 0, 1);
+        GroundVehicle gv = new GroundVehicle(pos, 1.0, 0.0);
         
-        DisplayServer ds = new DisplayServer();
+        DisplayServer ds = new DisplayServer("127.0.0.1");
         UserController uc = new UserController(sim, gv, ds);
         
         sim.addUserController(uc);
         
-        assertEquals(uc, sim.getUserController(1)));
+        assertEquals(uc, sim.getUserController(1));
 
     }
     
@@ -299,16 +212,26 @@ public class SimulatorTest {
     /**
      * Method: checkWithinDistance()
      */
-    @Test
-    public void testCheckWithinDistance(){
+    @Test(expected=IllegalArgumentException.class)
+        public void testCheckWithinDistance() throws Exception {
     	double[] pos1 = {0,0,0};
     	double[] pos2 = {0,2,0};
-    	
-    	boolean isWithinDistance = checkWithinDistance(pos1,pos2,3);
-    	
+
+        // check for objects within distance
+    	boolean isWithinDistance = Simulator.checkWithinDistance(pos1,pos2,3);
     	assertEquals(isWithinDistance,true);
+
+        // check for objects not within distance
+        double[] pos3 = {4,4,0};
+        isWithinDistance = Simulator.checkWithinDistance(pos1,pos3,3);
+        assertEquals(isWithinDistance,false);
+
+        // check illegal theshold distance argument throws exception
+        isWithinDistance = Simulator.checkWithinDistance(pos1,pos3,0);
     }
-    
+
+
+
     /**
      * Method: distance()
      */
@@ -317,7 +240,7 @@ public class SimulatorTest {
     	double[] pos1 = {0,0,0};
     	double[] pos2 = {0,2,0};
     	
-    	double dist = distance(pos1,pos2);
+    	double dist = Simulator.distance(pos1,pos2);
     	
     	assertEquals(dist,2,1E-6);
     }
@@ -339,16 +262,53 @@ public class SimulatorTest {
      */
     @Test
     public void testProjectileOffscreen(){
-    	double[] projectilePos = {10000 10000 0};
-    	
-    	boolean isOffscreen = projectileOffScreen(projectilePos);
-    			
-    	assertEquals(isOffscreen, true);
+
+        // test on-screen projectile position
+    	double[] projectilePos = {1.0, 1.0, 0};
+    	boolean isOffscreen = Simulator.projectileOffScreen(projectilePos);
+    	assertEquals(isOffscreen, false);
+
+        // test offscreen projectile position along x
+        double[] invalidPos1 = {-1.0, 1.0, 0.0};
+        isOffscreen = Simulator.projectileOffScreen(invalidPos1);
+        assertEquals(isOffscreen, true);
+
+        double[] invalidPos2 = {Simulator.SIM_X+1.0, 1.0, 0.0};
+        isOffscreen = Simulator.projectileOffScreen(invalidPos2);
+        assertEquals(isOffscreen, true);
+
+        // test offscreen projectile position along y
+        double[] invalidPos3 = {1.0, -1.0, 0.0};
+        isOffscreen = Simulator.projectileOffScreen(invalidPos3);
+        assertEquals(isOffscreen, true);
+
+        double[] invalidPos4 = {1.0, Simulator.SIM_Y+1.0, 0.0};
+        isOffscreen = Simulator.projectileOffScreen(invalidPos4);
+        assertEquals(isOffscreen, true);
+
+        // test boundaries along x
+        double[] boundPos1 = {0.0, 1.0, 0.0};
+        isOffscreen = Simulator.projectileOffScreen(boundPos1);
+        assertEquals(isOffscreen, false);
+
+        double[] boundPos2 = {Simulator.SIM_X, 1.0, 0.0};
+        isOffscreen = Simulator.projectileOffScreen(boundPos2);
+        assertEquals(isOffscreen, false);
+
+        // test boundaries along y
+        double[] boundPos3 = {1.0, 0.0, 0.0};
+        isOffscreen = Simulator.projectileOffScreen(boundPos3);
+        assertEquals(isOffscreen, false);
+
+        double[] boundPos4 = {1.0, Simulator.SIM_Y, 0.0};
+        isOffscreen = Simulator.projectileOffScreen(boundPos4);
+        assertEquals(isOffscreen, false);
+
     }
 
     public static void main(String[] args){
 
-        JUnitCore.main(TestSimulator.class.getName());
+        JUnitCore.main(SimulatorTest.class.getName());
     }
 
 } 
