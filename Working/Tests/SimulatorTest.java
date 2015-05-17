@@ -14,8 +14,6 @@ import java.net.ServerSocket;
 
 public class SimulatorTest {
 
-	//TODO: update with changes
-
     /**
      * Method: Simulator()
      *
@@ -141,15 +139,20 @@ public class SimulatorTest {
 
         double[] pos = { 0.0, 0.0, 0.0 };
 
+        GroundVehicle v = new GroundVehicle(pos, 1.0, 0.0);
+        sim.addVehicle(v);
+
+        int firstID = v.getNumID();
+
         // add GroundVehicles
         int nVehicles = 5;
-        for (int i = 0; i <= nVehicles; i++) {
+        for (int i = 1; i <= nVehicles; i++) {
             GroundVehicle gv = new GroundVehicle(pos, 1.0, 0.0);
             sim.addVehicle(gv);
 
             // check if the number IDs of the vehicles correspond
             // to the order they were created in
-            assertEquals(i+1, gv.getNumID());
+            assertEquals(firstID+i, gv.getNumID());
         }
     }
 
@@ -340,7 +343,10 @@ public class SimulatorTest {
     }
     
     /**
-     * Method: projectileOffscreen()
+     * Method: projectileOffScreen(double[] projectilePos)
+     *
+     * Tests if proper boolean values are returned based on
+     * projectile position on screen
      */
     @Test
     public void testProjectileOffscreen(){
