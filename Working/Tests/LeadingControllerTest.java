@@ -3,8 +3,9 @@
  * 16.35 FinalProjectile Game Final Project
  **/
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import static org.junit.Assert.*;
 
 public class LeadingControllerTest {
 
@@ -30,9 +31,11 @@ public class LeadingControllerTest {
         Simulator sim = new Simulator();
 
         LeadingController lc = new LeadingController(sim, gv);
-        
-        GroundVehicle gv2 = new GroundVehicle({50 40 0}, 5.0, Math.PI / 4);
-        GroundVehicle gv3 = new GroundVehicle({100 100 0}, 5.0, Math.PI / 4);
+
+        double[] pos2 = {50, 40, 0};
+        double[] pos3 = {100, 100, 0};
+        GroundVehicle gv2 = new GroundVehicle(pos2, 5.0, Math.PI / 4);
+        GroundVehicle gv3 = new GroundVehicle(pos3, 5.0, Math.PI / 4);
         sim.addVehicle(gv2);
         sim.addVehicle(gv3);
         
@@ -40,8 +43,7 @@ public class LeadingControllerTest {
         
         assertEquals(closest,gv2);
 	}
-		
-	}
+
 	
 	/**
 	 * Method: tooCloseToWAlls()
@@ -60,13 +62,14 @@ public class LeadingControllerTest {
 	 */
 	@Test
     public void testGetControl() throws Exception {
-		double[] startPosition = {50, 30, 0};
+        double[] startPosition = {50, 30, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
         Simulator sim = new Simulator();
 
         LeadingController lc = new LeadingController(sim, gv);
 
-        assertNotNull(vlc.getControl(0, 100));
+        assertNotNull(lc.getControl(0, 100));
+    }
 	
     public static void main(String[] args) {
         JUnitCore.main(LeadingControllerTest.class.getName());
