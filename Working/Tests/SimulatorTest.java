@@ -184,7 +184,7 @@ public class SimulatorTest {
 
             // check if starting theta values fall in allowed range
             assertTrue("Theta: "+startTheta,startTheta >= minTheta);
-            assertTrue("Theta: "+startTheta,startTheta < maxTheta);
+            assertTrue("Theta: " + startTheta, startTheta < maxTheta);
         }
     }
     
@@ -229,9 +229,13 @@ public class SimulatorTest {
     
     /**
      * Method: checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance)
+     *
+     * Tests if checkWithinDistance() method returns true when
+     * two GroundVehicle/Projectile objects are within a certain
+     * distance of each other, false when not within threshold distance
      */
-    @Test(expected=IllegalArgumentException.class)
-        public void testCheckWithinDistance() throws Exception {
+    @Test
+        public void testCheckWithinDistance() {
     	double[] pos1 = {0,0,0};
     	double[] pos2 = {0,2,0};
 
@@ -244,21 +248,36 @@ public class SimulatorTest {
         isWithinDistance = Simulator.checkWithinDistance(pos1,pos3,3);
         assertEquals(isWithinDistance, false);
 
-        // check illegal theshold distance argument throws exception
-        isWithinDistance = Simulator.checkWithinDistance(pos1,pos3,0);
     }
 
 
+    /**
+     * Method: checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance)
+     *
+     * Tests if checkWithinDistance() method throws exception when
+     * threshold distance is zero
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testCheckWithinDistanceIllegalThreshold() throws Exception {
+        double[] pos1 = {0,0,0};
+        double[] pos2 = {0,2,0};
+
+        // check illegal theshold distance argument throws exception
+        boolean isWithinDistance = Simulator.checkWithinDistance(pos1,pos2,0);
+    }
+
 
     /**
-     * Method: distance()
+     * Method: distance(double[] obj1pos, double[] obj2pos)
+     *
+     * Tests if linear distance between two objects is calculated correctly.
      */
     @Test
     public void testDistance(){
     	double[] pos1 = {0,0,0};
     	double[] pos2 = {0,2,0};
     	
-    	double dist = Simulator.distance(pos1,pos2);
+    	double dist = Simulator.distance(pos1, pos2);
     	
     	assertEquals(dist,2,1E-6);
     }
@@ -272,33 +291,46 @@ public class SimulatorTest {
     }
     
     /**
-     * Method: projectileShotVehicle()
+     * Method: projectileShotVehicle(double[] projectilePos, double[] vPos)
+     *
+     * Test if method returns false when vehicle was not shot
      */
     @Test
-    public void testProjectileShotVehicle(){
+    public void testProjectileShotVehicleFalse(){
     	
     	// test distance > HIT_DISTANCE
-    	double[] projectilePos = {50 50 0};
+    	double[] projectilePos = {50, 50, 0};
     	double vehicleX = projectilePos[0] + Projectile.HIT_DISTANCE*2;
-    	double [] vehiclePos = {vehicleX 50 0};
+    	double [] vehiclePos = {vehicleX, 50, 0};
     	Simulator sim = new Simulator();
     	
     	boolean shotVehicle = sim.projectileShotVehicle(projectilePos,vehiclePos);
     	
-    	assertEquals(shotVehicle,false);
-    	
-    	// test distance < HIT_DISTANCE
-    	double[] projectilePos = {50 50 0};
-    	double vehicleX = projectilePos[0] + Projectile.HIT_DISTANCE/2;
-    	double [] vehiclePos = {vehicleX 50 0};
-    	Simulator sim = new Simulator();
-    	
-    	boolean shotVehicle = sim.projectileShotVehicle(projectilePos,vehiclePos);
-    	
-    	assertEquals(shotVehicle,false);
-    	
+    	assertEquals(false, shotVehicle);
     }
-    
+
+
+    /**
+     * Method: projectileShotVehicle(double[] projectilePos, double[] vPos)
+     *
+     * Test if method returns true when vehicle was shot
+     */
+    @Test
+    public void testProjectileShotVehicleTrue(){
+
+        // test distance < HIT_DISTANCE
+        double[] projectilePos = {50, 50, 0};
+        double vehicleX = projectilePos[0] + Projectile.HIT_DISTANCE/2;
+        double [] vehiclePos = {vehicleX, 50, 0};
+        Simulator sim = new Simulator();
+
+        boolean shotVehicle = sim.projectileShotVehicle(projectilePos,vehiclePos);
+
+        assertEquals(true, shotVehicle);
+
+    }
+
+
     /**
      * Method: changeShotVehicle()
      */
