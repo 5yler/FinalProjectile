@@ -211,6 +211,21 @@ public class SimulatorTest {
     /**
      * Method: switchVehicles()
      */
+    @Test
+    public void testSwitchVehicles(){
+        double[] startPosition = {50, 30, 0};
+        double[] startPosition2 = {30, 10, 0};
+        GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        Simulator sim = new Simulator();
+
+        LeadingController lc = new LeadingController(sim, gv);
+        
+        GroundVehicle target = new GroundVehicle(startPosition2, 5.0, Math.PI / 4);
+        
+        sim.switchVehicles(lc,target);
+        
+        assertNull(lc.getGroundVehicle());
+    }
     
     /**
      * Method: checkWithinDistance()
@@ -267,6 +282,10 @@ public class SimulatorTest {
     /**
      * Method: changeShotVehicle()
      */
+    @Test
+    public void testChangeShotVehicle(){
+    	
+    }
     
     /**
      * Method: projectileOffscreen()
