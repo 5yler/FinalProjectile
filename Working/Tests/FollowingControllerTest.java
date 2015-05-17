@@ -42,8 +42,26 @@ public class FollowingControllerTest {
 
 
         // test speed when preyDistance > FOLLOWING_DISTANCE
+        
+        Control newControl = fc.getControl(1,0);
+        
+        double speed = newControl.getSpeed();
+        
+        assertEquals(speed,FollowingController.FOLLOWING_MAX_VEL,1E-6);
 
         // test speed when preyDistance < FOLLOWING_DISTANCE
+        
+        double followingDistance = 50 + FOLLOWING_DISTANCE/2;
+        double[] startPosition3 = {followingDistance, 30, 0};
+        GroundVehicle gv3 = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        
+        FollowingController fc2 = new FollowingController(sim, gv, gv3);
+        
+        Control newControl2 = fc2.getControl(1,0);
+        
+        double speed2 = newControl2.getSpeed();
+        
+        assertEquals(speed2, 5.0, 1E-6);
 
 
     }
