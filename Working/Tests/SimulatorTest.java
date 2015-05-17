@@ -2,6 +2,7 @@
  * SimulatorTest
  * 16.35 FinalProjectile Game Final Project
  * @author  Syler Wagner        <syler@mit.edu>
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
  **/
 
 import org.junit.Test;
@@ -10,7 +11,6 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-
 
 public class SimulatorTest {
 

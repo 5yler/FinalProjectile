@@ -2,6 +2,7 @@
  * GroundVehicleTest
  * 16.35 FinalProjectile Game Final Project
  * @author  Syler Wagner        <syler@mit.edu>
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
  **/
 
 import org.junit.*;
@@ -9,8 +10,6 @@ import org.junit.runner.JUnitCore;
 import static org.junit.Assert.*;
 
 public class GroundVehicleTest {
-
-	//TODO: update with changes
 
     /**
      * Constructor: GroundVehicle(double pose[3], double s, double omega)
