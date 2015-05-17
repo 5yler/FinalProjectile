@@ -20,10 +20,10 @@ public class DisplayServer extends JPanel implements KeyListener {
 
   public boolean OVER = false;
 
-  private double SPEED_INCREMENT = 1; //TODO: mod req?
-  private double[] userSpeed = {5*GroundVehicle.MIN_VEL, 5*GroundVehicle.MIN_VEL}; //TODO: req
-  private double[] userOmega = {0, 0}; //TODO: req
-  private boolean[] projectileGenerated = {false, false}; //TODO: req
+  private double SPEED_INCREMENT = 1;
+  private double[] userSpeed = {5*GroundVehicle.MIN_VEL, 5*GroundVehicle.MIN_VEL};
+  private double[] userOmega = {0, 0};
+  private boolean[] projectileGenerated = {false, false};
   private static Random rand = new Random();
 
   private static int historySkip = 5;
@@ -56,8 +56,8 @@ public class DisplayServer extends JPanel implements KeyListener {
   protected Color[] pathColors;
 
   /* CUSTOM SETTINGS */
-  public static final int DISPLAY_X = 1250; // display window x pixels
-  public static final int DISPLAY_Y = 700; // display window y pixels
+  public static final int DISPLAY_X = 800; // display window x pixels
+  public static final int DISPLAY_Y = 500; // display window y pixels
   public static final Color DISPLAY_BACKGROUND_COLOR = Color.black; // display background color
   public static final int LINE_Y_PIX = 12; // pixel height of text line
   public static final int LINE_X_PIX_OFFSET = 10; // pixel offset along x from edge of screen
@@ -195,7 +195,6 @@ public class DisplayServer extends JPanel implements KeyListener {
             return;
           } else {
             synchronized (my_display) {
-              //TODO: req
               if (tok.equals("over")) {
                 my_display.OVER = true;
                 tok = st.nextToken();
@@ -481,8 +480,6 @@ public class DisplayServer extends JPanel implements KeyListener {
   }
 
 
-  //TODO: requirements need to be completely rewritten for added user and how this is handled
-
   public void increaseSpeed(int UserID) {
 
     // increment user speed
@@ -534,7 +531,6 @@ public class DisplayServer extends JPanel implements KeyListener {
     return userOmega[UserID];
   }
 
-  //TODO: requirements
   public boolean getProjectileGenerated(int UserID) {
     return projectileGenerated[UserID];
   }
@@ -859,7 +855,7 @@ public class DisplayServer extends JPanel implements KeyListener {
   protected synchronized void gameOver(Graphics g) {
 
     g.setColor(randomLightColor());
-    g.setFont(new Font("default", Font.PLAIN, 200));
+    g.setFont(new Font("default", Font.PLAIN, 100));
     g.drawString("GAME OVER", LINE_X_PIX_OFFSET, DISPLAY_Y - LINE_Y_PIX_OFFSET);
 
     g.setColor(USER1_COLOR[0]);

@@ -6,8 +6,7 @@
 
 public class UserController extends VehicleController {
 
-
-    public static final int REACTION_TIME = 500; // [ms] timeout between successive projectiles firing //TODO: req
+    public static final int REACTION_TIME = 500; // [ms] timeout between successive projectiles firing
 
     private DisplayServer _ds;
 
@@ -56,8 +55,6 @@ public class UserController extends VehicleController {
         userControllerCount++;
         _v._color = userControllerCount;
     }
-
-
 
     public GroundVehicle getUserVehicle() {
         return _v;

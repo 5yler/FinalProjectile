@@ -14,14 +14,14 @@ public class FinalProjectile {
     public static boolean MULTIPLAYER;      // multiplaye mode
     public static int NUM_VEHICLES;         // number of non-user vehicles
 
-    public static final int GAME_TIME = 200;          // [s] time the game runs for //TODO: req
-    public static final int GAME_OVER_TIMEOUT = 10;   // [s] time the display remains after game over  //TODO: req
+    public static final int GAME_TIME = 200;          // [s] time the game runs for /
+    public static final int GAME_OVER_TIMEOUT = 10;   // [s] time the display remains after game over
 
     // [ms] time between successive updates for various threads
-    public static final int SIMULATOR_MS = 50;      //TODO: req
-    public static final int VEHICLE_MS = 50;        //TODO: req
-    public static final int CONTROLLER_MS = 100;    //TODO: req
-    public static final int PROJECTILE_MS = 20;     //TODO: req
+    public static final int SIMULATOR_MS = 50;
+    public static final int VEHICLE_MS = 50;
+    public static final int CONTROLLER_MS = 100;
+    public static final int PROJECTILE_MS = 20;
 
     // debug print statement toggle
     public static final boolean debug_user          = false;    // set to true for user controller debug
@@ -35,7 +35,6 @@ public class FinalProjectile {
 
         NUM_VEHICLES = 10;
 
-        //TODO:req
         if (args.length >= 1) { // if two command line arguments are present
             if (args[0].equals("1")) {
                 MULTIPLAYER = false;

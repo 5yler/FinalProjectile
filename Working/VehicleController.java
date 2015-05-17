@@ -321,23 +321,7 @@ public class VehicleController extends Thread {
 
             } // end if (UPDATE_MS since last update)
         } // end while (time < FinalProjectile.GAME_TIME)
-
     } // end run()
 
 
-//
-//    //TODO: complete
-//    public static void main(String args[]) {
-//        SchedulingParameters scheduling = new PriorityParameters(PriorityScheduler.MIN_PRIORITY+10);
-//        AsyncEventHandler missHandler = new DeadlineMissHandler();
-//        ReleaseParameters release = new PeriodicParameters(
-//                new RelativeTime(),         // release at .start()
-//                new RelativeTime(100, 0),   // period 100ms
-//                new RelativeTime(100, 0),   // cost
-//                new RelativeTime(100, 0),   // deadline 100ms
-//                null,                       // overrun handler
-//                missHandler);               // deadline miss handler
-////
-//        RealtimeThread rt = new VehicleController(scheduling, release);
-//    }
 }

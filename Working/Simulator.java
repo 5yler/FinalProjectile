@@ -20,7 +20,7 @@ public class Simulator extends Thread {
 
     public static final int UPDATE_MS = FinalProjectile.SIMULATOR_MS;
 
-    // colors // TODO:req
+    // colors
     public static final int USER1_COLOR = 1;
     public static final int USER2_COLOR = 2;
     public static final int LEADING_COLOR = 3;
@@ -35,7 +35,7 @@ public class Simulator extends Thread {
     public List<GroundVehicle> _vehicleList;  // list of GroundVehicles inside Simulator
     public List<Projectile> _projectileList;  // list of projectiles inside Simulator
 
-    // user controllers //TODO: req
+    // user controllers
     private UserController _uc1;
     private UserController _uc2;
 
@@ -125,7 +125,6 @@ public class Simulator extends Thread {
 
     /**
      * Associates a UserController with the Simulator
-     * //TODO: req modified for MULTIPLAYER
      * @param uc
      */
     public synchronized void addUserController(UserController uc) {
@@ -196,14 +195,12 @@ public class Simulator extends Thread {
 
     /**
      * Generates a projectile based on the position of the UserController associated with Simulator
-     *TODO: make this accommodate multiple userControllers
-     * TODO: req changed
-     */
+      */
     public void generateProjectile(UserController uc) {
 
         long timeSinceLastProjectile = (System.nanoTime() - _lastProjectileTime[uc._userID]) / 1000000; // [ms]
 
-        // check if REACTION_TIME has passed since last projectile being fired by user //TODO: req
+        // check if REACTION_TIME has passed since last projectile being fired by user
         if (timeSinceLastProjectile > UserController.REACTION_TIME) {
 
             Projectile p = new Projectile(uc.getUserVehicle().getPosition(), this, uc);
@@ -260,7 +257,6 @@ public class Simulator extends Thread {
     }
 
     /**
-     * //TODO: NEW REQUIREMENTS
      * Checks if projectile shot a vehicle.
      * @param projectilePos projectile [x, y, theta]
      * @param vPos vehicle [x, y, theta]
@@ -288,7 +284,6 @@ public class Simulator extends Thread {
      * @param oldController
      */
     public synchronized void switchVehicleControllers(VehicleController oldController, GroundVehicle targetUserVehicle) {
-        //TODO: Requirements
         //  check if OC actually has a vehicle
         if (oldController.getGroundVehicle() == null) {
             throw new IllegalArgumentException("Old VehicleController has no GroundVehicle!");
@@ -500,7 +495,6 @@ public class Simulator extends Thread {
         // send final scores
         _dc.over(userShots, userHits, userKills);
 
-
         System.out.println("SHOTS FIRED: " + Projectile.SHOTS_FIRED);
 
         System.out.println("USER 1 -------------------------------------");
@@ -518,7 +512,6 @@ public class Simulator extends Thread {
             System.out.println("Accuracy: " + accuracy(_uc2._hits,_uc2._shots));
 
         }
-
 
         try {
             Thread.sleep(FinalProjectile.GAME_OVER_TIMEOUT*1000);

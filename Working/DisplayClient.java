@@ -57,7 +57,6 @@ public class DisplayClient  {
     output.println("traceoff");
   }
 
-  //TODO: write requirements
   public void update(int userShots[], int userHits[], int userKills[], int numVehicles, double gvX[], double gvY[], double gvTheta[], double gvC[], int numProjectiles, double pX[], double pY[], double pC[])
   {
     StringBuffer message = new StringBuffer();
