@@ -50,15 +50,34 @@ public class LeadingControllerTest {
 	 */
 	@Test
 	public void testTooCloseToWallsX(){
-		double[] startPosition = {50, 30, 0};
+		
+        // test at low x values
+		
+		double startX = LeadingController.DANGER_ZONE/2;
+		double[] startPosition = {startX, 30, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
         Simulator sim = new Simulator();
 
         LeadingController lc = new LeadingController(sim, gv);
+        
+        boolean closeToWall = lc.tooCloseToWalls(gv.getPosition());
+        
+        assertEquals(closeToWall,true);
 
-        // test at low x values
 
         // test at high x values
+        
+        double startX2 = Simulator.SIM_X - LeadingController.DANGER_ZONE/2;
+        double[] startPosition = {startX2, 30, 0};
+        GroundVehicle gv2 = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        Simulator sim2 = new Simulator();
+
+        LeadingController lc2 = new LeadingController(sim2, gv2);
+        boolean closeToWall2 = lc2.tooCloseToWalls(gv2.getPosition());
+        
+        assertEquals(closeToWall2,true);
+
+
     }
 
     /**
@@ -66,15 +85,31 @@ public class LeadingControllerTest {
      */
     @Test
     public void testTooCloseToWallsY(){
-        double[] startPosition = {50, 30, 0};
+
+        // test at low y values
+    	
+		double startY = LeadingController.DANGER_ZONE/2;
+		double[] startPosition = {startY, 30, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
         Simulator sim = new Simulator();
 
         LeadingController lc = new LeadingController(sim, gv);
-
-        // test at low y values
+        
+        boolean closeToWall = lc.tooCloseToWalls(gv.getPosition());
+        
+        assertEquals(closeToWall,true);
 
         // test at high y values
+        
+        double startY2 = Simulator.SIM_Y - LeadingController.DANGER_ZONE/2;
+        double[] startPosition = {startY2, 30, 0};
+        GroundVehicle gv2 = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        Simulator sim2 = new Simulator();
+
+        LeadingController lc2 = new LeadingController(sim2, gv2);
+        boolean closeToWall2 = lc2.tooCloseToWalls(gv2.getPosition());
+        
+        assertEquals(closeToWall2,true);
     }
 
 
