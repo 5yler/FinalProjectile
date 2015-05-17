@@ -27,7 +27,7 @@ public class LeadingController extends VehicleController {
      * @return closest GroundVehicle from the list of GroundVehicles
      * following the LeadingController
      */
-    private GroundVehicle getClosestFollower() {
+    public GroundVehicle getClosestFollower() {
 
         // position of leader vehicle
         double[] vPosition = _v.getPosition();
@@ -69,7 +69,7 @@ public class LeadingController extends VehicleController {
      * @param vehiclePosition position of leading GroundVehicle
      * @return true if close to wall
      */
-    private boolean tooCloseToWalls(double[] vehiclePosition) {
+    public boolean tooCloseToWalls(double[] vehiclePosition) {
         double x = vehiclePosition[0];
         double y = vehiclePosition[1];
 
