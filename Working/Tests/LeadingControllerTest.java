@@ -46,16 +46,38 @@ public class LeadingControllerTest {
 
 	
 	/**
-	 * Method: tooCloseToWAlls()
+	 * Method: tooCloseToWalls()
 	 */
 	@Test
-	public void testTooCloseToWalls(){
+	public void testTooCloseToWallsX(){
 		double[] startPosition = {50, 30, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
         Simulator sim = new Simulator();
 
         LeadingController lc = new LeadingController(sim, gv);
-	}
+
+        // test at low x values
+
+        // test at high x values
+    }
+
+    /**
+     * Method: tooCloseToWalls()
+     */
+    @Test
+    public void testTooCloseToWallsY(){
+        double[] startPosition = {50, 30, 0};
+        GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        Simulator sim = new Simulator();
+
+        LeadingController lc = new LeadingController(sim, gv);
+
+        // test at low y values
+
+        // test at high y values
+    }
+
+
 	
 	/**
 	 * Method: getControl()

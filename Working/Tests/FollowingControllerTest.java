@@ -23,7 +23,8 @@ public class FollowingControllerTest {
         assertEquals(gv, fc.getGroundVehicle());
         assertEquals(gv2, fc.getPrey());
 	}
-	
+
+
 	/**
 	 * Method: getControl()
 	 */
@@ -38,6 +39,13 @@ public class FollowingControllerTest {
         FollowingController fc = new FollowingController(sim, gv, gv2);
 
         assertNotNull(fc.getControl(0, 100));
+
+
+        // test speed when preyDistance > FOLLOWING_DISTANCE
+
+        // test speed when preyDistance < FOLLOWING_DISTANCE
+
+
     }
 	
     public static void main(String[] args) {
