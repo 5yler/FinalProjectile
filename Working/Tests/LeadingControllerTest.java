@@ -1,6 +1,8 @@
 /**
  * LeadingControllerTest
  * 16.35 FinalProjectile Game Final Project
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
+ * @author  Syler Wagner        <syler@mit.edu>
  **/
 
 import org.junit.Test;
@@ -147,9 +149,7 @@ public class LeadingControllerTest {
 
         assertEquals(false, closeToWall);
     }
-
-
-
+    
     /**
      * Method: getControl(int sec, int msec)
      *

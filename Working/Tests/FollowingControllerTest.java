@@ -1,6 +1,8 @@
 /**
  * FollowingControllerTest
  * 16.35 FinalProjectile Game Final Project
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
+ * @author  Syler Wagner        <syler@mit.edu>
  **/
 
 import org.junit.Test;

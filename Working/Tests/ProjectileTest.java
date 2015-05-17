@@ -1,6 +1,8 @@
 /**
  * ProjectileTest
  * 16.35 FinalProjectile Game Final Project
+ * @author  Caitlin Wheatley    <caitkw@mit.edu>
+ * @author  Syler Wagner        <syler@mit.edu>
  **/
 
 import org.junit.Test;
@@ -14,7 +16,7 @@ public class ProjectileTest {
 	 *
 	 * Creates a new Projectile object and tests if the position values
 	 * and the Simulator and UserController references are initialized
-	 * correcly
+	 * correctly
 	 */
 	@Test
 	public void testConstructor() {

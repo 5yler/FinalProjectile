@@ -1,6 +1,7 @@
 /**
  * UserControllerTest
  * 16.35 FinalProjectile Game Final Project
+ * @author  Syler Wagner        <syler@mit.edu>
  **/
 
 import org.junit.Test;
@@ -105,8 +106,10 @@ public class UserControllerTest {
     }
 
 	/**
-	 * Method: getControl()
-	 */
+	 * Method: getControl(int sec, int msec)
+     *
+     * Tests if controls are generated correctly and not null.
+     */
 	@Test
     public void testGetControl() throws Exception {
 
