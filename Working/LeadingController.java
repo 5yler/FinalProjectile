@@ -37,7 +37,7 @@ public class LeadingController extends VehicleController {
         double shortestDistance = Math.sqrt(Simulator.SIM_X *Simulator.SIM_X + Simulator.SIM_Y *Simulator.SIM_Y);
 
         // make variable to store index of closest follower
-    GroundVehicle closestVehicle = null;
+        GroundVehicle closestVehicle = null;
 
         for (GroundVehicle otherVehicle : _sim._vehicleList) {    // iterate over Simulator vehicle list
             if (otherVehicle != _v) { // only iterate over vehicles not associated with this controller
@@ -57,6 +57,7 @@ public class LeadingController extends VehicleController {
                 if (otherVehicleDistance < shortestDistance) {
                     // update distance to closest follower
                     closestVehicle = otherVehicle;
+                    shortestDistance = otherVehicleDistance;
                 }
             }
         }

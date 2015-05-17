@@ -51,7 +51,7 @@ public class LeadingControllerTest {
         
         GroundVehicle closest = lc.getClosestFollower();
         
-        assertEquals(closest,gv2);
+        assertEquals(gv2,closest);
 	}
 
 	
@@ -75,7 +75,7 @@ public class LeadingControllerTest {
         
         boolean closeToWall = lc.tooCloseToWalls(gv.getPosition());
         
-        assertEquals(closeToWall,true);
+        assertEquals(true, closeToWall);
 
 
         // test at high x values
@@ -88,9 +88,7 @@ public class LeadingControllerTest {
         LeadingController lc2 = new LeadingController(sim2, gv2);
         boolean closeToWall2 = lc2.tooCloseToWalls(gv2.getPosition());
         
-        assertEquals(closeToWall2,true);
-
-
+        assertEquals(true, closeToWall2);
     }
 
     /**
@@ -105,7 +103,7 @@ public class LeadingControllerTest {
         // test at low y values
     	
 		double startY = LeadingController.DANGER_ZONE/2;
-		double[] startPosition = {startY, 30, 0};
+		double[] startPosition = {30, startY, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
         Simulator sim = new Simulator();
 
@@ -113,12 +111,12 @@ public class LeadingControllerTest {
         
         boolean closeToWall = lc.tooCloseToWalls(gv.getPosition());
         
-        assertEquals(true,closeToWall);
+        assertEquals(true, closeToWall);
 
         // test at high y values
         
         double startY2 = Simulator.SIM_Y - LeadingController.DANGER_ZONE/2;
-        double[] startPosition2 = {startY2, 30, 0};
+        double[] startPosition2 = {30, startY2, 0};
         GroundVehicle gv2 = new GroundVehicle(startPosition2, 5.0, Math.PI / 4);
         Simulator sim2 = new Simulator();
 
@@ -139,7 +137,7 @@ public class LeadingControllerTest {
 
         // test in middle of simulation
 
-        double[] startPosition = {Simulator.SIM_X/2, Simulator.SIM_Y, 0};
+        double[] startPosition = {Simulator.SIM_X/2, Simulator.SIM_Y/2, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
         Simulator sim = new Simulator();
 
