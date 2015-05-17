@@ -277,6 +277,26 @@ public class SimulatorTest {
     @Test
     public void testProjectileShotVehicle(){
     	
+    	// test distance > HIT_DISTANCE
+    	double[] projectilePos = {50 50 0};
+    	double vehicleX = projectilePos[0] + Projectile.HIT_DISTANCE*2;
+    	double [] vehiclePos = {vehicleX 50 0};
+    	Simulator sim = new Simulator();
+    	
+    	boolean shotVehicle = sim.projectileShotVehicle(projectilePos,vehiclePos);
+    	
+    	assertEquals(shotVehicle,false);
+    	
+    	// test distance < HIT_DISTANCE
+    	double[] projectilePos = {50 50 0};
+    	double vehicleX = projectilePos[0] + Projectile.HIT_DISTANCE/2;
+    	double [] vehiclePos = {vehicleX 50 0};
+    	Simulator sim = new Simulator();
+    	
+    	boolean shotVehicle = sim.projectileShotVehicle(projectilePos,vehiclePos);
+    	
+    	assertEquals(shotVehicle,false);
+    	
     }
     
     /**
