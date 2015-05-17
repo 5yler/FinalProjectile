@@ -9,6 +9,13 @@ import static org.junit.Assert.*;
 
 public class FollowingControllerTest {
 
+    /**
+     * Constructor: FollowingController(Simulator s, GroundVehicle v, GroundVehicle prey)
+     *
+     * Creates a new FollowingController object and tests if the
+     * associated Simulator, follower GroundVehicle, and prey
+     * GroundVehicle references are initialized correctly.
+     */
 	@Test
 	public void testContructor() {
         double[] startPosition = {50, 30, 0};
@@ -26,7 +33,9 @@ public class FollowingControllerTest {
 
 
 	/**
-	 * Method: getControl()
+	 * Method: getControl(int sec, int msec)
+     *
+     * Tests if controls are generated correctly and not null.
 	 */
 	@Test
     public void testGetControl() throws Exception {
@@ -40,30 +49,25 @@ public class FollowingControllerTest {
 
         assertNotNull(fc.getControl(0, 100));
 
-
         // test speed when preyDistance > FOLLOWING_DISTANCE
         
         Control newControl = fc.getControl(1,0);
-        
         double speed = newControl.getSpeed();
         
         assertEquals(speed,FollowingController.FOLLOWING_MAX_VEL,1E-6);
 
         // test speed when preyDistance < FOLLOWING_DISTANCE
         
-        double followingDistance = 50 + FOLLOWING_DISTANCE/2;
+        double followingDistance = 50 + FollowingController.FOLLOWING_DISTANCE/2;
         double[] startPosition3 = {followingDistance, 30, 0};
         GroundVehicle gv3 = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
         
         FollowingController fc2 = new FollowingController(sim, gv, gv3);
         
         Control newControl2 = fc2.getControl(1,0);
-        
         double speed2 = newControl2.getSpeed();
         
-        assertEquals(speed2, 5.0, 1E-6);
-
-
+        assertEquals(5.0, speed2, 1E-6);
     }
 	
     public static void main(String[] args) {

@@ -4,7 +4,7 @@
  * @author  Syler Wagner        <syler@mit.edu>
  **/
 
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.JUnitCore;
 import static org.junit.Assert.*;
 
@@ -13,7 +13,11 @@ public class GroundVehicleTest {
 	//TODO: update with changes
 
     /**
-     * Method: GroundVehicle(pose, s, dtheta) constructor
+     * Constructor: GroundVehicle(double pose[3], double s, double omega)
+     *
+     * Constructs a GroundVehicle object and tests if the
+     * position, speed, and angular velocity values are initialized
+     * correctly.
      */
     @Test
     public void testConstructor() {
@@ -34,8 +38,29 @@ public class GroundVehicleTest {
         assertEquals(dtheta, newVel[2], 1e-6);
     }
 
+
     /**
-     * Method: GroundVehicle(pose, dx, dy, dtheta) constructor
+     * Constructor: GroundVehicle(double pose[3], double s, double omega)
+     *
+     * Tests if constructor throws IllegalArgumentException when
+     * position array is not of proper length
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testConstructorInvalidPosition() {
+
+        double [] pose = {1, 2, 0, 0};
+        double dx = 5, dy = 0, dtheta = 0;
+        double s = 5;
+        GroundVehicle gv = new GroundVehicle(pose, s, dtheta);
+
+    }
+
+    /**
+     * Constructor: GroundVehicle(double pose[3], double dx, double dy, double dtheta)
+     *
+     * Constructs a GroundVehicle object and tests if the
+     * position, speed, and angular velocity values are initialized
+     * correctly.
      */
     @Test
     public void testConstructor2() {
@@ -102,6 +127,12 @@ public class GroundVehicleTest {
 
     }
 
+    /**
+     * Constructor: GroundVehicle(double pose[3], double s, double omega)
+     *
+     * Tests if constructor throws IllegalArgumentException when
+     * position array is too long
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testTooManyArgumentsInConstructor() {
         // too many arguments in pose constructor
@@ -109,6 +140,13 @@ public class GroundVehicleTest {
         new GroundVehicle(pose, 0, 0);
     }
 
+
+    /**
+     * Constructor: GroundVehicle(double pose[3], double s, double omega)
+     *
+     * Tests if constructor throws IllegalArgumentException when
+     * position array is too short
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testTooFewArgumentsInConstructor() {
         // too few arguments in pose constructor
@@ -116,6 +154,13 @@ public class GroundVehicleTest {
         new GroundVehicle(pose, 0, 0);
     }
 
+
+    /**
+     * Constructor: GroundVehicle(double pose[3], double dx, double dy, double dtheta)
+     *
+     * Tests if constructor throws IllegalArgumentException when
+     * position array is too long
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testTooManyArgumentsInConstructor2() {
         // too many arguments in pose constructor
@@ -123,6 +168,12 @@ public class GroundVehicleTest {
         new GroundVehicle(pose, 0, 0, 0);
     }
 
+    /**
+     * Constructor: GroundVehicle(double pose[3], double dx, double dy, double dtheta)
+     *
+     * Tests if constructor throws IllegalArgumentException when
+     * position array is too short
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testTooFewArgumentsInConstructor2() {
         // too few arguments in pose constructor
@@ -130,6 +181,12 @@ public class GroundVehicleTest {
         new GroundVehicle(pose, 0, 0, 0);
     }
 
+    /**
+     * Method: setPosition(double[3] newPos)
+     *
+     * Tests if setPosition() method throws IllegalArgumentException when
+     * position array is too long
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testTooManyArgumentsSetPosition() {
         // too many arguments in setPosition
@@ -139,6 +196,12 @@ public class GroundVehicleTest {
         gv.setPosition(newPose);
     }
 
+    /**
+     * Method: setPosition(double[3] newPos)
+     *
+     * Tests if setPosition() method throws IllegalArgumentException when
+     * position array is too short
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testTooFewArgumentsSetPosition() {
         // too few arguments in setPosition
@@ -148,6 +211,12 @@ public class GroundVehicleTest {
         gv.setPosition(newPose);
     }
 
+    /**
+     * Method: setVelocity(double[3] newVel)
+     *
+     * Tests if setVelocity() method throws IllegalArgumentException when
+     * velocity array is too long
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testTooManyArgumentsSetVelocity() {
         // too many arguments in setVelocity
@@ -157,6 +226,12 @@ public class GroundVehicleTest {
         gv.setVelocity(newVel);
     }
 
+    /**
+     * Method: setVelocity(double[3] newVel)
+     *
+     * Tests if setVelocity() method throws IllegalArgumentException when
+     * velocity array is too short
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testTooFewArgumentsSetVelocity() {
         // too few arguments in setVelocity

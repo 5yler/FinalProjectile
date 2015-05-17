@@ -209,10 +209,10 @@ public class SimulatorTest {
     
       
     /**
-     * Method: switchVehicles()
+     * Method: switchVehicleControllers(VehicleController oldController, GroundVehicle targetUserVehicle)
      */
     @Test
-    public void testSwitchVehicles(){
+    public void testVehicleControllers(){
         double[] startPosition = {50, 30, 0};
         double[] startPosition2 = {30, 10, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
@@ -222,13 +222,13 @@ public class SimulatorTest {
         
         GroundVehicle target = new GroundVehicle(startPosition2, 5.0, Math.PI / 4);
         
-        sim.switchVehicles(lc,target);
+        sim.switchVehicleControllers(lc, target);
         
         assertNull(lc.getGroundVehicle());
     }
     
     /**
-     * Method: checkWithinDistance()
+     * Method: checkWithinDistance(double[] obj1pos, double[] obj2pos, double thresholdDistance)
      */
     @Test(expected=IllegalArgumentException.class)
         public void testCheckWithinDistance() throws Exception {
@@ -242,7 +242,7 @@ public class SimulatorTest {
         // check for objects not within distance
         double[] pos3 = {4,4,0};
         isWithinDistance = Simulator.checkWithinDistance(pos1,pos3,3);
-        assertEquals(isWithinDistance,false);
+        assertEquals(isWithinDistance, false);
 
         // check illegal theshold distance argument throws exception
         isWithinDistance = Simulator.checkWithinDistance(pos1,pos3,0);

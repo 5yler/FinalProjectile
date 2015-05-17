@@ -13,10 +13,12 @@ import java.lang.reflect.Method;
 
 public class VehicleControllerTest extends TestCase {
 
-	//TODO: update with changes
 
     /**
-     * Method: VehicleController(Simulator s, GroundVehicle v) constructor
+     * Constructor: VehicleController(Simulator s, GroundVehicle v)
+     *
+     * Creates a new VehicleController object and tests if the associated
+     * Simulator and GroundVehicle references are initialized correctly.
      */
     @Test
     public void testConstructor() {
@@ -31,8 +33,7 @@ public class VehicleControllerTest extends TestCase {
     }
 
     /**
-     *
-     * Method: VehicleController(Simulator s, GroundVehicle v) constructor
+     * Constructor: VehicleController(Simulator s, GroundVehicle v)
      *
      * This method tests if newly created VehicleControllers get assigned
      * number IDs increasing in value.
@@ -114,7 +115,7 @@ public class VehicleControllerTest extends TestCase {
      * Method: setNumSides(int n)
      * Method: getNumSides()
      *
-     * Test get/set _numSides for valid input
+     * Test get/set _numSides for valid input.
      */
     @Test
     public void testGetSetNumSidesValid() throws Exception {
@@ -160,9 +161,11 @@ public class VehicleControllerTest extends TestCase {
 
     /**
      * Method: getControl(int sec, int msec)
+     *
+     * Tests if controls generated are not null
      */
     @Test
-    public void testGetControl() throws Exception {
+    public void testGetControl() {
         double[] startPosition = {50, 30, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4); // star-shaped
         Simulator sim = new Simulator();
@@ -171,17 +174,9 @@ public class VehicleControllerTest extends TestCase {
 
         assertNotNull(vc.getControl(0, 100));
 
-        //TODO: test if proper controls get returned when turning or not?
     }
 
-    /**
-     * Method: run()
-     */
-    @Test
-    public void testRun() throws Exception {
-        //TODO: test if IllegalStateException gets thrown if Simulator _vehicleControlQueue < 0
-        //TODO: test if Simulator _vehicleControlQueue gets decremented
-    }
+
 
 
     /**

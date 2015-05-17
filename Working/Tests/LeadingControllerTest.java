@@ -9,6 +9,13 @@ import static org.junit.Assert.*;
 
 public class LeadingControllerTest {
 
+    /**
+     * Constructor: LeadingController(Simulator sim, GroundVehicle v)
+     *
+     * Constructs LeadingController object and tests if the
+     * associated Simulator, GroundVehicle and DisplayServer
+     * references are initialized properly.
+     */
 	@Test
 	public void testContstructor() {
         double[] startPosition = {50, 30, 0};
@@ -23,9 +30,12 @@ public class LeadingControllerTest {
 	
 	/**
 	 * Method: getClosestFollower()
+     *
+     * Tests if the getClosestFollower() method returns the closest
+     * vehicle in Simulator _vehicleList
 	 */
 	@Test
-	public void testGetClosestFollower(){
+	public void testGetClosestFollower() {
 		double[] startPosition = {50, 30, 0};
         GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
         Simulator sim = new Simulator();
@@ -46,10 +56,13 @@ public class LeadingControllerTest {
 
 	
 	/**
-	 * Method: tooCloseToWalls()
+	 * Method: tooCloseToWalls(double[] vehiclePosition)
+     *
+     * Tests if the tooCloseToWalls() method returns true
+     * value when x is out of range
 	 */
 	@Test
-	public void testTooCloseToWallsX(){
+	public void testTooCloseToWallsX() {
 		
         // test at low x values
 		
@@ -68,8 +81,8 @@ public class LeadingControllerTest {
         // test at high x values
         
         double startX2 = Simulator.SIM_X - LeadingController.DANGER_ZONE/2;
-        double[] startPosition = {startX2, 30, 0};
-        GroundVehicle gv2 = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        double[] startPosition2 = {startX2, 30, 0};
+        GroundVehicle gv2 = new GroundVehicle(startPosition2, 5.0, Math.PI / 4);
         Simulator sim2 = new Simulator();
 
         LeadingController lc2 = new LeadingController(sim2, gv2);
@@ -81,10 +94,13 @@ public class LeadingControllerTest {
     }
 
     /**
-     * Method: tooCloseToWalls()
+     * Method: tooCloseToWalls(double[] vehiclePosition)
+     *
+     * Tests if the tooCloseToWalls() method returns true
+     * when x is out of range
      */
     @Test
-    public void testTooCloseToWallsY(){
+    public void testTooCloseToWallsY() {
 
         // test at low y values
     	
@@ -97,26 +113,50 @@ public class LeadingControllerTest {
         
         boolean closeToWall = lc.tooCloseToWalls(gv.getPosition());
         
-        assertEquals(closeToWall,true);
+        assertEquals(true,closeToWall);
 
         // test at high y values
         
         double startY2 = Simulator.SIM_Y - LeadingController.DANGER_ZONE/2;
-        double[] startPosition = {startY2, 30, 0};
-        GroundVehicle gv2 = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        double[] startPosition2 = {startY2, 30, 0};
+        GroundVehicle gv2 = new GroundVehicle(startPosition2, 5.0, Math.PI / 4);
         Simulator sim2 = new Simulator();
 
         LeadingController lc2 = new LeadingController(sim2, gv2);
         boolean closeToWall2 = lc2.tooCloseToWalls(gv2.getPosition());
         
-        assertEquals(closeToWall2,true);
+        assertEquals(true, closeToWall2);
+    }
+
+    /**
+     * Method: tooCloseToWalls(double[] vehiclePosition)
+     *
+     * Tests if the tooCloseToWalls() method returns false
+     * when the vehicle position is not too close to walls
+     */
+    @Test
+    public void testNotTooCloseToWalls() {
+
+        // test in middle of simulation
+
+        double[] startPosition = {Simulator.SIM_X/2, Simulator.SIM_Y, 0};
+        GroundVehicle gv = new GroundVehicle(startPosition, 5.0, Math.PI / 4);
+        Simulator sim = new Simulator();
+
+        LeadingController lc = new LeadingController(sim, gv);
+
+        boolean closeToWall = lc.tooCloseToWalls(gv.getPosition());
+
+        assertEquals(false, closeToWall);
     }
 
 
-	
-	/**
-	 * Method: getControl()
-	 */
+
+    /**
+     * Method: getControl(int sec, int msec)
+     *
+     * Tests if controls are generated correctly and not null.
+     */
 	@Test
     public void testGetControl() throws Exception {
         double[] startPosition = {50, 30, 0};

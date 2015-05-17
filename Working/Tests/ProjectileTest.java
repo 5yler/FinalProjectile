@@ -10,7 +10,11 @@ import static org.junit.Assert.*;
 public class ProjectileTest {
 
 	/**
-	 * Test Constructor
+	 * Constructor: Projectile(double[3] shooterPosition, Simulator sim, UserController uc)
+	 *
+	 * Creates a new Projectile object and tests if the position values
+	 * and the Simulator and UserController references are initialized
+	 * correcly
 	 */
 	@Test
 	public void testConstructor() {
@@ -34,6 +38,13 @@ public class ProjectileTest {
 		assertEquals(uc, p.getUserController());
 	}
 
+
+	/**
+	 * Constructor: Projectile(double[3] shooterPosition, Simulator sim, UserController uc)
+	 *
+	 * Tests if constructor throws IllegalArgumentException when
+	 * position array is too long
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testTooManyArgumentsInConstructor() {
 		// Too many arguments in pose constructor 
@@ -48,6 +59,13 @@ public class ProjectileTest {
 		Projectile p = new Projectile(shooterPos, sim, uc);
 	}
 
+
+	/**
+	 * Constructor: Projectile(double[3] shooterPosition, Simulator sim, UserController uc)
+	 *
+	 * Tests if constructor throws IllegalArgumentException when
+	 * position array is too short
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testTooFewArgumentsInConstructor() {
 		// Too few arguments in pose constructor 
@@ -60,6 +78,42 @@ public class ProjectileTest {
 		UserController uc = new UserController(sim, gv);
 
 		Projectile p = new Projectile(shooterPos, sim, uc);
+	}
+
+
+	/**
+	 * Constructor: Projectile(double[3] shooterPosition, Simulator sim, UserController uc)
+	 *
+	 * Tests if constructor throws IllegalArgumentException when
+	 * Simulator argument is null
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void testNullSimulatorConstructorArgument() {
+		// Too few arguments in pose constructor
+		double [] pose = {1, 2, 0};
+		double dx = 5, dy = 0, dtheta = 0;
+		double [] shooterPos = {3, 3, 0};
+		GroundVehicle gv = new GroundVehicle(pose, dx, dy, dtheta);
+
+		Simulator sim = new Simulator();
+		UserController uc = new UserController(sim, gv);
+
+		Projectile p = new Projectile(shooterPos, null, uc);
+	}
+
+	/**
+	 * Constructor: Projectile(double[3] shooterPosition, Simulator sim, UserController uc)
+	 *
+	 * Tests if constructor throws IllegalArgumentException when
+	 * UserController argument is null
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void testNullUserControllerConstructorArgument() {
+
+		double [] shooterPos = {3, 3, 0};
+		Simulator sim = new Simulator();
+
+		Projectile p = new Projectile(shooterPos, sim, null);
 	}
 
 
