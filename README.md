@@ -3,7 +3,7 @@ Multiplayer Java Game for 16.35 Final Project
 
 Final Projectile is a shooting game with both single-player and multi-player functionality that populates a display with either one or two user-controlled vehicles and a specified number of non-user vehicles. The user vehicles are controlled using keyboard input. The objective of the game is to shoot the non-user vehicles.
 
-One shot causes the vehicles to follow the user vehicles, a second shot “kills” the vehicle and removes it from the display. User scores are displayed onscreen. The game ends once all non- user vehicles have been destroyed, or if 200 seconds have passed and there are still remaining non-user vehicles present.
+One shot causes the vehicles to follow the user vehicles, a second shot “kills” the vehicle and removes it from the display. User scores are displayed onscreen. The game ends once all non-user vehicles have been destroyed, or if 200 seconds have passed and there are still remaining non-user vehicles present.
 
 ![alt tag](http://web.mit.edu/syler/www/FinalProjectileSmall.png)
 
