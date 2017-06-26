@@ -9,7 +9,7 @@ One shot causes the vehicles to follow the user vehicles, a second shot “kills
 
 ## Installation
 
-1. Download a copy of the repository using `git clone https://github.com/1635-S15/FinalProjectile.git` (HTTPS) or `git clone git@github.com:1635-S15/FinalProjectile.git` (SSH)
+1. Download a copy of the repository using `git clone https://github.com/5yler/FinalProjectile.git` (HTTPS) or `git clone git@github.com:5yler/FinalProjectile.git` (SSH)
 2. Compile the source code in the Working folder using `javac *.java` 
 
 ## Usage
